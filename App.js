@@ -4,6 +4,7 @@ import { Constants } from 'expo';
 import { combineReducers, createStore } from 'redux';
 // You can import from local files
 import Top from './components/Top';
+import NewRegist from './components/NewRegist';
 import EditRegist from './components/EditRegist';
 import {
   createStackNavigator,
@@ -54,10 +55,11 @@ const Stack = createStackNavigator(
         title: 'Home',
       }),
     },
-    Stack2: {
-      screen: EditRegist,
+    Stack2: { screen: EditRegist },
+    Stack3: {
+      screen: NewRegist,
       navigationOptions: () => ({
-        title: '編集',
+        title: '新規登録',
       }),
     },
   },
@@ -75,7 +77,7 @@ export default class App extends React.Component {
     title: 'Welcome',
   };
   render() {
-     // !!! ここでログを確認してみましょう。
+    // !!! ここでログを確認してみましょう。
     console.log('aaaa');
     console.log(this.props.navigation);
     return (
