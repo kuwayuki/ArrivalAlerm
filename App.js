@@ -55,8 +55,8 @@ const Stack = createStackNavigator(
         title: 'Home',
       }),
     },
-    Stack2: { screen: EditRegist },
-    Stack3: {
+    Stack3: { screen: EditRegist },
+    Stack2: {
       screen: NewRegist,
       navigationOptions: () => ({
         title: '新規登録',
