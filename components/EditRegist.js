@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 import { MapView } from 'expo';
+
 export default class Top extends React.Component {
   constructor(props) {
     super(props);

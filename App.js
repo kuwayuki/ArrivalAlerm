@@ -52,7 +52,7 @@ const Stack = createStackNavigator(
     Stack1: {
       screen: Top,
       navigationOptions: () => ({
-        title: 'Home',
+        // title: 'Home',
       }),
     },
     Stack3: { screen: EditRegist },
@@ -77,9 +77,6 @@ export default class App extends React.Component {
     title: 'Welcome',
   };
   render() {
-    // !!! ここでログを確認してみましょう。
-    console.log('aaaa');
-    console.log(this.props.navigation);
     return (
       <View style={styles.container}>
         <AppContainer
@@ -96,13 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: 'aliceblue',
     padding: 8,
-  },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
 });

@@ -28,14 +28,14 @@ export default class SectionListBasics extends Component {
             {
               title: '秋葉原駅',
               isAvailable: true,
-              distance: '10.0km',
+              distance: '10.0\nkm',
               interval: '5秒',
               timeZone: '5:00 ~ 12:00',
             },
             {
               title: '川崎駅',
               isAvailable: false,
-              distance: '10.0km',
+              distance: '10.0\nkm',
               interval: '5秒',
               timeZone: '5:00 ~ 12:00',
             },
@@ -43,7 +43,7 @@ export default class SectionListBasics extends Component {
           extraData={this.state.data}
           keyExtractor={this._keyExtractor}
           renderItem={({ item }) => (
-            <View style={styles.movieView}>
+            <View style={styles.ListRow}>
               <Text
                 style={styles.itemFocus}
                 onPress={() => this.props.navigation.navigate('Stack2')}>
@@ -53,11 +53,12 @@ export default class SectionListBasics extends Component {
                 style={styles.item}
                 // onPress={() => alert(item.title)}>
                 onPress={() => this.props.navigation.navigate('Stack2')}>
-                {item.title + ' ' + item.distance}
+                {item.title}
                 {'\n'}
                 {item.interval + ' ' + item.timeZone}
               </Text>
               <Switch
+                style={styles.itemSwitch}
                 onValueChange={this.switchValue}
                 value={item.isAvailable}
               />
@@ -75,30 +76,44 @@ export default class SectionListBasics extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'aliceblue',
     flex: 1,
   },
-  movieView: {
+  ListRow: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#c6e6fa',
+    backgroundColor: 'white',
     padding: 5,
     fontSize: 18,
     borderStyle: 'solid',
     borderColor: 'gray',
-    borderWidth: 1,
+    borderWidth: 0.25,
+    alignItems: 'center',
+    // height: 60,
   },
   itemFocus: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: 'lightblue',
-    borderRadius: 20,
-    borderWidth: 1,
+    textAlign: 'center',
+    width: 60,
+    paddingTop: 8,
+    paddingBottom: 8,
     borderColor: 'lightblue',
+    color: 'white',
+    // color: 'white',
+    // backgroundColor: 'azure',
+    // backgroundColor: 'aliceblue',
+    backgroundColor: 'aquamarine',
+    // backgroundColor: 'aqua',
+    borderRadius: 30,
+    borderWidth: 1,
     overflow: 'hidden',
+    fontSize: 17,
     // backgroundColor: '#000000',
   },
   item: {
+    width: '60%',
     fontSize: 18,
+  },
+  itemSwitch: {
   },
 });

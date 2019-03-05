@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import MapView, { UrlTile, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
+let timer = null;
+let position = null;
 async function getCurrentPosition(timeoutMillis = 10000) {
   if (Platform.OS === 'android') {
     const ok = await PermissionsAndroid.check(
@@ -37,51 +39,63 @@ export default class Top extends React.Component {
     super(props);
     this.state = {
       isFirstGet: false,
+      timer: 3,
       coords: {
         latitude: 100,
         longitude: 100,
       },
       markers: [
         {
-          key: 'tamachiStation',
-          latlng: {
-            latitude: 35.645736,
-            longitude: 139.747575,
-          },
-          title: '田町駅',
-          description: '田町ニューデイズ',
+          key: 'setting',
+          title: '通知場所',
         },
       ],
     };
   }
   markerClick() {
-    console.log('Marker was clicked');
+    console.log('clicked!!!!!!');
   }
+
+  timerGetPosition = () => {
+    this.interval = setInterval(() => {
+      console.log('aaaa');
+      return 'aaa';
+    }, 1000);
+  };
+
   async componentDidMount() {
     try {
+      this.timerGetPosition();
       const position = await getCurrentPosition(5000);
       const { latitude, longitude } = position.coords;
+      const marker_copy = this.state.markers.slice();
+      marker_copy[0].latlng = position.coords;
       this.setState({
         isFirstGet: true,
-        coords: {
-          latitude,
-          longitude,
-        },
-        latlng: {
-          latitude,
-          longitude,
-        },
+        coords: position.coords,
+        markers: marker_copy,
       });
     } catch (e) {
       alert(e.message);
     }
   }
+  markerSetting = e => {
+    const position = e.nativeEvent.coordinate;
+    const marker_copy = this.state.markers.slice();
+    marker_copy[0].latlng = position;
+    this.setState({
+      markers: marker_copy,
+    });
+  };
+
   render() {
     return (
       this.state.isFirstGet && (
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
+          onPoiClick={e => this.markerSetting(e)}
+          // console.log(e.nativeEvent.coordinate)}
           initialRegion={{
             latitude:
               this.state.coords != null ? this.state.coords.latitude : 100,
@@ -93,8 +107,8 @@ export default class Top extends React.Component {
           {this.state.markers.map(marker => (
             <Marker
               key={marker.key}
-              coordinate={this.state.coords}
-              // coordinate={marker.latlng}
+              // coordinate={this.state.coords}
+              coordinate={marker.latlng}
               title={marker.title}
               description={marker.description}
               onPress={() => this.markerClick()}
