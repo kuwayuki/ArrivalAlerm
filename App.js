@@ -7,6 +7,8 @@ import Top from './components/Top';
 import NewRegist from './components/NewRegist';
 import EditRegist from './components/EditRegist';
 import {
+  createMaterialTopTabNavigator,
+  createTabNavigator,
   createStackNavigator,
   createBottomTabNavigator,
   createAppContainer,
@@ -51,15 +53,22 @@ const Stack = createStackNavigator(
   {
     Stack1: {
       screen: Top,
-      navigationOptions: () => ({
+      navigationOptions: {
+        header: null,
         // title: 'Home',
-      }),
+      },
     },
-    Stack3: { screen: EditRegist },
+    Stack3: {
+      screen: EditRegist,
+      navigationOptions: {
+        header: null,
+      },
+    },
     Stack2: {
       screen: NewRegist,
       navigationOptions: () => ({
-        title: '新規登録',
+        title: null,
+        // title: '新規登録',
       }),
     },
   },
@@ -68,6 +77,7 @@ const Stack = createStackNavigator(
   }
 );
 const AppContainer = createAppContainer(Stack);
+const HeaderContainer = createAppContainer(RootStack);
 
 export default class App extends React.Component {
   constructor(props) {
@@ -92,8 +102,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
+    // paddingTop: Constants.statusBarHeight,
     backgroundColor: 'aliceblue',
-    padding: 8,
   },
 });

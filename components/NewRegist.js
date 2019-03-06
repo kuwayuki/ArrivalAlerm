@@ -53,19 +53,19 @@ export default class Top extends React.Component {
     };
   }
   markerClick() {
-    console.log('clicked!!!!!!');
+    alert("この地点を登録します。")
   }
 
   timerGetPosition = () => {
     this.interval = setInterval(() => {
-      console.log('aaaa');
+      // console.log('aaaa');
       return 'aaa';
     }, 1000);
   };
 
   async componentDidMount() {
     try {
-      this.timerGetPosition();
+      // this.timerGetPosition();
       const position = await getCurrentPosition(5000);
       const { latitude, longitude } = position.coords;
       const marker_copy = this.state.markers.slice();
@@ -83,6 +83,7 @@ export default class Top extends React.Component {
     const position = e.nativeEvent.coordinate;
     const marker_copy = this.state.markers.slice();
     marker_copy[0].latlng = position;
+    marker_copy[0].title = e.nativeEvent.name;
     this.setState({
       markers: marker_copy,
     });
@@ -95,6 +96,7 @@ export default class Top extends React.Component {
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           onPoiClick={e => this.markerSetting(e)}
+          // onPoiClick={e => console.log(e.nativeEvent)}
           // console.log(e.nativeEvent.coordinate)}
           initialRegion={{
             latitude:

@@ -9,11 +9,51 @@ import {
   FlatList,
   Switch,
 } from 'react-native';
+import { Header } from 'react-native-elements';
+import Swipeout from 'react-native-swipeout';
 
 export default class SectionListBasics extends Component {
   constructor(props) {
     super(props);
-    this.state = { data: null };
+    this.state = {
+      data: [
+        {
+          title: '秋葉原駅',
+          isAvailable: true,
+          distance: '10.0\nkm',
+          interval: '5秒',
+          timeZone: '5:00 ~ 12:00',
+        },
+        {
+          title: '川崎駅',
+          isAvailable: false,
+          distance: '10.0\nkm',
+          interval: '5秒',
+          timeZone: '5:00 ~ 12:00',
+        },
+        {
+          title: '川崎駅',
+          isAvailable: false,
+          distance: '10.0\nkm',
+          interval: '5秒',
+          timeZone: '5:00 ~ 12:00',
+        },
+        {
+          title: '川崎駅',
+          isAvailable: false,
+          distance: '10.0\nkm',
+          interval: '5秒',
+          timeZone: '5:00 ~ 12:00',
+        },
+        {
+          title: '川崎駅',
+          isAvailable: false,
+          distance: '10.0\nkm',
+          interval: '5秒',
+          timeZone: '5:00 ~ 12:00',
+        },
+      ],
+    };
   }
   switchValue = value => {
     this.setState({ switching: value });
@@ -21,48 +61,54 @@ export default class SectionListBasics extends Component {
   };
 
   render() {
+    const swipeBtns = [{
+      text: '削除',
+      backgroundColor: 'red',
+      underlayColor: 'rgba(0,0,0,1)',
+      // onPress: () => { this._completePhrase({ item, index }) },
+    }];
+
     return (
       <View style={styles.container}>
+        <Header
+          leftComponent={{ icon: 'settings', color: '#fff' }}
+          centerComponent={{ text: 'Home', style: { color: '#fff' } }}
+          rightComponent={{
+            icon: 'add',
+            color: '#fff',
+            onPress: () => this.props.navigation.navigate('Stack2'),
+          }}
+        />
         <FlatList
-          data={[
-            {
-              title: '秋葉原駅',
-              isAvailable: true,
-              distance: '10.0\nkm',
-              interval: '5秒',
-              timeZone: '5:00 ~ 12:00',
-            },
-            {
-              title: '川崎駅',
-              isAvailable: false,
-              distance: '10.0\nkm',
-              interval: '5秒',
-              timeZone: '5:00 ~ 12:00',
-            },
-          ]}
+          data={this.state.data}
           extraData={this.state.data}
           keyExtractor={this._keyExtractor}
           renderItem={({ item }) => (
-            <View style={styles.ListRow}>
-              <Text
-                style={styles.itemFocus}
-                onPress={() => this.props.navigation.navigate('Stack2')}>
-                {item.distance}
-              </Text>
-              <Text
-                style={styles.item}
-                // onPress={() => alert(item.title)}>
-                onPress={() => this.props.navigation.navigate('Stack2')}>
-                {item.title}
-                {'\n'}
-                {item.interval + ' ' + item.timeZone}
-              </Text>
-              <Switch
-                style={styles.itemSwitch}
-                onValueChange={this.switchValue}
-                value={item.isAvailable}
-              />
-            </View>
+            <Swipeout
+              right={swipeBtns}
+              autoClose={true}
+              backgroundColor="transparent">
+              <View style={styles.ListRow}>
+                <Text
+                  style={styles.itemFocus}
+                  onPress={() => this.props.navigation.navigate('Stack2')}>
+                  {item.distance}
+                </Text>
+                <Text
+                  style={styles.item}
+                  // onPress={() => alert(item.title)}>
+                  onPress={() => this.props.navigation.navigate('Stack2')}>
+                  {item.title}
+                  {'\n'}
+                  {item.interval + ' ' + item.timeZone}
+                </Text>
+                <Switch
+                  style={styles.itemSwitch}
+                  onValueChange={this.switchValue}
+                  value={item.isAvailable}
+                />
+              </View>
+            </Swipeout>
           )}
         />
         <Button
@@ -114,6 +160,5 @@ const styles = StyleSheet.create({
     width: '60%',
     fontSize: 18,
   },
-  itemSwitch: {
-  },
+  itemSwitch: {},
 });
