@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import { Header } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
+import { connect } from 'react-redux';
 
-export default class SectionListBasics extends Component {
+export class Top extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -61,12 +62,14 @@ export default class SectionListBasics extends Component {
   };
 
   render() {
-    const swipeBtns = [{
-      text: '削除',
-      backgroundColor: 'red',
-      underlayColor: 'rgba(0,0,0,1)',
-      // onPress: () => { this._completePhrase({ item, index }) },
-    }];
+    const swipeBtns = [
+      {
+        text: '削除',
+        backgroundColor: 'red',
+        underlayColor: 'rgba(0,0,0,1)',
+        // onPress: () => { this._completePhrase({ item, index }) },
+      },
+    ];
 
     return (
       <View style={styles.container}>
@@ -162,3 +165,9 @@ const styles = StyleSheet.create({
   },
   itemSwitch: {},
 });
+
+function mapStateToProps(state) {
+  return state;
+}
+
+export default connect(mapStateToProps)(Top);

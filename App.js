@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Button, AppRegistry } from 'react-native';
 import { Constants } from 'expo';
-import { combineReducers, createStore } from 'redux';
+import { createStore } from 'redux';
 // You can import from local files
 import Top from './components/Top';
 import NewRegist from './components/NewRegist';
@@ -13,9 +13,13 @@ import {
   createBottomTabNavigator,
   createAppContainer,
 } from 'react-navigation';
-
 // or any pure javascript modules available in npm
 import { Card } from 'react-native-paper';
+import { Provider } from 'react-redux';
+import { reducers } from './reducers/index';
+
+const store = createStore(reducers);
+
 // 「Tab1Screen」というコンポーネント（＝画面のようなもの）を定義
 class Tab1Screen extends React.Component {
   render() {
@@ -88,13 +92,15 @@ export default class App extends React.Component {
   };
   render() {
     return (
-      <View style={styles.container}>
-        <AppContainer
-          ref={nav => {
-            this.navigator = nav;
-          }}
-        />
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <AppContainer
+            ref={nav => {
+              this.navigator = nav;
+            }}
+          />
+        </View>
+      </Provider>
     );
   }
 }

@@ -8,6 +8,7 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import MapView, { UrlTile, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { connect } from 'react-redux';
 
 let timer = null;
 let position = null;
@@ -34,7 +35,7 @@ async function getCurrentPosition(timeoutMillis = 10000) {
   });
 }
 
-export default class Top extends React.Component {
+export class NewRegist extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,7 +54,7 @@ export default class Top extends React.Component {
     };
   }
   markerClick() {
-    alert("この地点を登録します。")
+    alert('この地点を登録します。');
   }
 
   timerGetPosition = () => {
@@ -125,3 +126,9 @@ export default class Top extends React.Component {
 const styles = StyleSheet.create({
   map: { ...StyleSheet.absoluteFillObject, flex: 1 },
 });
+
+function mapStateToProps(state) {
+  return state;
+}
+
+export default connect(mapStateToProps)(NewRegist);

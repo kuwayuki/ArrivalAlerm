@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 import { MapView } from 'expo';
+import { connect } from 'react-redux';
 
-export default class Top extends React.Component {
+export class EditRegist extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -44,3 +45,9 @@ const styles = StyleSheet.create({
     width: 128,
   },
 });
+
+function mapStateToProps(state) {
+  return state;
+}
+
+export default connect(mapStateToProps)(EditRegist);
