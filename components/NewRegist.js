@@ -85,6 +85,7 @@ export class NewRegist extends React.Component {
     const marker_copy = this.state.markers.slice();
     marker_copy[0].latlng = position;
     marker_copy[0].title = e.nativeEvent.name;
+    console.log(position);
     this.setState({
       markers: marker_copy,
     });
@@ -104,8 +105,8 @@ export class NewRegist extends React.Component {
               this.state.coords != null ? this.state.coords.latitude : 100,
             longitude:
               this.state.coords != null ? this.state.coords.longitude : 100,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
           }}>
           {this.state.markers.map(marker => (
             <Marker

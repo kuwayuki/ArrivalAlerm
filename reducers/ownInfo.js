@@ -2,7 +2,6 @@ const INITIAL_STATE = {
   coords: { latitude: null, longitude: null },
   interval: 'auto',
   isFree: true,
-  name: 'Nanasi',
 };
 
 export const ownInfo = (state = INITIAL_STATE, action) => {
