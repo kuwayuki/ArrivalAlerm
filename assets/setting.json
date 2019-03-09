@@ -4,11 +4,10 @@
     "key": "setting",
     "interval": "auto",
     "isFree": true,
-    "index": 0,
+    "setIndex": 0,
   },
   // ↓通知地点情報
   {
-    "key": "alermItem",
     "index": 0,
     "title": "秋葉原",
     "isAvailable": true,
@@ -25,7 +24,6 @@
     "timeZoneEnd": "12:00"
   },
   {
-    "key": "alermItem",
     "index": 1,
     "title": "川崎駅",
     "isAvailable": true,

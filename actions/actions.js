@@ -29,6 +29,11 @@ export const deleteAlermItem = index => ({
   type: DEF.ALERM_LIST.DELETE,
   index: index,
 });
+// アラーム項目：リフレッシュ
+export const refleshAlermItem = coords => ({
+  type: DEF.ALERM_LIST.REFLESH,
+  coords: coords,
+});
 // 有効／無効切替
 export const setAlermAvailable = index => ({
   type: DEF.ALERM_LIST.EDIT_AVAILABLE,

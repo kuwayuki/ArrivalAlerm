@@ -10,7 +10,14 @@ const INITIAL_STATE = {
 export const ownInfo = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case DEF.OWN_INFO.EDIT_COORDS:
-      return { ...state, coords: action.coords };
+      return {
+        ...state,
+        coords: {
+          latitude: action.coords.latitude,
+          longitude: action.coords.longitude,
+          speed: action.coords.speed,
+        },
+      };
     case DEF.OWN_INFO.EDIT_INTERVAL:
       return { ...state, interval: action.interval };
     default:

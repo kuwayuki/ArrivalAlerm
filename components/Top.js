@@ -8,6 +8,8 @@ import {
   Button,
   FlatList,
   Switch,
+  Vibration,
+  Notifications,
 } from 'react-native';
 import { Header } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
@@ -18,23 +20,32 @@ import {
   setOwnInfoCoords,
   addAlermItem,
   deleteAlermItem,
+  refleshAlermItem,
   setAlermAvailable,
 } from '../actions/actions';
+import { Location, TaskManager } from 'expo';
+const LOCATION_TASK_NAME = 'background-location-task';
 
 let json = require('../assets/setting.json');
 async function getJsonData(props) {
   var matchData = json.filter(function(item, index) {
     // 通知項目情報取得
-    if (item.key == 'alermItem') {
-      // 通知箇所との距離取得
-      item.distance = utils.getDistance(
-        props.ownInfo.coords.latitude,
-        props.ownInfo.coords.longitude,
-        item.coords.latitude,
-        item.coords.longitude
-      );
+    if (item.index != null) {
+      // // 通知箇所との距離取得
+      // item.distance = utils.getDistance(
+      //   props.ownInfo.coords.latitude,
+      //   props.ownInfo.coords.longitude,
+      //   item.coords.latitude,
+      //   item.coords.longitude
+      // );
 
+      // 一定の距離以内の場合はバイブレーション
+      if (item.distance < 2) {
+        // const PATTERN = [1000, 2000, 3000];
+        // Vibration.vibrate(PATTERN);
+      }
       props.addAlermItem(item);
+      // props.refleshAlermItem(props.ownInfo.coords);
     }
   });
 }
@@ -44,20 +55,66 @@ export class Top extends Component {
     super(props);
   }
 
+  // componentWillReceiveProps() {
+  //   propsOwnInfo = this.props;
+  //   console.log('ccc');
+  // }
+  // componentWillUpdate() {
+  //   propsOwnInfo = this.props;
+  //   console.log('eee');
+  // }
+  // componentDidUpdate() {
+  //   propsOwnInfo = this.props;
+  //   console.log('fff');
+  // }
+
+  // timerGetPosition = () => {
+  //   this.interval = setInterval(() => {
+  //     return 'aaa';
+  //   }, 1000);
+  // };
+
   async componentDidMount() {
     try {
       // 現在地取得
       const position = await getCurrentPosition(5000);
       this.props.setOwnInfoCoords(position.coords);
-
+      // this.timerGetPosition();
       // 設定済情報取得
       await getJsonData(this.props);
+      Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+        // accuracy: Location.Accuracy.High,
+        // accuracy: Location.Accuracy.BestForNavigation,
+        accuracy: Location.Accuracy.Balanced,
+        // timeInterval: 10000,
+        // distanceInterval: 100,
+      });
     } catch (e) {
-      alert(e.message);
+      // alert(e.message);
     }
   }
 
   render() {
+    const setStore = (coords, props) => {
+      props.setOwnInfoCoords(coords);
+      props.refleshAlermItem(coords);
+    };
+
+    TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
+      if (this.props.alermList.length == 0) {
+        getJsonData(this.props);
+        return;
+      }
+      if (error) {
+        console.log(error);
+        return;
+      }
+      if (data) {
+        const { locations } = data;
+        setStore(locations[0].coords, this.props);
+      }
+    });
+
     const swipeBtns = index => [
       {
         text: '削除',
@@ -69,11 +126,6 @@ export class Top extends Component {
       },
     ];
 
-    const switchValue = index => {
-      console.log(index);
-      // this.props.setAlermAvailable(index);
-    };
-
     return (
       <View style={styles.container}>
         <Header
@@ -82,7 +134,7 @@ export class Top extends Component {
           rightComponent={{
             icon: 'add',
             color: '#fff',
-            onPress: () => this.props.navigation.navigate('Stack2'),
+            onPress: () => this.props.navigation.navigate('NewRegist'),
           }}
         />
         <FlatList
@@ -97,14 +149,22 @@ export class Top extends Component {
               <View style={styles.ListRow}>
                 <Text
                   style={styles.itemFocus}
-                  onPress={() => this.props.navigation.navigate('Stack2')}>
-                  {item.distance}
+                  onPress={() => this.props.navigation.navigate('NewRegist')}>
+                  {utils.getDistance(
+                    this.props.ownInfo.coords.latitude,
+                    this.props.ownInfo.coords.longitude,
+                    item.coords.latitude,
+                    item.coords.longitude
+                  )}
                   {'\nkm'}
                 </Text>
                 <Text
                   style={styles.item}
+                  selectable={false}
+                  accessible={false}
+                  allowFontScaling={false}
                   // onPress={() => alert(item.title)}>
-                  onPress={() => this.props.navigation.navigate('Stack2')}>
+                  onPress={() => this.props.navigation.navigate('NewRegist')}>
                   {item.title}
                   {'\n'}
                   {item.interval +
@@ -184,13 +244,14 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapStateToProps(state) {
+const mapStateToProps = state => {
   return state;
-}
+};
 const mapDispatchToProps = {
   setOwnInfoCoords,
   addAlermItem,
   deleteAlermItem,
+  refleshAlermItem,
   setAlermAvailable,
 };
 
