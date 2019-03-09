@@ -14,39 +14,38 @@ const INITIAL_ITEM = {
   timeZoneEnd: '12:00',
 };
 
-// const INITIAL_ITEM = {
-//   index: 0,
-//   title: '',
-//   isAvailable: true,
-//   isAlermed: false,
-//   alermMessage: '目的地に到着しました。',
-//   alermDistance: '1000',
-//   distance: '0', // いる？
-//   interval: 'auto',
-//   coords: { latitude: null, longitude: null },
-//   timeZoneStart: '5:00',
-//   timeZoneEnd: '12:00',
-// };
+const INITIAL_ITEM_2 = {
+  index: 7,
+  title: '',
+  isAvailable: true,
+  isAlermed: false,
+  alermMessage: '目的地に到着しました。',
+  alermDistance: '1000',
+  distance: '0', // いる？
+  interval: 'auto',
+  coords: { latitude: null, longitude: null },
+  timeZoneStart: '5:00',
+  timeZoneEnd: '12:00',
+};
 
 const INITIAL_STATE = [
-  INITIAL_ITEM,
-  INITIAL_ITEM,
-  INITIAL_ITEM,
-  INITIAL_ITEM,
-  INITIAL_ITEM,
-  INITIAL_ITEM,
-  INITIAL_ITEM,
-  INITIAL_ITEM,
 ];
 
 export const alermList = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case DEF.ALERM_LIST.ADD:
-      return { ...state, title: action.title };
+      return [...state, action.alermItem];
     case DEF.ALERM_LIST.EDIT:
-      return { ...state, title: action.title };
+      return state.map(el =>
+        el.index === action.index ? action.alermItem : el
+      );
     case DEF.ALERM_LIST.DELETE:
-      return { ...state, title: '' };
+      // state.filter(el => console.log(el));
+      return state.filter(el => el.index !== action.index);
+    case DEF.ALERM_LIST.EDIT_AVAILABLE:
+      var temp = state[action.index];
+      temp.isAvailable = !temp.isAvailable;
+      return state.map(el => (el.index === action.index ? temp : el));
     default:
       return state;
   }

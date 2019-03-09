@@ -1,16 +1,14 @@
 [
   // 設定各種
   {
-    "coords": {
-      "latitude": null,
-      "longitude": null
-    },
+    "key": "setting",
     "interval": "auto",
     "isFree": true,
     "index": 0,
   },
   // ↓通知地点情報
   {
+    "key": "alermItem",
     "index": 0,
     "title": "秋葉原",
     "isAvailable": true,
@@ -20,13 +18,14 @@
     "distance": "0", // いる？
     "interval": "auto",
     "coords": {
-      "latitude": 35.53136621897242,
-      "longitude": 139.6968913078308
+      "latitude": 35.69839680452033,
+      "longitude": 139.77308750152588
     },
     "timeZoneStart": "5:00",
     "timeZoneEnd": "12:00"
   },
   {
+    "key": "alermItem",
     "index": 1,
     "title": "川崎駅",
     "isAvailable": true,

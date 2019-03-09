@@ -13,61 +13,66 @@ import { Header } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 import { connect } from 'react-redux';
 import * as utils from '../containers/utils';
-let json = require('../assets/setting.json');
+import { getCurrentPosition } from '../containers/position';
+import {
+  setOwnInfoCoords,
+  addAlermItem,
+  deleteAlermItem,
+  setAlermAvailable,
+} from '../actions/actions';
 
-const getJsonData = () => {
-  // console.log(json);
-  // console.log(json[0]);
-  // console.log(json[1]);
-  // console.log(json[0].index);
-};
+let json = require('../assets/setting.json');
+async function getJsonData(props) {
+  var matchData = json.filter(function(item, index) {
+    // 通知項目情報取得
+    if (item.key == 'alermItem') {
+      // 通知箇所との距離取得
+      item.distance = utils.getDistance(
+        props.ownInfo.coords.latitude,
+        props.ownInfo.coords.longitude,
+        item.coords.latitude,
+        item.coords.longitude
+      );
+
+      props.addAlermItem(item);
+    }
+  });
+}
 
 export class Top extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props);
-    getJsonData();
-
-    this.state = {
-      data: [
-        {
-          title: '秋葉原駅',
-          isAvailable: true,
-          distance: '10.0\nkm',
-          interval: '5秒',
-          timeZone: '5:00 ~ 12:00',
-        },
-        {
-          title: '川崎駅',
-          isAvailable: false,
-          distance: '10.0\nkm',
-          interval: '5秒',
-          timeZone: '5:00 ~ 12:00',
-        },
-        {
-          title: '川崎駅',
-          isAvailable: false,
-          distance: '10.0\nkm',
-          interval: '5秒',
-          timeZone: '5:00 ~ 12:00',
-        },
-      ],
-    };
   }
-  switchValue = value => {
-    this.setState({ switching: value });
-    const switchText = value ? 'ON' : 'OFF';
-  };
+
+  async componentDidMount() {
+    try {
+      // 現在地取得
+      const position = await getCurrentPosition(5000);
+      this.props.setOwnInfoCoords(position.coords);
+
+      // 設定済情報取得
+      await getJsonData(this.props);
+    } catch (e) {
+      alert(e.message);
+    }
+  }
 
   render() {
-    const swipeBtns = [
+    const swipeBtns = index => [
       {
         text: '削除',
         backgroundColor: 'red',
         underlayColor: 'rgba(0,0,0,1)',
-        // onPress: () => { this._completePhrase({ item, index }) },
+        onPress: () => {
+          this.props.deleteAlermItem(index);
+        },
       },
     ];
+
+    const switchValue = index => {
+      console.log(index);
+      // this.props.setAlermAvailable(index);
+    };
 
     return (
       <View style={styles.container}>
@@ -86,14 +91,14 @@ export class Top extends Component {
           keyExtractor={this._keyExtractor}
           renderItem={({ item }) => (
             <Swipeout
-              right={swipeBtns}
+              right={swipeBtns(item.index)}
               autoClose={true}
               backgroundColor="transparent">
               <View style={styles.ListRow}>
                 <Text
                   style={styles.itemFocus}
                   onPress={() => this.props.navigation.navigate('Stack2')}>
-                  {utils.distanceMtoKm(item.distance)}
+                  {item.distance}
                   {'\nkm'}
                 </Text>
                 <Text
@@ -102,11 +107,15 @@ export class Top extends Component {
                   onPress={() => this.props.navigation.navigate('Stack2')}>
                   {item.title}
                   {'\n'}
-                  {item.interval + ' ' + item.timeZoneStart + '～' + item.timeZoneEnd}
+                  {item.interval +
+                    ' ' +
+                    item.timeZoneStart +
+                    '～' +
+                    item.timeZoneEnd}
                 </Text>
                 <Switch
                   style={styles.itemSwitch}
-                  onValueChange={this.switchValue}
+                  onValueChange={() => this.props.setAlermAvailable(item.index)}
                   value={item.isAvailable}
                 />
               </View>
@@ -178,5 +187,14 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
   return state;
 }
+const mapDispatchToProps = {
+  setOwnInfoCoords,
+  addAlermItem,
+  deleteAlermItem,
+  setAlermAvailable,
+};
 
-export default connect(mapStateToProps)(Top);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Top);
