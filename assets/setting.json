@@ -4,39 +4,5 @@
     "key": "setting",
     "interval": "auto",
     "isFree": true,
-    "setIndex": 0,
-  },
-  // ↓通知地点情報
-  {
-    "index": 0,
-    "title": "秋葉原",
-    "isAvailable": true,
-    "isAlermed": false,
-    "alermMessage": "目的地に到着しました。",
-    "alermDistance": "1000",
-    "distance": "0", // いる？
-    "interval": "auto",
-    "coords": {
-      "latitude": 35.69839680452033,
-      "longitude": 139.77308750152588
-    },
-    "timeZoneStart": "5:00",
-    "timeZoneEnd": "12:00"
-  },
-  {
-    "index": 1,
-    "title": "川崎駅",
-    "isAvailable": true,
-    "isAlermed": false,
-    "alermMessage": "目的地に到着しました。",
-    "alermDistance": "1000",
-    "distance": "10000", // いる？
-    "interval": "auto",
-    "coords": {
-      "latitude": 35.53136621897242,
-      "longitude": 139.6968913078308
-    },
-    "timeZoneStart": "5:00",
-    "timeZoneEnd": "12:00"
   }
 ]

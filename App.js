@@ -25,18 +25,12 @@ const Stack = createStackNavigator(
     NewRegist: {
       screen: NewRegist,
       navigationOptions: {
-        title: null,
-        headerMode: 'none',
-        headerBackTitle: 'Backa',
-        headerBackTitleVisible: false,
         // title: '新規登録',
       },
     },
     EditRegist: {
       screen: EditRegist,
       navigationOptions: {
-        header: null,
-        headerBackTitleVisible: false,
       },
     },
   },

@@ -13,6 +13,7 @@ import { getCurrentPosition } from '../containers/position';
 import { addAlermItem } from '../actions/actions';
 import { INITIAL_ITEM } from '../constants/constants';
 import { Header } from 'react-native-elements';
+import * as json from '../containers/jsonFile';
 
 let timer = null;
 
@@ -32,16 +33,17 @@ export class NewRegist extends React.Component {
     };
   }
   // マーカークリック
-  markerClick = () => {
+  async markerClick() {
     let item = {};
     Object.assign(item, INITIAL_ITEM);
     let markers = this.state.markers.slice();
-    item.index = this.props.alermList.length;
+    item.index = await json.getSetIndex();
     item.title = markers[0].title;
     item.coords = markers[0].latlng;
     this.props.addAlermItem(item);
+    json.addAsyncStorage(item);
     this.props.navigation.navigate('Top');
-  };
+  }
 
   timerGetPosition = () => {
     this.interval = setInterval(() => {

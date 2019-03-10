@@ -1,6 +1,11 @@
 import * as DEF from '../constants/constants';
 
 // ★自分情報★ //////////////////////
+// 設定全般
+export const setOwnInfo = setting => ({
+  type: DEF.OWN_INFO.SETTING,
+  setting: setting,
+});
 // 現在地地点情報：設定
 export const setOwnInfoCoords = coords => ({
   type: DEF.OWN_INFO.EDIT_COORDS,
@@ -11,6 +16,11 @@ export const setOwnInfoInterval = interval => ({
   type: DEF.OWN_INFO.EDIT_COORDS,
   interval: interval,
 });
+// 選択通知情報：設定
+export const setOwnInfoSelectedIndex = selectedIndex => ({
+  type: DEF.OWN_INFO.EDIT_SELECTED_INDEX,
+  selectedIndex: selectedIndex,
+});
 
 // ★アラームリスト★ //////////////////////
 // アラーム項目：追加
@@ -19,9 +29,8 @@ export const addAlermItem = alermItem => ({
   alermItem: alermItem,
 });
 // アラーム項目：編集
-export const setAlermItem = (index, alermItem) => ({
+export const setAlermItem = (alermItem) => ({
   type: DEF.ALERM_LIST.EDIT,
-  index: index,
   alermItem: alermItem,
 });
 // アラーム項目：削除

@@ -9,8 +9,10 @@ export const ALERM_LIST = {
 
 unique = '_OWN_INFO';
 export const OWN_INFO = {
+  SETTING: 'SETTING' + unique,
   EDIT_COORDS: 'EDIT_COORDS' + unique,
   EDIT_INTERVAL: 'EDIT_INTERVAL' + unique,
+  EDIT_SELECTED_INDEX: 'EDIT_SELECTED_INDEX' + unique,
 };
 
 export const VIBRATION_PATTERN = {
@@ -26,9 +28,39 @@ export const INITIAL_ITEM = {
   isAlermed: false,
   alermMessage: '目的地に到着しました。',
   alermDistance: 1000,
-  distance: 0,
   interval: 'auto',
   coords: { latitude: null, longitude: null },
-  timeZoneStart: '5:00',
-  timeZoneEnd: '12:00',
+  isLimitTimeZone: false,
+  timeZoneStart: "12:00",
+  timeZoneEnd: "12:00",
+  isLimitWeekDay: false,
+  isMonday: true,
+  isTuesday: true,
+  isWednesday: true,
+  isThursday: true,
+  isFriday: true,
+  isSunday: true,
+  isSaturday: true,
 };
+
+export const WEEK_DAY = ['月', '火', '水', '木', '金', '土', '日'];
+
+export const DISTANCE_KIND = [
+  {
+    value: 100,
+  },
+  {
+    value: 300,
+  },
+  {
+    value: 500,
+  },
+  {
+    value: 1000,
+  },
+  {
+    value: 3000,
+  },
+];
+export const MAX_TRIAL = 2;
+export const MAX_OFFICAL = 8;
