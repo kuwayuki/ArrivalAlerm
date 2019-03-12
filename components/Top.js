@@ -8,15 +8,14 @@ import {
   Button,
   FlatList,
   Switch,
-  Vibration,
-  Notifications,
+  AsyncStorage,
 } from 'react-native';
 import { Header } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 import { connect } from 'react-redux';
 import * as utils from '../containers/utils';
 import * as json from '../containers/jsonFile';
-import { getCurrentPosition } from '../containers/position';
+import { checkPosition, getCurrentPosition } from '../containers/position';
 import {
   setOwnInfo,
   setOwnInfoCoords,
@@ -27,55 +26,58 @@ import {
   setAlermAvailable,
 } from '../actions/actions';
 import * as DEF from '../constants/constants';
-import { Location, TaskManager } from 'expo';
+import { Location, TaskManager, Notifications } from 'expo';
 const LOCATION_TASK_NAME = 'background-location-task';
+
+TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
+  if (error) {
+    console.log(error);
+    return;
+  }
+  if (data) {
+    const { locations } = data;
+    await json.mergeStorageDataOwnInfo(locations[0]);
+    // AsyncStorageより情報取得
+    let alermList = await json.getAllStorageDataAlermList();
+    let ownInfo = await json.getStorageDataOwnInfo();
+    checkPosition(ownInfo, alermList);
+  }
+});
 
 export class Top extends Component {
   constructor(props) {
     super(props);
   }
-
+  _handleNotification = notification => {
+    if (notification.origin === 'selected') {
+      // バックグラウンドで起動中に通知がタップされたとき
+    } else if (notification.origin === 'received') {
+      // アプリ起動中に通知を受け取った
+    }
+  };
   async componentDidMount() {
     try {
+      Notifications.addListener(this._handleNotification);
+      TaskManager.unregisterAllTasksAsync();
+      await utils.initNotification();
       // 現在地取得
       const position = await getCurrentPosition(5000);
       this.props.setOwnInfoCoords(position.coords);
-      // this.timerGetPosition();
       // 設定済情報取得
       await json.getJsonData(this.props);
-      // Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-      //   // accuracy: Location.Accuracy.High,
-      //   // accuracy: Location.Accuracy.BestForNavigation,
-      //   accuracy: Location.Accuracy.Balanced,
-      //   // timeInterval: 10000,
-      //   // distanceInterval: 100,
-      // });
+      Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+        // accuracy: Location.Accuracy.High,
+        // accuracy: Location.Accuracy.BestForNavigation,
+        accuracy: Location.Accuracy.Balanced,
+        timeInterval: 10000,
+        // distanceInterval: 100,
+      });
     } catch (e) {
       // alert(e.message);
     }
   }
 
   render() {
-    const setStore = (coords, props) => {
-      props.setOwnInfoCoords(coords);
-      props.refleshAlermItem(coords);
-    };
-
-    // TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
-    //   if (this.props.alermList.length == 0) {
-    //     // json.getJsonData(this.props);
-    //     return;
-    //   }
-    //   if (error) {
-    //     // console.log(error);
-    //     return;
-    //   }
-    //   if (data) {
-    //     const { locations } = data;
-    //     setStore(locations[0].coords, this.props);
-    //   }
-    // });
-
     const newRegistBtn = () => {
       let count = this.props.alermList.length;
       if (this.props.ownInfo.isFree && count > DEF.MAX_TRIAL) {
@@ -110,7 +112,10 @@ export class Top extends Component {
           leftComponent={{
             icon: 'settings',
             color: '#fff',
-            onPress: () => json.clearAsyncStorage(),
+            onPress: () => {
+              TaskManager.unregisterAllTasksAsync();
+              json.clearAsyncStorage();
+            },
           }}
           centerComponent={{ text: 'Home', style: { color: '#fff' } }}
           rightComponent={{
@@ -122,7 +127,7 @@ export class Top extends Component {
         <FlatList
           data={this.props.alermList}
           extraData={this.props.alermList}
-          keyExtractor={this._keyExtractor}
+          keyExtractor={item => item.id}
           renderItem={({ item }) => (
             <Swipeout
               right={swipeBtns(item.index)}
@@ -134,15 +139,30 @@ export class Top extends Component {
                   onPress={() => editRegistBtn(item.index)}>
                   {utils.getDistance(this.props.ownInfo.coords, item.coords)}
                 </Text>
-                <Text
-                  style={styles.item}
-                  selectable={false}
-                  accessible={false}
-                  allowFontScaling={false}
-                  // onPress={() => alert(item.title)}>
-                  onPress={() => editRegistBtn(item.index)}>
-                  {item.title}
-                </Text>
+                <View style={styles.viewMiddle}>
+                  <Text
+                    style={styles.item}
+                    selectable={false}
+                    accessible={false}
+                    allowFontScaling={false}
+                    ellipsizeMode={'tail'}
+                    numberOfLines={1}
+                    // onPress={() => alert(item.title)}>
+                    onPress={() => editRegistBtn(item.index)}>
+                    {item.title}
+                  </Text>
+                  <Text
+                    style={styles.item}
+                    selectable={false}
+                    accessible={false}
+                    allowFontScaling={false}
+                    ellipsizeMode={'tail'}
+                    numberOfLines={1}
+                    // onPress={() => alert(item.title)}>
+                    onPress={() => editRegistBtn(item.index)}>
+                    {item.title}
+                  </Text>
+                </View>
                 <Switch
                   style={styles.itemSwitch}
                   onValueChange={() => this.props.setAlermAvailable(item.index)}
@@ -204,8 +224,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     // backgroundColor: '#000000',
   },
+  viewMiddle: {
+    width: '60%',
+  },
   item: {
-    width: '58%',
+    padding: 3,
     fontSize: 18,
   },
   itemSwitch: {

@@ -16,7 +16,12 @@ import MapView, { UrlTile, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { connect } from 'react-redux';
 import { getCurrentPosition } from '../containers/position';
 import { setAlermItem } from '../actions/actions';
-import { INITIAL_ITEM, DISTANCE_KIND, WEEK_DAY } from '../constants/constants';
+import {
+  INITIAL_ITEM,
+  DISTANCE_KIND,
+  DISTANCE_KIND_METER,
+  WEEK_DAY,
+} from '../constants/constants';
 import {
   Header,
   Input,
@@ -28,7 +33,9 @@ import {
 import * as json from '../containers/jsonFile';
 import { Dropdown } from 'react-native-material-dropdown';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import * as utils from '../containers/utils';
 let listIndex = 0;
+let selectTimer = 0; // 0:start / 1:end
 
 const getListIndex = props => {
   let index = 0;
@@ -39,16 +46,33 @@ const getListIndex = props => {
     index++;
   }
 };
+
+const getSelectedDistanceIndex = alermDistance => {
+  let index = 0;
+  for (let meter of DISTANCE_KIND_METER) {
+    if (meter == alermDistance) {
+      return index;
+    }
+    index++;
+  }
+  return 9;
+};
+
 export class EditRegist extends React.Component {
   constructor(props) {
     super(props);
     listIndex = getListIndex(props);
+    let selectIndex = getSelectedDistanceIndex(
+      props.alermList[listIndex].alermDistance
+    );
     this.state = {
+      isSelectedDistance: selectIndex != 9,
+      selectedDistanceIndex: selectIndex,
       title: props.alermList[listIndex].title,
       isAvailable: props.alermList[listIndex].isAvailable,
       isAlermed: props.alermList[listIndex].isAlermed,
       alermMessage: props.alermList[listIndex].alermMessage,
-      alermDistance: props.alermList[listIndex].alermDistance,
+      alermDistance: String(props.alermList[listIndex].alermDistance),
       interval: props.alermList[listIndex].interval,
       isLimitTimeZone: props.alermList[listIndex].isLimitTimeZone,
       timeZoneStart: props.alermList[listIndex].timeZoneStart,
@@ -84,7 +108,7 @@ export class EditRegist extends React.Component {
     let markers = this.state.markers.slice();
     item.title = this.state.title;
     item.alermMessage = this.state.alermMessage;
-    item.alermDistance = this.state.alermDistance;
+    item.alermDistance = Number(this.state.alermDistance);
     item.coords = this.state.coords;
     item.isLimitTimeZone = this.state.isLimitTimeZone;
     item.timeZoneStart = this.state.timeZoneStart;
@@ -103,6 +127,36 @@ export class EditRegist extends React.Component {
     this.props.navigation.navigate('Top');
   }
 
+  //
+  selectedDistanceClick = selectedDistanceIndex => {
+    this.setState({ selectedDistanceIndex });
+    let selectMeter = 1000;
+    switch (selectedDistanceIndex) {
+      case 0:
+        selectMeter = DISTANCE_KIND_METER[0];
+        break;
+      case 1:
+        selectMeter = DISTANCE_KIND_METER[1];
+        break;
+      case 2:
+        selectMeter = DISTANCE_KIND_METER[2];
+        break;
+      case 3:
+        selectMeter = DISTANCE_KIND_METER[3];
+        break;
+      case 4:
+        selectMeter = DISTANCE_KIND_METER[4];
+        break;
+      case 5:
+        selectMeter = DISTANCE_KIND_METER[5];
+        break;
+      case 6:
+        selectMeter = DISTANCE_KIND_METER[6];
+        break;
+    }
+    this.setState({ alermDistance: String(selectMeter) });
+  };
+
   markerSetting = e => {
     const position = e.nativeEvent.coordinate;
     const marker_copy = this.state.markers.slice();
@@ -114,18 +168,52 @@ export class EditRegist extends React.Component {
     });
   };
 
-  _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+  _showDateTimePicker = target => {
+    selectTimer = target;
+    this.setState({ isDateTimePickerVisible: true });
+  };
 
   _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
   _handleDatePicked = time => {
-    console.log('A date has been picked: ', new Date());
-    // console.log('A date has been picked: ', time.toLocaleString());
+    if (selectTimer == 0) {
+      this.setState({ timeZoneStart: utils.getTimeFromDateTime(time) });
+    } else {
+      this.setState({ timeZoneEnd: utils.getTimeFromDateTime(time) });
+    }
     this._hideDateTimePicker();
   };
 
   render() {
-    const buttons = ['100M', '300M', '500M', '1KM', '3KM', '5KM'];
+    const checkBoxContainer = (index, stateWeekDay) => {
+      return (
+        <CheckBox
+          containerStyle={styles.checkBox}
+          textStyle={styles.checkBox}
+          title={WEEK_DAY[index]}
+          checked={stateWeekDay}
+          onPress={() => {
+            switch (index) {
+              case 0:
+                return this.setState({ isMonday: !stateWeekDay });
+              case 1:
+                return this.setState({ isTuesday: !stateWeekDay });
+              case 2:
+                return this.setState({ isWednesday: !stateWeekDay });
+              case 3:
+                return this.setState({ isThursday: !stateWeekDay });
+              case 4:
+                return this.setState({ isFriday: !stateWeekDay });
+              case 5:
+                return this.setState({ isSaturday: !stateWeekDay });
+              case 6:
+                return this.setState({ isSunday: !stateWeekDay });
+            }
+          }}
+          iconRight
+        />
+      );
+    };
     return (
       <View style={styles.container}>
         <Header
@@ -181,27 +269,39 @@ export class EditRegist extends React.Component {
               />
             ))}
           </MapView>
-          <ButtonGroup onPress={this.updateIndex} buttons={buttons} />
-          <SectionList
-            sections={[
-              {
-                title: '通知距離',
-                data: [this.state.alermDistance],
-              },
-            ]}
-            renderItem={({ item }) => (
-              <Dropdown
-                data={DISTANCE_KIND}
-                value={item}
-                containerStyle={styles.itemDrompDown}
-                onChangeText={alermDistance => this.setState({ alermDistance })}
+          <Text style={styles.sectionHeader}>通知距離</Text>
+          <View style={styles.rowTextSetting}>
+            <Text style={styles.text}>
+              {this.state.isSelectedDistance ? '選択入力' : '手動入力'}
+            </Text>
+            <Switch
+              style={styles.setting}
+              onValueChange={isSelectedDistance =>
+                this.setState({ isSelectedDistance })
+              }
+              value={this.state.isSelectedDistance}
+            />
+          </View>
+          {this.state.isSelectedDistance ? (
+            <View style={styles.bgColorWhite}>
+              <ButtonGroup
+                onPress={this.selectedDistanceClick}
+                selectedButtonStyle={styles.bgColorSelected}
+                buttons={DISTANCE_KIND}
+                selectedIndex={this.state.selectedDistanceIndex}
               />
-            )}
-            renderSectionHeader={({ section }) => (
-              <Text style={styles.sectionHeader}>{section.title}</Text>
-            )}
-            keyExtractor={(item, index) => index}
-          />
+            </View>
+          ) : (
+            <View style={styles.rowTextSetting}>
+              <TextInput
+                style={styles.textNum}
+                keyboardType={'number-pad'}
+                onChangeText={alermDistance => this.setState({ alermDistance })}
+                value={this.state.alermDistance}
+              />
+              <Text>メートル</Text>
+            </View>
+          )}
           <Text style={styles.sectionHeader}>通知曜日</Text>
           <View style={styles.rowTextSetting}>
             <Text style={styles.text}>曜日を指定</Text>
@@ -215,80 +315,26 @@ export class EditRegist extends React.Component {
           </View>
           {this.state.isLimitWeekDay && (
             <View style={styles.rowStyle}>
-              <CheckBox
-                containerStyle={styles.checkBox}
-                textStyle={styles.checkBox}
-                title={WEEK_DAY[0]}
-                checked={this.state.isMonday}
-                onPress={() =>
-                  this.setState({ isMonday: !this.state.isMonday })
-                }
-                iconRight
-              />
-              <CheckBox
-                containerStyle={styles.checkBox}
-                textStyle={styles.checkBox}
-                title={WEEK_DAY[1]}
-                checked={this.state.isTuesday}
-                onPress={() =>
-                  this.setState({ isTuesday: !this.state.isTuesday })
-                }
-                iconRight
-              />
-              <CheckBox
-                containerStyle={styles.checkBox}
-                textStyle={styles.checkBox}
-                title={WEEK_DAY[2]}
-                checked={this.state.isWednesday}
-                onPress={() =>
-                  this.setState({ isWednesday: !this.state.isWednesday })
-                }
-                iconRight
-              />
-              <CheckBox
-                containerStyle={styles.checkBox}
-                textStyle={styles.checkBox}
-                title={WEEK_DAY[3]}
-                checked={this.state.isThursday}
-                onPress={() =>
-                  this.setState({ isThursday: !this.state.isThursday })
-                }
-                iconRight
-              />
-              <CheckBox
-                containerStyle={styles.checkBox}
-                textStyle={styles.checkBox}
-                title={WEEK_DAY[4]}
-                checked={this.state.isFriday}
-                onPress={() =>
-                  this.setState({ isFriday: !this.state.isFriday })
-                }
-                iconRight
-              />
-              <CheckBox
-                containerStyle={styles.checkBox}
-                textStyle={styles.checkBox}
-                title={WEEK_DAY[5]}
-                checked={this.state.isSaturday}
-                onPress={() =>
-                  this.setState({ isSaturday: !this.state.isSaturday })
-                }
-                iconRight
-              />
-              <CheckBox
-                containerStyle={styles.checkBox}
-                textStyle={styles.checkBox}
-                title={WEEK_DAY[6]}
-                checked={this.state.isSunday}
-                onPress={() =>
-                  this.setState({ isSunday: !this.state.isSunday })
-                }
-                iconRight
-              />
+              {checkBoxContainer(0, this.state.isMonday)}
+              {checkBoxContainer(1, this.state.isTuesday)}
+              {checkBoxContainer(2, this.state.isWednesday)}
+              {checkBoxContainer(3, this.state.isThursday)}
+              {checkBoxContainer(4, this.state.isFriday)}
+              {checkBoxContainer(5, this.state.isSaturday)}
+              {checkBoxContainer(6, this.state.isSunday)}
             </View>
           )}
           <DateTimePicker
             mode={'time'}
+            date={
+              selectTimer == 0
+                ? new Date('2019/03/10 ' + this.state.timeZoneStart)
+                : new Date('2019/03/10 ' + this.state.timeZoneEnd)
+            }
+            titleIOS={
+              selectTimer == 0 ? '通知時間帯：開始' : '通知時間帯：終了'
+            }
+            confirmTextIOS={'OK'}
             isVisible={this.state.isDateTimePickerVisible}
             onConfirm={this._handleDatePicked}
             onCancel={this._hideDateTimePicker}
@@ -308,13 +354,13 @@ export class EditRegist extends React.Component {
             <View style={styles.rowStyle}>
               <Text
                 style={styles.timeZone}
-                onPress={() => this._showDateTimePicker()}>
+                onPress={() => this._showDateTimePicker(0)}>
                 {this.state.timeZoneStart}
               </Text>
               <Text>～</Text>
               <Text
                 style={styles.timeZone}
-                onPress={() => this._showDateTimePicker()}>
+                onPress={() => this._showDateTimePicker(1)}>
                 {this.state.timeZoneEnd}
               </Text>
             </View>
@@ -333,7 +379,7 @@ const styles = StyleSheet.create({
   },
   map: {
     // flex: 1
-    height: 300,
+    height: 220,
   },
   sectionHeader: {
     color: 'white',
@@ -372,15 +418,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.25,
     // textAlign: 'right',
   },
-  itemDrompDown: {
-    margin: 0,
-    paddingLeft: 250,
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-    // textAlign: 'right',
-  },
   rowStyle: {
     flex: 1,
     flexDirection: 'row',
@@ -408,6 +445,20 @@ const styles = StyleSheet.create({
     width: '80%',
     paddingLeft: 30,
     fontSize: 18,
+    // textAlign: 'right',
+  },
+  bgColorWhite: {
+    backgroundColor: 'white',
+  },
+  bgColorSelected: {
+    backgroundColor: 'cornflowerblue',
+  },
+  textNum: {
+    width: '80%',
+    padding: 9,
+    paddingLeft: 30,
+    fontSize: 18,
+    textAlign: 'right',
   },
   setting: {
     paddingLeft: 150,
