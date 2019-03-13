@@ -16,7 +16,7 @@ export async function getSetIndex() {
 
 export async function isExistsAsyncStorage(props) {
   const value = await AsyncStorage.getItem(UNIQUE_SETTING);
-  if (value !== null) {
+  if (value != null) {
     props.setOwnInfo(JSON.parse(value));
     return true;
   }
@@ -36,8 +36,38 @@ export async function clearAsyncStorage(index) {
 }
 
 // jsonファイルから通知情報を取得
+export async function getAllStorageDataAlermList() {
+  var listAlermItem = [];
+  const keys = await AsyncStorage.getAllKeys();
+  const items = await AsyncStorage.multiGet(keys);
+  let index = 0;
+  for (let key of keys) {
+    if (key.indexOf(UNIQUE_ALERM) != -1) {
+      listAlermItem.push(JSON.parse(items[index][1]));
+    }
+    index++;
+  }
+  return listAlermItem;
+}
+
+export async function setStorageDataOwnInfo(ownInfo) {
+  await AsyncStorage.setItem(UNIQUE_SETTING, ownInfo);
+}
+
+export async function mergeStorageDataOwnInfo(parts) {
+  await AsyncStorage.mergeItem(UNIQUE_SETTING, JSON.stringify(parts));
+}
+
+export async function getStorageDataOwnInfo() {
+  let ownInfo = await AsyncStorage.getItem(UNIQUE_SETTING);
+  return JSON.parse(ownInfo);
+}
+
+// jsonファイルから通知情報を取得
 export async function getJsonData(props) {
-  if (isExistsAsyncStorage(props)) {
+  let isRet = await isExistsAsyncStorage(props);
+  if (isRet) {
+    console.log('AsyncStorageファイルから読み込み');
     AsyncStorage.getAllKeys((err, keys) => {
       AsyncStorage.multiGet(keys, (err, stores) => {
         stores.map((result, i, store) => {
@@ -60,6 +90,7 @@ export async function getJsonData(props) {
     });
   }
 }
+
 // jsonファイルに通知情報を追加
 export async function addJsonData(alermItem) {
   json.push(alermItem);

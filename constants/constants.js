@@ -31,8 +31,8 @@ export const INITIAL_ITEM = {
   interval: 'auto',
   coords: { latitude: null, longitude: null },
   isLimitTimeZone: false,
-  timeZoneStart: "12:00",
-  timeZoneEnd: "12:00",
+  timeZoneStart: '12:00',
+  timeZoneEnd: '12:00',
   isLimitWeekDay: false,
   isMonday: true,
   isTuesday: true,
@@ -44,23 +44,17 @@ export const INITIAL_ITEM = {
 };
 
 export const WEEK_DAY = ['月', '火', '水', '木', '金', '土', '日'];
-
 export const DISTANCE_KIND = [
-  {
-    value: 100,
-  },
-  {
-    value: 300,
-  },
-  {
-    value: 500,
-  },
-  {
-    value: 1000,
-  },
-  {
-    value: 3000,
-  },
+  '100M',
+  '300M',
+  '500M',
+  '1KM',
+  '3KM',
+  '5KM',
+  '10KM',
 ];
+
+export const DISTANCE_KIND_METER = [100, 300, 500, 1000, 3000, 5000, 10000];
+
 export const MAX_TRIAL = 2;
 export const MAX_OFFICAL = 8;
