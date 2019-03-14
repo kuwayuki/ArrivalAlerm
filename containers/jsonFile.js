@@ -28,6 +28,9 @@ export async function addAsyncStorage(alermItem) {
     JSON.stringify(alermItem)
   );
 }
+export async function setPartAsyncStorage(index, setItem) {
+  AsyncStorage.mergeItem(UNIQUE_ALERM + index, JSON.stringify(setItem));
+}
 export async function deleteAsyncStorage(index) {
   AsyncStorage.removeItem(UNIQUE_ALERM + index);
 }

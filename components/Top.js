@@ -9,6 +9,8 @@ import {
   FlatList,
   Switch,
   AsyncStorage,
+  Permissions,
+  Alert,
 } from 'react-native';
 import { Header } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
@@ -29,6 +31,49 @@ import * as DEF from '../constants/constants';
 import { Location, TaskManager, Notifications } from 'expo';
 const LOCATION_TASK_NAME = 'background-location-task';
 
+// async function registerForPushNotificationsAsync() {
+//   const { status: existingStatus } = await Permissions.getAsync(
+//     Permissions.NOTIFICATIONS
+//   );
+//   let finalStatus = existingStatus;
+
+//   // only ask if permissions have not already been determined, because
+//   // iOS won't necessarily prompt the user a second time.
+//   if (existingStatus !== 'granted') {
+//     // Android remote notification permissions are granted during the app
+//     // install, so this will only ask on iOS
+//     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+//     finalStatus = status;
+//   }
+
+//   // Stop here if the user did not grant permissions
+//   if (finalStatus !== 'granted') {
+//     return;
+//   }
+
+//   // Get the token that uniquely identifies this device
+//   let token = await Notifications.getExpoPushTokenAsync();
+
+//   const PUSH_ENDPOINT = 'https://your-server.com/users/push-token';
+
+//   // POST the token to your backend server from where you can retrieve it to send push notifications.
+//   return fetch(PUSH_ENDPOINT, {
+//     method: 'POST',
+//     headers: {
+//       Accept: 'application/json',
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       token: {
+//         value: token,
+//       },
+//       user: {
+//         username: 'Brent',
+//       },
+//     }),
+//   });
+// }
+
 TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
   if (error) {
     console.log(error);
@@ -40,7 +85,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     // AsyncStorageより情報取得
     let alermList = await json.getAllStorageDataAlermList();
     let ownInfo = await json.getStorageDataOwnInfo();
-    checkPosition(ownInfo, alermList);
+    await checkPosition(ownInfo, alermList);
   }
 });
 
@@ -50,13 +95,16 @@ export class Top extends Component {
   }
   _handleNotification = notification => {
     if (notification.origin === 'selected') {
-      // バックグラウンドで起動中に通知がタップされたとき
+      //バックグラウンドで通知
     } else if (notification.origin === 'received') {
-      // アプリ起動中に通知を受け取った
+      //フォアグラウンドで通知
+      Alert.alert('通知が来ました:' + notification.data.name);
+      console.log(notification.data.name);
     }
   };
   async componentDidMount() {
     try {
+      // registerForPushNotificationsAsync();
       Notifications.addListener(this._handleNotification);
       TaskManager.unregisterAllTasksAsync();
       await utils.initNotification();
@@ -69,8 +117,9 @@ export class Top extends Component {
         // accuracy: Location.Accuracy.High,
         // accuracy: Location.Accuracy.BestForNavigation,
         accuracy: Location.Accuracy.Balanced,
-        timeInterval: 10000,
-        // distanceInterval: 100,
+        // timeInterval: 100000,
+        // showsBackgroundLocationIndicator: true,
+        // distanceInterval: 10,
       });
     } catch (e) {
       // alert(e.message);
@@ -112,9 +161,24 @@ export class Top extends Component {
           leftComponent={{
             icon: 'settings',
             color: '#fff',
-            onPress: () => {
-              TaskManager.unregisterAllTasksAsync();
-              json.clearAsyncStorage();
+            onPress: async () => {
+              console.log('ccc');
+              // let notificationId = await Notifications.presentLocalNotificationAsync(
+              // let local = {
+              let notificationId = await Notifications.presentLocalNotificationAsync(
+                {
+                  title: 'This is crazy',
+                  body: 'Your mind will blow after reading this',
+                }
+              );
+              // let token = await Notifications.getExpoPushTokenAsync();
+              // console.log(token);
+
+              // Notifications.scheduleLocalNotificationAsync(local, {
+              //   time: new Date().getTime() + 1000,
+              // });
+              // TaskManager.unregisterAllTasksAsync();
+              // json.clearAsyncStorage();
             },
           }}
           centerComponent={{ text: 'Home', style: { color: '#fff' } }}
@@ -165,7 +229,12 @@ export class Top extends Component {
                 </View>
                 <Switch
                   style={styles.itemSwitch}
-                  onValueChange={() => this.props.setAlermAvailable(item.index)}
+                  onValueChange={value => {
+                    json.setPartAsyncStorage(item.index, {
+                      isAvailable: value,
+                    });
+                    this.props.setAlermAvailable(item.index);
+                  }}
                   value={item.isAvailable}
                 />
               </View>

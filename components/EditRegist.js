@@ -108,6 +108,7 @@ export class EditRegist extends React.Component {
     let markers = this.state.markers.slice();
     item.title = this.state.title;
     item.alermMessage = this.state.alermMessage;
+    item.isAlermed = false;
     item.alermDistance = Number(this.state.alermDistance);
     item.coords = this.state.coords;
     item.isLimitTimeZone = this.state.isLimitTimeZone;

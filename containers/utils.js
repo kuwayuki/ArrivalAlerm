@@ -104,3 +104,8 @@ export const getTimeFromDateTime = dateTime => {
   let localeDateTime = dateTime.toLocaleString();
   return localeDateTime.slice(localeDateTime.indexOf(' '), -3);
 };
+export const getNumTime = time => {
+  return Number(
+    time.substr(0, time.indexOf(':')) + time.substr(time.indexOf(':') + 1)
+  );
+};

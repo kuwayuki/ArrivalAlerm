@@ -3,8 +3,10 @@ import {
   PermissionsAndroid,
   Vibration,
   PushNotificationIOS,
+  AppState,
 } from 'react-native';
-import { getDistanceMeter } from './utils';
+import { getDistanceMeter, getNumTime, getTimeFromDateTime } from './utils';
+import { addAsyncStorage } from './jsonFile';
 import { Notifications, Permissions, Location, TaskManager } from 'expo';
 
 export async function getCurrentPosition(timeoutMillis = 10000) {
@@ -36,14 +38,70 @@ export const isInside = (distance, alermDistance) => {
   }
   return false;
 };
+
+const isCheckDayWeek = (weekDay, alermItem) => {
+  let isCheck = true;
+  if (alermItem.isLimitWeekDay) {
+    // 曜日指定ありかつ、対象曜日がチェックがついていない
+    if (
+      (weekDay == 0 && !alermItem.isSunday) ||
+      (weekDay == 1 && !alermItem.isMonday) ||
+      (weekDay == 2 && !alermItem.isTuesday) ||
+      (weekDay == 3 && !alermItem.isWednesday) ||
+      (weekDay == 4 && !alermItem.isThursday) ||
+      (weekDay == 5 && !alermItem.isFriday) ||
+      (weekDay == 6 && !alermItem.isSaturday)
+    ) {
+      isCheck = false;
+    }
+  }
+  return isCheck;
+};
+
+const isCheckTime = (numNowTile, alermItem) => {
+  let isCheck = true;
+  // 現在時刻が有効であるかのチェック
+  if (alermItem.isLimitTimeZone) {
+    let timeZoneStart = getNumTime(alermItem.timeZoneStart);
+    let timeZoneEnd = getNumTime(alermItem.timeZoneEnd);
+    // 時刻指定ありかつ、対象時刻内でない場合
+    if (timeZoneStart < timeZoneEnd) {
+      // 一般的な時間比較
+      if (!(timeZoneStart <= numNowTile && numNowTile <= timeZoneEnd)) {
+        // 時間外なので処理をしない
+        isCheck = false;
+      }
+    } else if (timeZoneStart == timeZoneEnd) {
+      // まあ同じ時間はないかな
+      if (!(timeZoneStart == numNowTile)) {
+        // 時間外なので処理をしない
+        isCheck = false;
+      }
+    } else {
+      // 終了日時の方が早いので、0時跨ぎ
+      if (
+        !(
+          (timeZoneStart <= numNowTile && numNowTile <= 2400) ||
+          (0 <= numNowTile && numNowTile <= timeZoneEnd)
+        )
+      ) {
+        // 時間外なので処理をしない
+        isCheck = false;
+      }
+    }
+  }
+  return isCheck;
+};
+
 // 登録地点が一定距離内に存在するかチェック
-export const checkPosition = (ownInfo, alermList) => {
+export async function checkPosition(ownInfo, alermList) {
   let isReturn = false;
   // 現在時刻を取得
-  let nowTime = null;
+  var date = new Date();
+  let nowTime = getTimeFromDateTime(date);
+  let numNowTile = getNumTime(nowTime);
   // 現在曜日を取得を取得
-  let weekDay = null;
-
+  let weekDay = date.getDay();
   // 対象が通知範囲内かのチェック
   for (let alermItem of alermList) {
     // 有効の場合のみチェック
@@ -57,49 +115,36 @@ export const checkPosition = (ownInfo, alermList) => {
           // 範囲外なら何もしない
           continue;
         }
-        // 曜日が有効であるかのチェック
-        if (alermItem.isLimitWeekDay) {
-          // 曜日指定ありかつ、対象曜日がチェックがついていない
-          if (!alermItem.isMonday) {
-            continue;
-          }
-        }
-        // 現在時刻が有効であるかのチェック
-        if (alermItem.isLimitTimeZone) {
-          let timeZoneStart = alermItem.timeZoneStart;
-          let timeZoneEnd = alermItem.timeZoneEnd;
-          // 時刻指定ありかつ、対象時刻内でない場合
-          if (timeZoneStart < timeZoneEnd) {
-            // 一般的な時間比較
-          } else if (timeZoneStart == timeZoneEnd) {
-            // まあ同じ時間はないかな
-          } else {
-            // 終了日時の方が早いので、0時跨ぎ
-          }
-        }
+        // 曜日チェック
+        if (!isCheckDayWeek(weekDay, alermItem)) continue;
+
+        // 時間チェック
+        if (!isCheckTime(numNowTile, alermItem)) continue;
+
         // 対象範囲なので通知を行う
-        // console.log('通知!');
-        // TODO:alerm
-        // TODO:set
         const PATTERN = [1000, 2000, 3000];
         // Vibration.vibrate(PATTERN);
 
-        Notifications.presentLocalNotificationAsync({
-          title: 'ネスゴサナイ',
-          body: alermItem.alermMessage,
-          sound: true,
-          data: {
-            message: alermItem.alermMessage,
-          },
-        });
+        // console.log(notificationId);
+        // Notifications.presentLocalNotificationAsync({
+        //   title: 'ネスゴサナイ',
+        //   body: alermItem.alermMessage,
+        //   sound: true,
+        //   data: {
+        //     message: alermItem.alermMessage,
+        //   },
+        // });
+
+        // alermItem.isAlermed = true;
+        // addAsyncStorage(alermItem);
       } else {
         // 通知済の場合は、範囲外なら未通知に変更
         if (!isIn) {
-          // TODO:set
-          console.log('通知回復');
+          alermItem.isAlermed = false;
+          addAsyncStorage(alermItem);
         }
       }
     }
   }
   return;
-};
+}

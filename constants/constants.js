@@ -39,8 +39,8 @@ export const INITIAL_ITEM = {
   isWednesday: true,
   isThursday: true,
   isFriday: true,
-  isSunday: true,
   isSaturday: true,
+  isSunday: true,
 };
 
 export const WEEK_DAY = ['月', '火', '水', '木', '金', '土', '日'];
