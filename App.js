@@ -6,7 +6,6 @@ import Top from './components/Top';
 import NewRegist from './components/NewRegist';
 import EditRegist from './components/EditRegist';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { Card } from 'react-native-paper';
 import { Provider } from 'react-redux';
 import { reducers } from './reducers/index';
 

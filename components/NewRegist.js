@@ -1,15 +1,7 @@
 import * as React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Platform,
-  PermissionsAndroid,
-} from 'react-native';
-import MapView, { UrlTile, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { View, StyleSheet } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { connect } from 'react-redux';
-import { getCurrentPosition } from '../containers/position';
 import { addAlermItem } from '../actions/actions';
 import { INITIAL_ITEM } from '../constants/constants';
 import { Header } from 'react-native-elements';

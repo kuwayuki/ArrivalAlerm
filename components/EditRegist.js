@@ -6,15 +6,10 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  Image,
-  Platform,
-  PermissionsAndroid,
   SectionList,
-  Picker,
 } from 'react-native';
-import MapView, { UrlTile, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { connect } from 'react-redux';
-import { getCurrentPosition } from '../containers/position';
 import { setAlermItem } from '../actions/actions';
 import {
   INITIAL_ITEM,
@@ -24,14 +19,11 @@ import {
 } from '../constants/constants';
 import {
   Header,
-  Input,
   CheckBox,
-  Icon,
   Button,
   ButtonGroup,
 } from 'react-native-elements';
 import * as json from '../containers/jsonFile';
-import { Dropdown } from 'react-native-material-dropdown';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import * as utils from '../containers/utils';
 let listIndex = 0;

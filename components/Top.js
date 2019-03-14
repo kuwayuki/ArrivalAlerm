@@ -1,17 +1,5 @@
 import React, { Component } from 'react';
-import {
-  AppRegistry,
-  SectionList,
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  FlatList,
-  Switch,
-  AsyncStorage,
-  Permissions,
-  Alert,
-} from 'react-native';
+import { StyleSheet, Text, View, FlatList, Switch, Alert } from 'react-native';
 import { Header } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 import { connect } from 'react-redux';
@@ -28,51 +16,8 @@ import {
   setAlermAvailable,
 } from '../actions/actions';
 import * as DEF from '../constants/constants';
-import { Location, TaskManager, Notifications } from 'expo';
+import { Location, TaskManager, Notifications, Vibration } from 'expo';
 const LOCATION_TASK_NAME = 'background-location-task';
-
-// async function registerForPushNotificationsAsync() {
-//   const { status: existingStatus } = await Permissions.getAsync(
-//     Permissions.NOTIFICATIONS
-//   );
-//   let finalStatus = existingStatus;
-
-//   // only ask if permissions have not already been determined, because
-//   // iOS won't necessarily prompt the user a second time.
-//   if (existingStatus !== 'granted') {
-//     // Android remote notification permissions are granted during the app
-//     // install, so this will only ask on iOS
-//     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-//     finalStatus = status;
-//   }
-
-//   // Stop here if the user did not grant permissions
-//   if (finalStatus !== 'granted') {
-//     return;
-//   }
-
-//   // Get the token that uniquely identifies this device
-//   let token = await Notifications.getExpoPushTokenAsync();
-
-//   const PUSH_ENDPOINT = 'https://your-server.com/users/push-token';
-
-//   // POST the token to your backend server from where you can retrieve it to send push notifications.
-//   return fetch(PUSH_ENDPOINT, {
-//     method: 'POST',
-//     headers: {
-//       Accept: 'application/json',
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//       token: {
-//         value: token,
-//       },
-//       user: {
-//         username: 'Brent',
-//       },
-//     }),
-//   });
-// }
 
 TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
   if (error) {
@@ -96,15 +41,19 @@ export class Top extends Component {
   _handleNotification = notification => {
     if (notification.origin === 'selected') {
       //バックグラウンドで通知
+      // const PATTERN = [1000, 2000, 3000];
+      // Vibration.vibrate(PATTERN);
     } else if (notification.origin === 'received') {
       //フォアグラウンドで通知
-      Alert.alert('通知が来ました:' + notification.data.name);
-      console.log(notification.data.name);
+      Alert.alert(notification.data.message);
+    } else if (notification.origin !== 'granted') {
+      // (iOS向け) 位置情報利用の許可をユーザーに求める
+      // await Permissions.askAsync(Permissions.LOCATION);
     }
   };
+
   async componentDidMount() {
     try {
-      // registerForPushNotificationsAsync();
       Notifications.addListener(this._handleNotification);
       TaskManager.unregisterAllTasksAsync();
       await utils.initNotification();
@@ -117,9 +66,9 @@ export class Top extends Component {
         // accuracy: Location.Accuracy.High,
         // accuracy: Location.Accuracy.BestForNavigation,
         accuracy: Location.Accuracy.Balanced,
-        // timeInterval: 100000,
+        // timeInterval: 1000,
         // showsBackgroundLocationIndicator: true,
-        // distanceInterval: 10,
+        distanceInterval: 100,
       });
     } catch (e) {
       // alert(e.message);
@@ -163,22 +112,8 @@ export class Top extends Component {
             color: '#fff',
             onPress: async () => {
               console.log('ccc');
-              // let notificationId = await Notifications.presentLocalNotificationAsync(
-              // let local = {
-              let notificationId = await Notifications.presentLocalNotificationAsync(
-                {
-                  title: 'This is crazy',
-                  body: 'Your mind will blow after reading this',
-                }
-              );
-              // let token = await Notifications.getExpoPushTokenAsync();
-              // console.log(token);
-
-              // Notifications.scheduleLocalNotificationAsync(local, {
-              //   time: new Date().getTime() + 1000,
-              // });
-              // TaskManager.unregisterAllTasksAsync();
-              // json.clearAsyncStorage();
+              TaskManager.unregisterAllTasksAsync();
+              json.clearAsyncStorage();
             },
           }}
           centerComponent={{ text: 'Home', style: { color: '#fff' } }}
@@ -211,7 +146,6 @@ export class Top extends Component {
                     allowFontScaling={false}
                     ellipsizeMode={'tail'}
                     numberOfLines={1}
-                    // onPress={() => alert(item.title)}>
                     onPress={() => editRegistBtn(item.index)}>
                     {item.title}
                   </Text>
@@ -222,7 +156,6 @@ export class Top extends Component {
                     allowFontScaling={false}
                     ellipsizeMode={'tail'}
                     numberOfLines={1}
-                    // onPress={() => alert(item.title)}>
                     onPress={() => editRegistBtn(item.index)}>
                     {item.title}
                   </Text>

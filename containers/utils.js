@@ -1,5 +1,5 @@
 import { Notifications, Permissions } from 'expo';
-
+import { Platform, PermissionsAndroid } from 'react-native';
 export const distanceMtoKm = meter => {
   var n = 2;
   let km = Math.floor((meter / 1000) * Math.pow(10, n)) / Math.pow(10, n);
@@ -14,6 +14,19 @@ export async function initNotification() {
   );
   const currentNotificationPermission = permissions[Permissions.NOTIFICATIONS];
   const currentLocationPermission = permissions[Permissions.LOCATION];
+  if (Platform.OS === 'android') {
+    const ok = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    );
+    if (!ok) {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        throw new Error();
+      }
+    }
+  }
 
   if (currentNotificationPermission.status !== 'granted') {
     // (iOS向け) プッシュ通知の許可をユーザーに求める
@@ -23,9 +36,8 @@ export async function initNotification() {
       return;
     }
   }
-
   // プッシュ通知を開いた時のイベントハンドラーを登録
-  Notifications.addListener(this.handleNotification);
+  // Notifications.addListener(this.handleNotification);
 
   if (currentLocationPermission !== 'granted') {
     // (iOS向け) 位置情報利用の許可をユーザーに求める

@@ -1,29 +1,9 @@
-import {
-  Platform,
-  PermissionsAndroid,
-  Vibration,
-  PushNotificationIOS,
-  AppState,
-} from 'react-native';
+import { Vibration } from 'react-native';
 import { getDistanceMeter, getNumTime, getTimeFromDateTime } from './utils';
 import { addAsyncStorage } from './jsonFile';
-import { Notifications, Permissions, Location, TaskManager } from 'expo';
+import { Notifications } from 'expo';
 
 export async function getCurrentPosition(timeoutMillis = 10000) {
-  if (Platform.OS === 'android') {
-    const ok = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-    );
-    if (!ok) {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-      );
-      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-        throw new Error();
-      }
-    }
-  }
-
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(resolve, reject, {
       timeout: timeoutMillis,
@@ -122,21 +102,17 @@ export async function checkPosition(ownInfo, alermList) {
         if (!isCheckTime(numNowTile, alermItem)) continue;
 
         // 対象範囲なので通知を行う
-        const PATTERN = [1000, 2000, 3000];
-        // Vibration.vibrate(PATTERN);
+        Notifications.presentLocalNotificationAsync({
+          title: 'ネスゴサナイ',
+          body: alermItem.alermMessage,
+          sound: true,
+          data: {
+            message: alermItem.alermMessage,
+          },
+        });
 
-        // console.log(notificationId);
-        // Notifications.presentLocalNotificationAsync({
-        //   title: 'ネスゴサナイ',
-        //   body: alermItem.alermMessage,
-        //   sound: true,
-        //   data: {
-        //     message: alermItem.alermMessage,
-        //   },
-        // });
-
-        // alermItem.isAlermed = true;
-        // addAsyncStorage(alermItem);
+        alermItem.isAlermed = true;
+        addAsyncStorage(alermItem);
       } else {
         // 通知済の場合は、範囲外なら未通知に変更
         if (!isIn) {
