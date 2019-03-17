@@ -2,7 +2,8 @@
   // 設定各種
   {
     "key": "setting",
-    "interval": "auto",
+    "performance": 0,
+    "distance": 100,
     "isFree": true,
   }
 ]

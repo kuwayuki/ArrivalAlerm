@@ -2,8 +2,8 @@ import * as DEF from '../constants/constants';
 
 const INITIAL_STATE = {
   coords: { latitude: null, longitude: null, speed: null },
-  interval: 5,
-  intervalSetting: 'auto',
+  distance: 100,
+  performance: 0,
   isFree: true,
   selectedIndex: 0,
 };
@@ -14,6 +14,8 @@ export const ownInfo = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isFree: action.setting.isFree,
+        distance: Number(action.setting.distance),
+        performance: Number(action.setting.performance),
       };
     case DEF.OWN_INFO.EDIT_COORDS:
       return {
@@ -24,8 +26,12 @@ export const ownInfo = (state = INITIAL_STATE, action) => {
           speed: action.coords.speed,
         },
       };
-    case DEF.OWN_INFO.EDIT_INTERVAL:
-      return { ...state, interval: action.interval };
+    case DEF.OWN_INFO.EDIT_SETTING:
+      return {
+        ...state,
+        distance: action.ownInfo.distance,
+        performance: action.ownInfo.performance,
+      };
     case DEF.OWN_INFO.EDIT_SELECTED_INDEX:
       return { ...state, selectedIndex: action.selectedIndex };
     default:

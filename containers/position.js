@@ -102,7 +102,7 @@ export async function checkPosition(ownInfo, alermList) {
         if (!isCheckTime(numNowTile, alermItem)) continue;
 
         // 対象範囲なので通知を行う
-        Notifications.presentLocalNotificationAsync({
+        await Notifications.presentLocalNotificationAsync({
           title: 'ネスゴサナイ',
           body: alermItem.alermMessage,
           sound: true,

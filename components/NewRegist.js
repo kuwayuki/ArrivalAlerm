@@ -37,13 +37,6 @@ export class NewRegist extends React.Component {
     this.props.navigation.navigate('Top');
   }
 
-  timerGetPosition = () => {
-    this.interval = setInterval(() => {
-      // console.log('aaaa');
-      return 'aaa';
-    }, 1000);
-  };
-
   markerSetting = e => {
     const position = e.nativeEvent.coordinate;
     const marker_copy = this.state.markers.slice();

@@ -54,7 +54,7 @@ export async function getAllStorageDataAlermList() {
 }
 
 export async function setStorageDataOwnInfo(ownInfo) {
-  await AsyncStorage.setItem(UNIQUE_SETTING, ownInfo);
+  await AsyncStorage.setItem(UNIQUE_SETTING, JSON.stringify(ownInfo));
 }
 
 export async function mergeStorageDataOwnInfo(parts) {

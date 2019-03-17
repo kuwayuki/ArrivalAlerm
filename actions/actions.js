@@ -12,9 +12,9 @@ export const setOwnInfoCoords = coords => ({
   coords: coords,
 });
 // 現在地地点情報取得間隔：設定
-export const setOwnInfoInterval = interval => ({
-  type: DEF.OWN_INFO.EDIT_COORDS,
-  interval: interval,
+export const setOwnInfoSetting = ownInfo => ({
+  type: DEF.OWN_INFO.EDIT_SETTING,
+  ownInfo: ownInfo,
 });
 // 選択通知情報：設定
 export const setOwnInfoSelectedIndex = selectedIndex => ({
@@ -29,7 +29,7 @@ export const addAlermItem = alermItem => ({
   alermItem: alermItem,
 });
 // アラーム項目：編集
-export const setAlermItem = (alermItem) => ({
+export const setAlermItem = alermItem => ({
   type: DEF.ALERM_LIST.EDIT,
   alermItem: alermItem,
 });

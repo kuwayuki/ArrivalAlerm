@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, FlatList, Switch, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Switch,
+  Alert,
+  Vibration,
+} from 'react-native';
 import { Header } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 import { connect } from 'react-redux';
 import * as utils from '../containers/utils';
 import * as json from '../containers/jsonFile';
+import { _handleNotification, startLocation } from '../containers/location';
 import { checkPosition, getCurrentPosition } from '../containers/position';
 import {
   setOwnInfo,
@@ -16,63 +25,30 @@ import {
   setAlermAvailable,
 } from '../actions/actions';
 import * as DEF from '../constants/constants';
-import { Location, TaskManager, Notifications, Vibration } from 'expo';
-const LOCATION_TASK_NAME = 'background-location-task';
-
-TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
-  if (error) {
-    console.log(error);
-    return;
-  }
-  if (data) {
-    const { locations } = data;
-    await json.mergeStorageDataOwnInfo(locations[0]);
-    // AsyncStorageより情報取得
-    let alermList = await json.getAllStorageDataAlermList();
-    let ownInfo = await json.getStorageDataOwnInfo();
-    await checkPosition(ownInfo, alermList);
-  }
-});
+import { Location, TaskManager, Notifications, Speech } from 'expo';
 
 export class Top extends Component {
   constructor(props) {
     super(props);
   }
-  _handleNotification = notification => {
-    if (notification.origin === 'selected') {
-      //バックグラウンドで通知
-      // const PATTERN = [1000, 2000, 3000];
-      // Vibration.vibrate(PATTERN);
-    } else if (notification.origin === 'received') {
-      //フォアグラウンドで通知
-      Alert.alert(notification.data.message);
-    } else if (notification.origin !== 'granted') {
-      // (iOS向け) 位置情報利用の許可をユーザーに求める
-      // await Permissions.askAsync(Permissions.LOCATION);
-    }
-  };
 
-  async componentDidMount() {
+  async componentWillMount() {
     try {
-      Notifications.addListener(this._handleNotification);
-      TaskManager.unregisterAllTasksAsync();
       await utils.initNotification();
       // 現在地取得
       const position = await getCurrentPosition(5000);
       this.props.setOwnInfoCoords(position.coords);
       // 設定済情報取得
       await json.getJsonData(this.props);
-      Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-        // accuracy: Location.Accuracy.High,
-        // accuracy: Location.Accuracy.BestForNavigation,
-        accuracy: Location.Accuracy.Balanced,
-        // timeInterval: 1000,
-        // showsBackgroundLocationIndicator: true,
-        distanceInterval: 100,
-      });
+
+      Notifications.addListener(_handleNotification);
     } catch (e) {
       // alert(e.message);
     }
+  }
+
+  componentDidUpdate() {
+    startLocation(this.props.ownInfo, this.props.alermList);
   }
 
   render() {
@@ -90,6 +66,10 @@ export class Top extends Component {
     const editRegistBtn = index => {
       this.props.setOwnInfoSelectedIndex(index);
       this.props.navigation.navigate('EditRegist');
+    };
+
+    const settingBtn = index => {
+      this.props.navigation.navigate('Setting');
     };
 
     const swipeBtns = index => [
@@ -110,11 +90,7 @@ export class Top extends Component {
           leftComponent={{
             icon: 'settings',
             color: '#fff',
-            onPress: async () => {
-              console.log('ccc');
-              TaskManager.unregisterAllTasksAsync();
-              json.clearAsyncStorage();
-            },
+            onPress: () => settingBtn(),
           }}
           centerComponent={{ text: 'Home', style: { color: '#fff' } }}
           rightComponent={{
@@ -141,23 +117,19 @@ export class Top extends Component {
                 <View style={styles.viewMiddle}>
                   <Text
                     style={styles.item}
-                    selectable={false}
-                    accessible={false}
-                    allowFontScaling={false}
-                    ellipsizeMode={'tail'}
                     numberOfLines={1}
                     onPress={() => editRegistBtn(item.index)}>
                     {item.title}
                   </Text>
                   <Text
-                    style={styles.item}
-                    selectable={false}
-                    accessible={false}
-                    allowFontScaling={false}
-                    ellipsizeMode={'tail'}
+                    style={styles.itemDis}
                     numberOfLines={1}
                     onPress={() => editRegistBtn(item.index)}>
-                    {item.title}
+                    {utils.getRimDistance(
+                      this.props.ownInfo.coords,
+                      item.coords,
+                      item.alermDistance
+                    )}
                   </Text>
                 </View>
                 <Switch
@@ -230,8 +202,14 @@ const styles = StyleSheet.create({
     width: '60%',
   },
   item: {
-    padding: 3,
-    fontSize: 18,
+    paddingTop: 5,
+    paddingLeft: 3,
+    fontSize: 20,
+  },
+  itemDis: {
+    paddingTop: 5,
+    paddingLeft: 3,
+    fontSize: 14,
   },
   itemSwitch: {
     width: 60,

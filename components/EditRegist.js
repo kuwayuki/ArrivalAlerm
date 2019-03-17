@@ -99,7 +99,8 @@ export class EditRegist extends React.Component {
     Object.assign(item, this.props.alermList[listIndex]);
     let markers = this.state.markers.slice();
     item.title = this.state.title;
-    item.alermMessage = this.state.alermMessage;
+    item.alermMessage = this.state.title + 'に到着しました。';
+    // item.alermMessage = this.state.alermMessage;
     item.isAlermed = false;
     item.alermDistance = Number(this.state.alermDistance);
     item.coords = this.state.coords;

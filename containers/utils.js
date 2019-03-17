@@ -49,22 +49,22 @@ export const getDistance = (coords1, coords2) => {
   if (coords1 == null || coords2 == null) {
     return '--';
   }
-  let lat1 = coords1.latitude;
-  let lng1 = coords1.longitude;
-  let lat2 = coords2.latitude;
-  let lng2 = coords2.longitude;
-  lat1 *= Math.PI / 180;
-  lng1 *= Math.PI / 180;
-  lat2 *= Math.PI / 180;
-  lng2 *= Math.PI / 180;
-  let distance =
-    6371 *
-    Math.acos(
-      Math.cos(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1) +
-        Math.sin(lat1) * Math.sin(lat2)
-    );
 
+  let distance = getDistanceMeter(coords1, coords2) / 1000;
   return distanceKeta(distance) + '\n' + distanceUnit(distance);
+};
+
+export const getRimDistance = (coords1, coords2, alermDistance) => {
+  let disstance = getDistanceMeter(coords1, coords2);
+  let message = '';
+  if (disstance < alermDistance) {
+    message = '通知範囲内';
+  } else {
+    disstance = (disstance - alermDistance) / 1000;
+    let distanceMe = distanceKeta(disstance) + distanceUnit(disstance);
+    message = '残り' + distanceMe + 'で通知します';
+  }
+  return message;
 };
 
 export const getDistanceMeter = (coords1, coords2) => {

@@ -11,7 +11,7 @@ unique = '_OWN_INFO';
 export const OWN_INFO = {
   SETTING: 'SETTING' + unique,
   EDIT_COORDS: 'EDIT_COORDS' + unique,
-  EDIT_INTERVAL: 'EDIT_INTERVAL' + unique,
+  EDIT_SETTING: 'EDIT_SETTING' + unique,
   EDIT_SELECTED_INDEX: 'EDIT_SELECTED_INDEX' + unique,
 };
 
@@ -52,6 +52,16 @@ export const DISTANCE_KIND = [
   '3KM',
   '5KM',
   '10KM',
+];
+
+export const PERFORMANCE_KIND = [
+  '最低',
+  '低',
+  '微低',
+  '標準',
+  '微高',
+  '高',
+  '最高',
 ];
 
 export const DISTANCE_KIND_METER = [100, 300, 500, 1000, 3000, 5000, 10000];

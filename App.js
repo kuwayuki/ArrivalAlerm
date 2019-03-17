@@ -5,6 +5,7 @@ import { createStore } from 'redux';
 import Top from './components/Top';
 import NewRegist from './components/NewRegist';
 import EditRegist from './components/EditRegist';
+import Setting from './components/Setting';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { Provider } from 'react-redux';
 import { reducers } from './reducers/index';
@@ -30,6 +31,12 @@ const Stack = createStackNavigator(
     EditRegist: {
       screen: EditRegist,
       navigationOptions: {
+      },
+    },
+    Setting: {
+      screen: Setting,
+      navigationOptions: {
+        // title: '新規登録',
       },
     },
   },
