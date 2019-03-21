@@ -25,6 +25,7 @@ import {
   setAlermAvailable,
 } from '../actions/actions';
 import * as DEF from '../constants/constants';
+import { LANGUAGE } from '../constants/language';
 import { Location, TaskManager, Notifications, Speech } from 'expo';
 
 export class Top extends Component {
@@ -55,9 +56,11 @@ export class Top extends Component {
     const newRegistBtn = () => {
       let count = this.props.alermList.length;
       if (this.props.ownInfo.isFree && count > DEF.MAX_TRIAL) {
-        alert('無料版は' + (DEF.MAX_TRIAL + 1) + '件までしか登録できません。');
+        alert(
+          LANGUAGE.wd.freeAlert1 + (DEF.MAX_TRIAL + 1) + LANGUAGE.wd.freeAlert2
+        );
       } else if (count > DEF.MAX_OFFICAL) {
-        alert(DEF.MAX_OFFICAL + 1 + '件までしか登録できません。');
+        alert(DEF.MAX_OFFICAL + 1 + LANGUAGE.wd.freeAlert2);
       } else {
         this.props.navigation.navigate('NewRegist');
       }
@@ -74,7 +77,7 @@ export class Top extends Component {
 
     const swipeBtns = index => [
       {
-        text: '削除',
+        text: LANGUAGE.wd.del,
         backgroundColor: 'red',
         underlayColor: 'rgba(0,0,0,1)',
         onPress: () => {
@@ -92,7 +95,7 @@ export class Top extends Component {
             color: '#fff',
             onPress: () => settingBtn(),
           }}
-          centerComponent={{ text: 'Home', style: { color: '#fff' } }}
+          centerComponent={{ icon: 'home', color: '#fff' }}
           rightComponent={{
             icon: 'add',
             color: '#fff',
@@ -125,11 +128,13 @@ export class Top extends Component {
                     style={styles.itemDis}
                     numberOfLines={1}
                     onPress={() => editRegistBtn(item.index)}>
-                    {utils.getRimDistance(
-                      this.props.ownInfo.coords,
-                      item.coords,
-                      item.alermDistance
-                    )}
+                    {item.isAvailable
+                      ? utils.getRimDistance(
+                          this.props.ownInfo.coords,
+                          item.coords,
+                          item.alermDistance
+                        )
+                      : LANGUAGE.wd.distanceMessageNone}
                   </Text>
                 </View>
                 <Switch

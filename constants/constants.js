@@ -1,3 +1,4 @@
+import { LANGUAGE } from '../constants/language';
 let unique = '_NAME';
 export const ALERM_LIST = {
   ADD: 'ADD' + unique,
@@ -6,6 +7,7 @@ export const ALERM_LIST = {
   REFLESH: 'REFLESH' + unique,
   EDIT_AVAILABLE: 'EDIT_AVAILABLE' + unique,
 };
+export const CLEAR = 'CLEAR_STATE';
 
 unique = '_OWN_INFO';
 export const OWN_INFO = {
@@ -23,11 +25,11 @@ export const VIBRATION_PATTERN = {
 
 export const INITIAL_ITEM = {
   index: 0,
-  title: '現在地点',
+  title: LANGUAGE.wd.alermPoint,
   isAvailable: true,
   isAlermed: false,
-  alermMessage: '目的地に到着しました。',
-  alermDistance: 1000,
+  alermMessage: LANGUAGE.wd.alermPoint + LANGUAGE.wd.arrivedNear,
+  alermDistance: 300,
   interval: 'auto',
   coords: { latitude: null, longitude: null },
   isLimitTimeZone: false,
@@ -43,7 +45,15 @@ export const INITIAL_ITEM = {
   isSunday: true,
 };
 
-export const WEEK_DAY = ['月', '火', '水', '木', '金', '土', '日'];
+export const WEEK_DAY = [
+  LANGUAGE.wd.monday,
+  LANGUAGE.wd.tuesday,
+  LANGUAGE.wd.wednesday,
+  LANGUAGE.wd.thursday,
+  LANGUAGE.wd.friday,
+  LANGUAGE.wd.saturday,
+  LANGUAGE.wd.sunday,
+];
 export const DISTANCE_KIND = [
   '100M',
   '300M',
@@ -55,13 +65,12 @@ export const DISTANCE_KIND = [
 ];
 
 export const PERFORMANCE_KIND = [
-  '最低',
-  '低',
-  '微低',
-  '標準',
-  '微高',
-  '高',
-  '最高',
+  LANGUAGE.wd.lowest,
+  LANGUAGE.wd.low,
+  LANGUAGE.wd.balanced,
+  LANGUAGE.wd.high,
+  LANGUAGE.wd.highest,
+  LANGUAGE.wd.best,
 ];
 
 export const DISTANCE_KIND_METER = [100, 300, 500, 1000, 3000, 5000, 10000];

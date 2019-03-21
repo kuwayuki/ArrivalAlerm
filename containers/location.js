@@ -10,8 +10,15 @@ import {
   getStorageDataOwnInfo,
   getAllStorageDataAlermList,
 } from '../containers/jsonFile';
-import { checkPosition, getCurrentPosition } from '../containers/position';
+import {
+  checkPosition,
+  getCurrentPosition,
+  isCheckTime,
+  isCheckDayWeek,
+} from '../containers/position';
 import { Vibration } from 'react-native';
+import { getDistanceMeter } from './utils';
+import { LANGUAGE } from '../constants/language';
 
 const LOCATION_TASK_NAME = 'background-location-task';
 
@@ -27,7 +34,7 @@ export async function _handleNotification(notification) {
       //フォアグラウンドで通知
       const PATTERN = [1000, 2000, 3000];
       Vibration.vibrate(PATTERN);
-      Speech.speak(notification.data.message, { 'language ': 'ja' });
+      Speech.speak(notification.data.message, { 'language ': LANGUAGE.locale });
     }
   } else if (notification.origin !== 'granted') {
     // (iOS向け) 位置情報利用の許可をユーザーに求める
@@ -49,51 +56,97 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     alermList = await getAllStorageDataAlermList();
     let ownInfo = await getStorageDataOwnInfo();
     await checkPosition(ownInfo, alermList);
+    await startLocation(ownInfo, alermList);
   }
   isChecking = false;
 });
 
-const getBestPerformance = alermList => {
+const getBestPerformance = (ownCoords, alermList) => {
   let accuracy = Location.Accuracy.Lowest;
-  let alermDistance = 10000;
+  let alermDistance = 1000;
+  let pointDistance = 0;
+  let hasMap = false;
   for (let alermItem of alermList) {
-    // 有効の場合のみチェック
-    if (alermItem.isAvailable) {
-      // 通知距離を取得
-      let localDis = alermItem.alermDistance;
+    // １．有効かつ、２．未通知かつ、３．曜日有効かつ、４．時刻有効の場合のみチェック
+    if (
+      alermItem.isAvailable &&
+      !alermItem.isAlermed &&
+      isCheckDayWeek(alermItem) &&
+      isCheckTime(alermItem)
+    ) {
+      // 残り通知距離を取得
+      let localDis =
+        getDistanceMeter(ownCoords, alermItem.coords) - alermItem.alermDistance;
+      hasMap = true;
       // 最小値を取得
       if (alermDistance > localDis) {
-        alermDistance = localDis;
+        // 目的地の通知地点までの距離
+        pointDistance = localDis;
+        // 一番近い目的地の通知距離
+        alermDistance = alermItem.alermDistance;
       }
     }
   }
-  if (alermDistance <= 5) {
+
+  if (!hasMap) {
+    return { accuracy: Location.Accuracy.Lowest, distance: alermDistance };
+  }
+
+  let index = 1;
+  if (ownCoords.speed < 1) {
+    // 停滞・維持レベル(目的地までの距離)
+    index = 0.1;
+  } else if (ownCoords.speed < 10) {
+    // 徒歩レベル(目的地までの距離)
+    index = 0.3;
+  } else if (ownCoords.speed < 30) {
+    // 電車・車レベル(目的地までの距離と通知距離に反比例)
+    index = 2;
+  } else {
+    // 新幹線レベル
+    index = 3;
+  }
+  if (pointDistance < 10 * index) {
     accuracy = Location.Accuracy.Highest;
-  } else if (alermDistance <= 10) {
+  } else if (pointDistance < 100 * index) {
+    // 10m範囲
     accuracy = Location.Accuracy.High;
-  } else if (alermDistance <= 100) {
+  } else if (pointDistance < 1000 * index) {
+    // 100m範囲
     accuracy = Location.Accuracy.Balanced;
-  } else if (alermDistance <= 1000) {
+  } else if (pointDistance < 3000 * index) {
+    // 1000m範囲
     accuracy = Location.Accuracy.Low;
-  } else if (alermDistance <= 3000) {
+  } else {
+    // 3000m範囲
     accuracy = Location.Accuracy.Lowest;
   }
-  return { accuracy: accuracy, distance: alermDistance };
+  // console.log({
+  //   speed: ownCoords.speed,
+  //   accuracy: accuracy,
+  //   distance: pointDistance,
+  // });
+  return { accuracy: accuracy, distance: alermDistance / 3 };
 };
 
 let beforeSetting = null;
-export const startLocation = (ownInfo, alermList) => {
+export async function startLocation(ownInfo, alermList) {
   let accuracy = Location.Accuracy.Balanced;
   let distanceInterval = 10;
   if (ownInfo != null) {
+    // 自動設定の場合
     if (ownInfo.performance == 0) {
-      if (alermList != null) {
+      if (alermList != null && alermList.length > 0) {
         // 自動取得設定
-        let retPer = getBestPerformance(alermList);
+        let retPer = getBestPerformance(ownInfo.coords, alermList);
         accuracy = retPer.accuracy;
         distanceInterval = retPer.distance;
+      } else {
+        await TaskManager.unregisterAllTasksAsync();
+        return;
       }
     } else {
+      // 手動設定の場合はそのまま設定
       accuracy = ownInfo.performance;
       distanceInterval = ownInfo.distance;
     }
@@ -105,10 +158,10 @@ export const startLocation = (ownInfo, alermList) => {
       beforeSetting.distance != nextSetting.distance)
   ) {
     beforeSetting = nextSetting;
-    TaskManager.unregisterAllTasksAsync();
-    Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+    await TaskManager.unregisterAllTasksAsync();
+    await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
       accuracy: accuracy,
       distanceInterval: distanceInterval,
     });
   }
-};
+}

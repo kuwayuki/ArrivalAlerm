@@ -8,9 +8,9 @@ import EditRegist from './components/EditRegist';
 import Setting from './components/Setting';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { Provider } from 'react-redux';
-import { reducers } from './reducers/index';
+import { rootReducer } from './reducers/index';
 
-export const store = createStore(reducers);
+export const store = createStore(rootReducer);
 
 const Stack = createStackNavigator(
   {
@@ -30,8 +30,7 @@ const Stack = createStackNavigator(
     },
     EditRegist: {
       screen: EditRegist,
-      navigationOptions: {
-      },
+      navigationOptions: {},
     },
     Setting: {
       screen: Setting,

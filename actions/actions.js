@@ -1,5 +1,8 @@
 import * as DEF from '../constants/constants';
 
+export const clearStore = setting => ({
+  type: DEF.CLEAR,
+});
 // ★自分情報★ //////////////////////
 // 設定全般
 export const setOwnInfo = setting => ({

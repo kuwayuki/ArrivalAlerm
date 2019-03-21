@@ -1,11 +1,17 @@
 import * as React from 'react';
-import { Text, Switch, View, StyleSheet } from 'react-native';
+import { Text, Switch, View, StyleSheet, Alert } from 'react-native';
 import { connect } from 'react-redux';
-import { setOwnInfoSetting } from '../actions/actions';
+import {
+  setOwnInfoSetting,
+  setOwnInfoCoords,
+  clearStore,
+} from '../actions/actions';
 import { PERFORMANCE_KIND } from '../constants/constants';
 import { Header, Button, ButtonGroup } from 'react-native-elements';
 import { startLocation } from '../containers/location';
 import * as json from '../containers/jsonFile';
+import { LANGUAGE } from '../constants/language';
+import { getCurrentPosition } from '../containers/position';
 
 export class Setting extends React.Component {
   constructor(props) {
@@ -34,8 +40,30 @@ export class Setting extends React.Component {
   }
 
   clearSetting() {
-    json.clearAsyncStorage();
-    this.props.navigation.navigate('Top');
+    Alert.alert(LANGUAGE.wd.initialize, LANGUAGE.wd.initializeQuestion, [
+      {
+        text: 'OK',
+        onPress: async () => {
+          this.props.clearStore();
+          const position = await getCurrentPosition(5000);
+          this.props.setOwnInfoCoords(position.coords);
+          Alert.alert(LANGUAGE.wd.initialize, LANGUAGE.wd.initializeOK, [
+            {
+              text: 'OK',
+              onPress: async () => {
+                json.clearAsyncStorage();
+                // 設定済情報取得
+                await json.getJsonData(this.props);
+                this.props.navigation.navigate('Top');
+              },
+            },
+          ]);
+        },
+      },
+      {
+        text: 'Cancel',
+      },
+    ]);
   }
 
   render() {
@@ -43,22 +71,26 @@ export class Setting extends React.Component {
       <View style={styles.container}>
         <Header
           leftComponent={{
-            text: '戻る',
-            style: { color: '#fff' },
+            icon: 'arrow-back',
+            color: '#fff',
             onPress: () => this.props.navigation.navigate('Top'),
           }}
-          centerComponent={{ text: '編集', style: { color: '#fff' } }}
+          centerComponent={{ icon: 'settings', color: '#fff' }}
           rightComponent={{
-            text: '更新',
+            text: LANGUAGE.wd.update,
             style: { color: '#fff' },
             onPress: () => this.settingUpdate(),
           }}
         />
-        <Text style={styles.sectionHeader}>位置情報取得</Text>
-        <Text style={styles.sectionHeader}>位置情報取得間隔</Text>
+        <Text style={styles.sectionHeader}>{LANGUAGE.wd.getLocation}</Text>
+        <Text style={styles.sectionHeader}>
+          {LANGUAGE.wd.getLocationInterval}
+        </Text>
         <View style={styles.rowTextSetting}>
           <Text style={styles.text}>
-            {this.state.performanceSelect ? '自動' : '指定'}
+            {this.state.performanceSelect
+              ? LANGUAGE.wd.auto
+              : LANGUAGE.wd.choice}
           </Text>
           <Switch
             style={styles.setting}
@@ -79,44 +111,32 @@ export class Setting extends React.Component {
           </View>
         )}
         <View style={styles.rowTextSetting}>
-          <Text>
+          <Text style={styles.textDes}>
             {!this.state.performanceSelect
-              ? '高いほど位置情報が正確になりますが、 消費電力もあがります。'
-              : '登録地点に従って自動で設定します。'}
+              ? LANGUAGE.wd.getLocationDesChoice
+              : LANGUAGE.wd.getLocationDesAuto}
           </Text>
         </View>
-        <Text style={styles.sectionHeader}>位置情報取得間隔</Text>
-        <View style={styles.rowTextSetting}>
-          <Text style={styles.text}>
-            {this.state.performanceSelect ? '自動' : '指定'}
-          </Text>
-          <Switch
-            style={styles.setting}
-            onValueChange={performanceSelect =>
-              this.setState({ performanceSelect })
-            }
-            value={this.state.performanceSelect}
-          />
-        </View>
-        {!this.state.performanceSelect && (
-          <View style={styles.bgColorWhite}>
-            <ButtonGroup
-              onPress={this.selectedDistanceClick}
-              selectedButtonStyle={styles.bgColorSelected}
-              buttons={PERFORMANCE_KIND}
-              selectedIndex={this.state.selectedDistanceIndex}
+        <Text style={styles.sectionHeader}>{LANGUAGE.wd.other}</Text>
+        {this.props.isFree && (
+          <View style={styles.rowTextSetting}>
+            <Text style={styles.textDes}>{LANGUAGE.wd.payDes}</Text>
+            <Button
+              style={styles.button}
+              title={LANGUAGE.wd.pay}
+              onPress={() => this.clearSetting()}
             />
           </View>
         )}
         <View style={styles.rowTextSetting}>
-          <Text>
-            {!this.state.performanceSelect
-              ? '高いほど位置情報が正確になりますが、 消費電力もあがります。'
-              : '登録地点に従って自動で設定します。'}
-          </Text>
+          <Text style={styles.textDes}>{LANGUAGE.wd.initializeDes}</Text>
+          <Button
+            style={styles.button}
+            buttonStyle={styles.bgColorRed}
+            title={LANGUAGE.wd.initialize}
+            onPress={() => this.clearSetting()}
+          />
         </View>
-        <Button title="更新" onPress={() => this.settingUpdate()} />
-        <Button title="初期化" onPress={() => this.clearSetting()} />
       </View>
     );
   }
@@ -153,29 +173,6 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 0.25,
   },
-  item: {
-    padding: 10,
-    margin: 0,
-    paddingLeft: 50,
-    fontSize: 18,
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-    // textAlign: 'right',
-  },
-  rowStyle: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
   rowTextSetting: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -187,20 +184,32 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
   },
+  textDes: {
+    paddingLeft: 30,
+    fontSize: 14,
+    // textAlign: 'right',
+  },
   text: {
-    width: '80%',
+    width: '60%',
     paddingLeft: 30,
     fontSize: 18,
     // textAlign: 'right',
   },
+  button: {
+    width: 90,
+    paddingRight: 20,
+  },
+  setting: {
+    width: 80,
+  },
   bgColorWhite: {
     backgroundColor: 'white',
   },
+  bgColorRed: {
+    backgroundColor: 'red',
+  },
   bgColorSelected: {
     backgroundColor: 'cornflowerblue',
-  },
-  setting: {
-    paddingLeft: 150,
   },
 });
 
@@ -209,6 +218,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = {
   setOwnInfoSetting,
+  setOwnInfoCoords,
+  clearStore,
 };
 
 export default connect(

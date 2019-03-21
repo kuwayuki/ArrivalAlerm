@@ -19,9 +19,12 @@ export const isInside = (distance, alermDistance) => {
   return false;
 };
 
-const isCheckDayWeek = (weekDay, alermItem) => {
+export const isCheckDayWeek = alermItem => {
   let isCheck = true;
   if (alermItem.isLimitWeekDay) {
+    // 現在曜日を取得を取得
+    var date = new Date();
+    let weekDay = date.getDay();
     // 曜日指定ありかつ、対象曜日がチェックがついていない
     if (
       (weekDay == 0 && !alermItem.isSunday) ||
@@ -38,10 +41,14 @@ const isCheckDayWeek = (weekDay, alermItem) => {
   return isCheck;
 };
 
-const isCheckTime = (numNowTile, alermItem) => {
+export const isCheckTime = alermItem => {
   let isCheck = true;
   // 現在時刻が有効であるかのチェック
   if (alermItem.isLimitTimeZone) {
+    // 現在時刻を取得
+    var date = new Date();
+    let nowTime = getTimeFromDateTime(date);
+    let numNowTile = getNumTime(nowTime);
     let timeZoneStart = getNumTime(alermItem.timeZoneStart);
     let timeZoneEnd = getNumTime(alermItem.timeZoneEnd);
     // 時刻指定ありかつ、対象時刻内でない場合
@@ -76,12 +83,7 @@ const isCheckTime = (numNowTile, alermItem) => {
 // 登録地点が一定距離内に存在するかチェック
 export async function checkPosition(ownInfo, alermList) {
   let isReturn = false;
-  // 現在時刻を取得
-  var date = new Date();
-  let nowTime = getTimeFromDateTime(date);
-  let numNowTile = getNumTime(nowTime);
-  // 現在曜日を取得を取得
-  let weekDay = date.getDay();
+
   // 対象が通知範囲内かのチェック
   for (let alermItem of alermList) {
     // 有効の場合のみチェック
@@ -96,10 +98,10 @@ export async function checkPosition(ownInfo, alermList) {
           continue;
         }
         // 曜日チェック
-        if (!isCheckDayWeek(weekDay, alermItem)) continue;
+        if (!isCheckDayWeek(alermItem)) continue;
 
         // 時間チェック
-        if (!isCheckTime(numNowTile, alermItem)) continue;
+        if (!isCheckTime(alermItem)) continue;
 
         // 対象範囲なので通知を行う
         await Notifications.presentLocalNotificationAsync({

@@ -4,6 +4,6 @@
     "key": "setting",
     "performance": 0,
     "distance": 100,
-    "isFree": true,
+    "isFree": false,
   }
 ]

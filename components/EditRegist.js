@@ -17,15 +17,12 @@ import {
   DISTANCE_KIND_METER,
   WEEK_DAY,
 } from '../constants/constants';
-import {
-  Header,
-  CheckBox,
-  Button,
-  ButtonGroup,
-} from 'react-native-elements';
+import { Header, CheckBox, Button, ButtonGroup } from 'react-native-elements';
 import * as json from '../containers/jsonFile';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import * as utils from '../containers/utils';
+import { LANGUAGE } from '../constants/language';
+
 let listIndex = 0;
 let selectTimer = 0; // 0:start / 1:end
 
@@ -99,7 +96,7 @@ export class EditRegist extends React.Component {
     Object.assign(item, this.props.alermList[listIndex]);
     let markers = this.state.markers.slice();
     item.title = this.state.title;
-    item.alermMessage = this.state.title + 'に到着しました。';
+    item.alermMessage = this.state.title + LANGUAGE.wd.arrivedNear;
     // item.alermMessage = this.state.alermMessage;
     item.isAlermed = false;
     item.alermDistance = Number(this.state.alermDistance);
@@ -212,13 +209,13 @@ export class EditRegist extends React.Component {
       <View style={styles.container}>
         <Header
           leftComponent={{
-            text: '戻る',
-            style: { color: '#fff' },
+            icon: 'arrow-back',
+            color: '#fff',
             onPress: () => this.props.navigation.navigate('Top'),
           }}
-          centerComponent={{ text: '編集', style: { color: '#fff' } }}
+          centerComponent={{ icon: 'edit-location', color: '#fff' }}
           rightComponent={{
-            text: '決定',
+            text: LANGUAGE.wd.decision,
             style: { color: '#fff' },
             onPress: () => this.markerClick(),
           }}
@@ -227,7 +224,7 @@ export class EditRegist extends React.Component {
           <SectionList
             sections={[
               {
-                title: 'タイトル',
+                title: LANGUAGE.wd.editTitle,
                 data: [this.state.title],
               },
             ]}
@@ -247,11 +244,12 @@ export class EditRegist extends React.Component {
             provider={PROVIDER_GOOGLE}
             style={styles.map}
             onPoiClick={e => this.markerSetting(e)}
-            initialRegion={{
-              latitude: this.state.coords.latitude,
-              longitude: this.state.coords.longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
+            onRegionChange={this.onRegionChange}
+            region={{
+              latitude: this.state.markers[0].latlng.latitude,
+              longitude: this.state.markers[0].latlng.longitude,
+              latitudeDelta: 0.00003 * this.state.alermDistance,
+              longitudeDelta: 0.00003 * this.state.alermDistance,
             }}>
             {this.state.markers.map(marker => (
               <Marker
@@ -262,11 +260,25 @@ export class EditRegist extends React.Component {
                 onPress={() => this.markerClick()}
               />
             ))}
+            <MapView.Circle
+              center={{
+                latitude: this.state.markers[0].latlng.latitude,
+                longitude: this.state.markers[0].latlng.longitude,
+              }}
+              radius={this.state.alermDistance}
+              strokeWidth={1}
+              strokeColor="darkviolet"
+              fillColor={'rgba(148,0,211,0.1)'}
+            />
           </MapView>
-          <Text style={styles.sectionHeader}>通知距離</Text>
+          <Text style={styles.sectionHeader}>
+            {LANGUAGE.wd.editAlermDistance}
+          </Text>
           <View style={styles.rowTextSetting}>
             <Text style={styles.text}>
-              {this.state.isSelectedDistance ? '選択入力' : '手動入力'}
+              {this.state.isSelectedDistance
+                ? LANGUAGE.wd.editChoiceInput
+                : LANGUAGE.wd.editManualInput}
             </Text>
             <Switch
               style={styles.setting}
@@ -293,12 +305,14 @@ export class EditRegist extends React.Component {
                 onChangeText={alermDistance => this.setState({ alermDistance })}
                 value={this.state.alermDistance}
               />
-              <Text>メートル</Text>
+              <Text>{LANGUAGE.wd.meter}</Text>
             </View>
           )}
-          <Text style={styles.sectionHeader}>通知曜日</Text>
+          <Text style={styles.sectionHeader}>
+            {LANGUAGE.wd.editAlermWeekDay}
+          </Text>
           <View style={styles.rowTextSetting}>
-            <Text style={styles.text}>曜日を指定</Text>
+            <Text style={styles.text}>{LANGUAGE.wd.editChoiceWeekDay}</Text>
             <Switch
               style={styles.setting}
               onValueChange={isLimitWeekDay =>
@@ -326,16 +340,20 @@ export class EditRegist extends React.Component {
                 : new Date('2019/03/10 ' + this.state.timeZoneEnd)
             }
             titleIOS={
-              selectTimer == 0 ? '通知時間帯：開始' : '通知時間帯：終了'
+              selectTimer == 0
+                ? LANGUAGE.wd.editAlermTimeZone + LANGUAGE.wd.start
+                : LANGUAGE.wd.editAlermTimeZone + LANGUAGE.wd.end
             }
             confirmTextIOS={'OK'}
             isVisible={this.state.isDateTimePickerVisible}
             onConfirm={this._handleDatePicked}
             onCancel={this._hideDateTimePicker}
           />
-          <Text style={styles.sectionHeader}>通知時間帯</Text>
+          <Text style={styles.sectionHeader}>
+            {LANGUAGE.wd.editAlermTimeZone}
+          </Text>
           <View style={styles.rowTextSetting}>
-            <Text style={styles.text}>時間を指定</Text>
+            <Text style={styles.text}>{LANGUAGE.wd.editAlermTimeChoice}</Text>
             <Switch
               style={styles.setting}
               onValueChange={isLimitTimeZone =>
@@ -359,7 +377,6 @@ export class EditRegist extends React.Component {
               </Text>
             </View>
           )}
-          <Button title="更新" onPress={() => this.markerClick()} />
         </ScrollView>
       </View>
     );
