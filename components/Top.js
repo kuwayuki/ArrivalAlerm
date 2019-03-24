@@ -7,14 +7,21 @@ import {
   Switch,
   Alert,
   Vibration,
+  TouchableOpacity,
 } from 'react-native';
-import { Header } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 import { connect } from 'react-redux';
 import * as utils from '../containers/utils';
 import * as json from '../containers/jsonFile';
 import { _handleNotification, startLocation } from '../containers/location';
-import { checkPosition, getCurrentPosition } from '../containers/position';
+import { topHeader } from '../containers/header';
+import {
+  checkPosition,
+  getCurrentPosition,
+  isCheckDayWeek,
+  isCheckTime,
+} from '../containers/position';
 import {
   setOwnInfo,
   setOwnInfoCoords,
@@ -27,12 +34,88 @@ import {
 import * as DEF from '../constants/constants';
 import { LANGUAGE } from '../constants/language';
 import { Location, TaskManager, Notifications, Speech } from 'expo';
+import TimerMixin from 'react-timer-mixin';
+
+const ICON_SIZE = 20;
+const statusicon = item => {
+  let status = utils.getStatusIcon(item);
+  switch (status) {
+    case DEF.STATUS.AVAILABLE:
+      return <Icon name="volume-up" size={ICON_SIZE} color="lime" />;
+    case DEF.STATUS.DISABLE:
+      return <Icon name="volume-off" size={ICON_SIZE} color="red" />;
+    case DEF.STATUS.ALERMED:
+      return <Icon name="volume-off" size={ICON_SIZE} color="red" />;
+    case DEF.STATUS.OUT_WEEK_DAY:
+      return (
+        <Icon
+          name="calendar-times-o"
+          type="font-awesome"
+          size={ICON_SIZE}
+          color="red"
+        />
+      );
+    case DEF.STATUS.OUT_TIME:
+      return <Icon name="alarm-off" size={ICON_SIZE} color="red" />;
+  }
+};
+
+const getRimDistance = (coords1, item) => {
+  let status = utils.getStatusIcon(item);
+  let coords2 = item.coords;
+  let alermDistance = item.alermDistance;
+  let disstance = utils.getDistanceMeter(coords1, item.coords);
+  let message = '';
+  switch (status) {
+    case DEF.STATUS.AVAILABLE:
+      if (disstance < alermDistance) {
+        message = '通知範囲内';
+      } else {
+        disstance = (disstance - item.alermDistance) / 1000;
+        let distanceMe =
+          utils.distanceKeta(disstance) + utils.distanceUnit(disstance);
+        message = '残り' + distanceMe + 'で通知します';
+      }
+      return message;
+    case DEF.STATUS.DISABLE:
+      return '通知オフ';
+    case DEF.STATUS.ALERMED:
+      return '既に通知済みです';
+    case DEF.STATUS.OUT_WEEK_DAY:
+      return '本日は通知しません';
+    case DEF.STATUS.OUT_TIME:
+      return '通知時間外です';
+  }
+};
 
 export class Top extends Component {
   constructor(props) {
     super(props);
   }
+  async componentDidMount() {
+    this.interval = setInterval(async () => {
+      let ownInfo = await json.getStorageDataOwnInfo();
+      this.props.setOwnInfoCoords(ownInfo.coords);
+    }, 5000);
+  }
 
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   if (nextProps.ownInfo.coords != this.props.ownInfo.coords) {
+  //     this.setState({ a: aaa++ });
+  //     console.log(this.state);
+  //     console.log('change');
+  //     return true;
+  //   } else {
+  //     console.log(nextProps.ownInfo.coords);
+  //     console.log(this.props.ownInfo.coords);
+  //     console.log('none-change');
+  //     return false;
+  //   }
+  // }
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
   async componentWillMount() {
     try {
       await utils.initNotification();
@@ -53,26 +136,9 @@ export class Top extends Component {
   }
 
   render() {
-    const newRegistBtn = () => {
-      let count = this.props.alermList.length;
-      if (this.props.ownInfo.isFree && count > DEF.MAX_TRIAL) {
-        alert(
-          LANGUAGE.wd.freeAlert1 + (DEF.MAX_TRIAL + 1) + LANGUAGE.wd.freeAlert2
-        );
-      } else if (count > DEF.MAX_OFFICAL) {
-        alert(DEF.MAX_OFFICAL + 1 + LANGUAGE.wd.freeAlert2);
-      } else {
-        this.props.navigation.navigate('NewRegist');
-      }
-    };
-
     const editRegistBtn = index => {
       this.props.setOwnInfoSelectedIndex(index);
       this.props.navigation.navigate('EditRegist');
-    };
-
-    const settingBtn = index => {
-      this.props.navigation.navigate('Setting');
     };
 
     const swipeBtns = index => [
@@ -89,19 +155,7 @@ export class Top extends Component {
 
     return (
       <View style={styles.container}>
-        <Header
-          leftComponent={{
-            icon: 'settings',
-            color: '#fff',
-            onPress: () => settingBtn(),
-          }}
-          centerComponent={{ icon: 'home', color: '#fff' }}
-          rightComponent={{
-            icon: 'add',
-            color: '#fff',
-            onPress: () => newRegistBtn(),
-          }}
-        />
+        {topHeader(this.props)}
         <FlatList
           data={this.props.alermList}
           extraData={this.props.alermList}
@@ -111,31 +165,22 @@ export class Top extends Component {
               right={swipeBtns(item.index)}
               autoClose={true}
               backgroundColor="transparent">
-              <View style={styles.ListRow}>
-                <Text
-                  style={styles.itemFocus}
-                  onPress={() => editRegistBtn(item.index)}>
+              <TouchableOpacity
+                style={styles.ListRow}
+                onPress={() => editRegistBtn(item.index)}>
+                <Text style={styles.itemFocus}>
                   {utils.getDistance(this.props.ownInfo.coords, item.coords)}
                 </Text>
                 <View style={styles.viewMiddle}>
-                  <Text
-                    style={styles.item}
-                    numberOfLines={1}
-                    onPress={() => editRegistBtn(item.index)}>
+                  <Text style={styles.item} numberOfLines={1}>
                     {item.title}
                   </Text>
-                  <Text
-                    style={styles.itemDis}
-                    numberOfLines={1}
-                    onPress={() => editRegistBtn(item.index)}>
-                    {item.isAvailable
-                      ? utils.getRimDistance(
-                          this.props.ownInfo.coords,
-                          item.coords,
-                          item.alermDistance
-                        )
-                      : LANGUAGE.wd.distanceMessageNone}
-                  </Text>
+                  <View style={styles.icons}>
+                    {statusicon(item)}
+                    <Text style={styles.itemDis} numberOfLines={1}>
+                      {getRimDistance(this.props.ownInfo.coords, item)}
+                    </Text>
+                  </View>
                 </View>
                 <Switch
                   style={styles.itemSwitch}
@@ -147,7 +192,7 @@ export class Top extends Component {
                   }}
                   value={item.isAvailable}
                 />
-              </View>
+              </TouchableOpacity>
             </Swipeout>
           )}
         />
@@ -203,6 +248,14 @@ const styles = StyleSheet.create({
     fontSize: 17,
     // backgroundColor: '#000000',
   },
+  icons: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    // justifyContent: 'space-between',
+    backgroundColor: 'white',
+    alignItems: 'center',
+  },
   viewMiddle: {
     width: '60%',
   },
@@ -212,8 +265,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   itemDis: {
-    paddingTop: 5,
-    paddingLeft: 3,
+    paddingLeft: 10,
     fontSize: 14,
   },
   itemSwitch: {

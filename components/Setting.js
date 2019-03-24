@@ -12,6 +12,7 @@ import { startLocation } from '../containers/location';
 import * as json from '../containers/jsonFile';
 import { LANGUAGE } from '../constants/language';
 import { getCurrentPosition } from '../containers/position';
+import { settingHeader } from '../containers/header';
 
 export class Setting extends React.Component {
   constructor(props) {
@@ -22,21 +23,6 @@ export class Setting extends React.Component {
         props.ownInfo.performance == 0 ? -1 : props.ownInfo.performance - 1,
       distance: props.ownInfo.distance,
     };
-  }
-
-  settingUpdate() {
-    let ownInfo = {};
-    Object.assign(ownInfo, this.props.ownInfo);
-    let performance = 0;
-    if (!this.state.performanceSelect) {
-      performance = this.state.performance + 1;
-    }
-    ownInfo.performance = performance;
-    ownInfo.distance = this.state.distance;
-    json.setStorageDataOwnInfo(ownInfo);
-    startLocation(ownInfo, this.props.alermList);
-    this.props.setOwnInfoSetting(ownInfo);
-    this.props.navigation.navigate('Top');
   }
 
   clearSetting() {
@@ -69,19 +55,7 @@ export class Setting extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header
-          leftComponent={{
-            icon: 'arrow-back',
-            color: '#fff',
-            onPress: () => this.props.navigation.navigate('Top'),
-          }}
-          centerComponent={{ icon: 'settings', color: '#fff' }}
-          rightComponent={{
-            text: LANGUAGE.wd.update,
-            style: { color: '#fff' },
-            onPress: () => this.settingUpdate(),
-          }}
-        />
+        {settingHeader(this.state, this.props)}
         <Text style={styles.sectionHeader}>{LANGUAGE.wd.getLocation}</Text>
         <Text style={styles.sectionHeader}>
           {LANGUAGE.wd.getLocationInterval}

@@ -1,5 +1,8 @@
 import { Notifications, Permissions } from 'expo';
 import { Platform, PermissionsAndroid } from 'react-native';
+import { isCheckDayWeek, isCheckTime } from './position';
+import { STATUS } from '../constants/constants';
+
 export const distanceMtoKm = meter => {
   var n = 2;
   let km = Math.floor((meter / 1000) * Math.pow(10, n)) / Math.pow(10, n);
@@ -54,17 +57,26 @@ export const getDistance = (coords1, coords2) => {
   return distanceKeta(distance) + '\n' + distanceUnit(distance);
 };
 
-export const getRimDistance = (coords1, coords2, alermDistance) => {
-  let disstance = getDistanceMeter(coords1, coords2);
-  let message = '';
-  if (disstance < alermDistance) {
-    message = '通知範囲内';
-  } else {
-    disstance = (disstance - alermDistance) / 1000;
-    let distanceMe = distanceKeta(disstance) + distanceUnit(disstance);
-    message = '残り' + distanceMe + 'で通知します';
+export const getStatusIcon = item => {
+  // 通知済の場合
+  if (!item.isAvailable) {
+    return STATUS.DISABLE;
   }
-  return message;
+  if (item.isAlermed) {
+    return STATUS.ALERMED;
+  } else {
+    // 曜日指定外の場合
+    if (item.isLimitWeekDay && !isCheckDayWeek(item)) {
+      return STATUS.OUT_WEEK_DAY;
+    }
+    // 時間指定外の場合
+    if (item.isLimitTimeZone && !isCheckTime(item)) {
+      return STATUS.OUT_TIME;
+    }
+
+    // 通知設定
+    return STATUS.AVAILABLE;
+  }
 };
 
 export const getDistanceMeter = (coords1, coords2) => {
@@ -89,7 +101,7 @@ export const getDistanceMeter = (coords1, coords2) => {
   return distance;
 };
 
-const distanceKeta = km => {
+export const distanceKeta = km => {
   if (km > 99) {
     km = 99.99;
   } else if (km < 1) {
@@ -106,7 +118,7 @@ const distanceKeta = km => {
   return km;
 };
 
-const distanceUnit = km => {
+export const distanceUnit = km => {
   if (km < 1) {
     return 'm';
   }

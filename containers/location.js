@@ -88,17 +88,17 @@ const getBestPerformance = (ownCoords, alermList) => {
     }
   }
 
-  if (!hasMap) {
-    return { accuracy: Location.Accuracy.Lowest, distance: alermDistance };
+  if (!hasMap || pointDistance > 5000) {
+    return { accuracy: Location.Accuracy.Lowest, distance: 1000 };
   }
 
   let index = 1;
   if (ownCoords.speed < 1) {
     // 停滞・維持レベル(目的地までの距離)
-    index = 0.1;
+    index = 0.3;
   } else if (ownCoords.speed < 10) {
     // 徒歩レベル(目的地までの距離)
-    index = 0.3;
+    index = 1;
   } else if (ownCoords.speed < 30) {
     // 電車・車レベル(目的地までの距離と通知距離に反比例)
     index = 2;
@@ -126,7 +126,7 @@ const getBestPerformance = (ownCoords, alermList) => {
   //   accuracy: accuracy,
   //   distance: pointDistance,
   // });
-  return { accuracy: accuracy, distance: alermDistance / 3 };
+  return { accuracy: accuracy, distance: alermDistance / 2 };
 };
 
 let beforeSetting = null;
@@ -161,7 +161,7 @@ export async function startLocation(ownInfo, alermList) {
     await TaskManager.unregisterAllTasksAsync();
     await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
       accuracy: accuracy,
-      distanceInterval: distanceInterval,
+      // distanceInterval: distanceInterval,
     });
   }
 }

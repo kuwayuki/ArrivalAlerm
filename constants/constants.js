@@ -77,3 +77,11 @@ export const DISTANCE_KIND_METER = [100, 300, 500, 1000, 3000, 5000, 10000];
 
 export const MAX_TRIAL = 2;
 export const MAX_OFFICAL = 8;
+
+export const STATUS = {
+  AVAILABLE: 0,
+  DISABLE: 1,
+  ALERMED: 2,
+  OUT_WEEK_DAY: 3,
+  OUT_TIME: 4,
+};

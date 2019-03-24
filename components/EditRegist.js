@@ -22,6 +22,7 @@ import * as json from '../containers/jsonFile';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import * as utils from '../containers/utils';
 import { LANGUAGE } from '../constants/language';
+import { editRegistHeader } from '../containers/header';
 
 let listIndex = 0;
 let selectTimer = 0; // 0:start / 1:end
@@ -89,33 +90,6 @@ export class EditRegist extends React.Component {
         },
       ],
     };
-  }
-  // マーカークリック
-  async markerClick() {
-    let item = {};
-    Object.assign(item, this.props.alermList[listIndex]);
-    let markers = this.state.markers.slice();
-    item.title = this.state.title;
-    item.alermMessage = this.state.title + LANGUAGE.wd.arrivedNear;
-    // item.alermMessage = this.state.alermMessage;
-    item.isAlermed = false;
-    item.alermDistance = Number(this.state.alermDistance);
-    item.coords = this.state.coords;
-    item.isLimitTimeZone = this.state.isLimitTimeZone;
-    item.timeZoneStart = this.state.timeZoneStart;
-    item.timeZoneEnd = this.state.timeZoneEnd;
-    item.isLimitWeekDay = this.state.isLimitWeekDay;
-    item.isMonday = this.state.isMonday;
-    item.isTuesday = this.state.isTuesday;
-    item.isWednesday = this.state.isWednesday;
-    item.isThursday = this.state.isThursday;
-    item.isFriday = this.state.isFriday;
-    item.isSaturday = this.state.isSaturday;
-    item.isSunday = this.state.isSunday;
-    item.coords = markers[0].latlng;
-    this.props.setAlermItem(item);
-    json.addAsyncStorage(item);
-    this.props.navigation.navigate('Top');
   }
 
   //
@@ -207,19 +181,7 @@ export class EditRegist extends React.Component {
     };
     return (
       <View style={styles.container}>
-        <Header
-          leftComponent={{
-            icon: 'arrow-back',
-            color: '#fff',
-            onPress: () => this.props.navigation.navigate('Top'),
-          }}
-          centerComponent={{ icon: 'edit-location', color: '#fff' }}
-          rightComponent={{
-            text: LANGUAGE.wd.decision,
-            style: { color: '#fff' },
-            onPress: () => this.markerClick(),
-          }}
-        />
+        {editRegistHeader(this.state, this.props, listIndex)}
         <ScrollView>
           <SectionList
             sections={[

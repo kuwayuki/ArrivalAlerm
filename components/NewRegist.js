@@ -3,11 +3,10 @@ import { View, StyleSheet } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { connect } from 'react-redux';
 import { addAlermItem } from '../actions/actions';
-import { INITIAL_ITEM } from '../constants/constants';
 import { Header } from 'react-native-elements';
 import * as json from '../containers/jsonFile';
 import { LANGUAGE } from '../constants/language';
-import { getNumTime, getTimeFromDateTime } from '../containers/utils';
+import { newRegistHeader } from '../containers/header';
 
 let timer = null;
 
@@ -26,36 +25,6 @@ export class NewRegist extends React.Component {
       ],
     };
   }
-  // マーカークリック
-  async markerClick() {
-    let item = {};
-    Object.assign(item, INITIAL_ITEM);
-    let markers = this.state.markers.slice();
-    item.index = await json.getSetIndex();
-    item.title = markers[0].title;
-    item.coords = markers[0].latlng;
-    var date = new Date();
-    let nowTime = getTimeFromDateTime(date);
-    let numNowTime = getNumTime(nowTime);
-    let startTime = 0;
-    let endTime = 0;
-    if (numNowTime >= 200) {
-      startTime = numNowTime - 200;
-    } else {
-      startTime = 2400 + numNowTime - 200;
-    }
-
-    if (numNowTime < 2200) {
-      endTime = numNowTime + 200;
-    } else {
-      endTime = numNowTime + 200 - 2400;
-    }
-    item.timeZoneStart = String(startTime).substr(0, String(startTime).length - 2) + ':00';
-    item.timeZoneEnd = String(endTime).substr(0, String(endTime).length - 2) + ':00';
-    this.props.addAlermItem(item);
-    json.addAsyncStorage(item);
-    this.props.navigation.navigate('Top');
-  }
 
   markerSetting = e => {
     const position = e.nativeEvent.coordinate;
@@ -70,19 +39,7 @@ export class NewRegist extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header
-          leftComponent={{
-            icon: 'arrow-back',
-            color: '#fff',
-            onPress: () => this.props.navigation.navigate('Top'),
-          }}
-          centerComponent={{ icon: 'map', color: '#fff' }}
-          rightComponent={{
-            text: LANGUAGE.wd.decision,
-            style: { color: '#fff' },
-            onPress: () => this.markerClick(),
-          }}
-        />
+        {newRegistHeader(this.state, this.props)}
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -99,7 +56,6 @@ export class NewRegist extends React.Component {
               coordinate={marker.latlng}
               title={marker.title}
               description={marker.description}
-              onPress={() => this.markerClick()}
             />
           ))}
         </MapView>
