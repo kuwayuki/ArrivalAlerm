@@ -2,6 +2,7 @@ import { Vibration } from 'react-native';
 import { getDistanceMeter, getNumTime, getTimeFromDateTime } from './utils';
 import { addAsyncStorage } from './jsonFile';
 import { Notifications } from 'expo';
+import { LANGUAGE } from '../constants/language';
 
 export async function getCurrentPosition(timeoutMillis = 10000) {
   return new Promise((resolve, reject) => {
@@ -105,9 +106,9 @@ export async function checkPosition(ownInfo, alermList) {
 
         // 対象範囲なので通知を行う
         await Notifications.presentLocalNotificationAsync({
-          title: 'ネスゴサナイ',
+          title: LANGUAGE.wd.appTitle,
           body: alermItem.alermMessage,
-          sound: true,
+          sound: ownInfo.sound,
           data: {
             message: alermItem.alermMessage,
           },

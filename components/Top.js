@@ -69,53 +69,52 @@ const getRimDistance = (coords1, item) => {
   switch (status) {
     case DEF.STATUS.AVAILABLE:
       if (disstance < alermDistance) {
-        message = '通知範囲内';
+        message = LANGUAGE.wd.distanceInside;
       } else {
         disstance = (disstance - item.alermDistance) / 1000;
         let distanceMe =
           utils.distanceKeta(disstance) + utils.distanceUnit(disstance);
-        message = '残り' + distanceMe + 'で通知します';
+        message =
+          LANGUAGE.wd.distanceMessage1 +
+          distanceMe +
+          LANGUAGE.wd.distanceMessage2;
       }
       return message;
     case DEF.STATUS.DISABLE:
-      return '通知オフ';
+      return LANGUAGE.wd.distanceMessageNone;
     case DEF.STATUS.ALERMED:
-      return '既に通知済みです';
+      return LANGUAGE.wd.distanceMessageAlermed;
     case DEF.STATUS.OUT_WEEK_DAY:
-      return '本日は通知しません';
+      return LANGUAGE.wd.distanceMessageOutsideWeekDay;
     case DEF.STATUS.OUT_TIME:
-      return '通知時間外です';
+      return LANGUAGE.wd.distanceMessageOutsideTime;
   }
 };
 
 export class Top extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isFetching: false,
+    };
+  }
+  onRefresh() {
+    this.setState({ isFetching: true });
   }
   async componentDidMount() {
-    this.interval = setInterval(async () => {
-      let ownInfo = await json.getStorageDataOwnInfo();
-      this.props.setOwnInfoCoords(ownInfo.coords);
-    }, 5000);
+    if (this.timer == null) {
+      this.timer = setInterval(async () => {
+        let ownInfo = await json.getStorageDataOwnInfo();
+        this.props.setOwnInfoCoords(ownInfo.coords);
+        this.setState({ isFetching: false });
+      }, 5000);
+    }
   }
-
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   if (nextProps.ownInfo.coords != this.props.ownInfo.coords) {
-  //     this.setState({ a: aaa++ });
-  //     console.log(this.state);
-  //     console.log('change');
-  //     return true;
-  //   } else {
-  //     console.log(nextProps.ownInfo.coords);
-  //     console.log(this.props.ownInfo.coords);
-  //     console.log('none-change');
-  //     return false;
-  //   }
-  // }
 
   componentWillUnmount() {
     clearTimeout(this.timer);
   }
+
   async componentWillMount() {
     try {
       await utils.initNotification();
@@ -157,9 +156,15 @@ export class Top extends Component {
       <View style={styles.container}>
         {topHeader(this.props)}
         <FlatList
-          data={this.props.alermList}
+          data={this.props.alermList.sort(
+            (a, b) =>
+              utils.getDistanceMeter(this.props.ownInfo.coords, b.coords) -
+              utils.getDistanceMeter(this.props.ownInfo.coords, a.coords)
+          )}
           extraData={this.props.alermList}
           keyExtractor={item => item.id}
+          onRefresh={() => this.onRefresh()}
+          refreshing={this.state.isFetching}
           renderItem={({ item }) => (
             <Swipeout
               right={swipeBtns(item.index)}
@@ -168,12 +173,12 @@ export class Top extends Component {
               <TouchableOpacity
                 style={styles.ListRow}
                 onPress={() => editRegistBtn(item.index)}>
-                <Text style={styles.itemFocus}>
+                <Text style={[styles.itemFocus, utils.getBgColor(item)]}>
                   {utils.getDistance(this.props.ownInfo.coords, item.coords)}
                 </Text>
                 <View style={styles.viewMiddle}>
                   <Text style={styles.item} numberOfLines={1}>
-                    {item.title}
+                    {item.title.replace(/\s+/g, '')}
                   </Text>
                   <View style={styles.icons}>
                     {statusicon(item)}
@@ -226,7 +231,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     borderColor: 'lightblue',
     color: 'white',
-    backgroundColor: 'deepskyblue',
+    // backgroundColor: 'deepskyblue',
     // backgroundColor: 'turquoise',
     // backgroundColor: 'slateblue',
     // backgroundColor: 'yellowgreen',

@@ -161,7 +161,7 @@ export async function startLocation(ownInfo, alermList) {
     await TaskManager.unregisterAllTasksAsync();
     await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
       accuracy: accuracy,
-      // distanceInterval: distanceInterval,
+      distanceInterval: distanceInterval,
     });
   }
 }

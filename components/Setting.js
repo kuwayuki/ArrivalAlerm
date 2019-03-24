@@ -22,6 +22,7 @@ export class Setting extends React.Component {
       performance:
         props.ownInfo.performance == 0 ? -1 : props.ownInfo.performance - 1,
       distance: props.ownInfo.distance,
+      sound: props.ownInfo.sound,
     };
   }
 
@@ -90,6 +91,17 @@ export class Setting extends React.Component {
               ? LANGUAGE.wd.getLocationDesChoice
               : LANGUAGE.wd.getLocationDesAuto}
           </Text>
+        </View>
+        <Text style={styles.sectionHeader}>{LANGUAGE.wd.sound}</Text>
+        <View style={styles.rowTextSetting}>
+          <Text style={styles.text}>
+            {this.state.sound ? LANGUAGE.wd.on : LANGUAGE.wd.off}
+          </Text>
+          <Switch
+            style={styles.setting}
+            onValueChange={sound => this.setState({ sound })}
+            value={this.state.sound}
+          />
         </View>
         <Text style={styles.sectionHeader}>{LANGUAGE.wd.other}</Text>
         {this.props.isFree && (

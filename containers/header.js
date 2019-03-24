@@ -37,6 +37,7 @@ const settingUpdate = (state, props) => {
   }
   ownInfo.performance = performance;
   ownInfo.distance = state.distance;
+  ownInfo.sound = state.sound;
   json.setStorageDataOwnInfo(ownInfo);
   props.setOwnInfoSetting(ownInfo);
   props.navigation.navigate('Top');
@@ -80,7 +81,6 @@ async function editMarkerClick(state, props, listIndex) {
   let markers = state.markers.slice();
   item.title = state.title;
   item.alermMessage = state.title + LANGUAGE.wd.arrivedNear;
-  // item.alermMessage = state.alermMessage;
   item.isAlermed = false;
   item.alermDistance = Number(state.alermDistance);
   item.coords = state.coords;

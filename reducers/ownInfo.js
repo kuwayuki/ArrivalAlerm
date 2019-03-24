@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   performance: 0,
   isFree: true,
   isRead: false,
+  sound: true,
   selectedIndex: 0,
 };
 
@@ -17,6 +18,7 @@ export const ownInfo = (state = INITIAL_STATE, action) => {
         isFree: action.setting.isFree,
         distance: Number(action.setting.distance),
         performance: Number(action.setting.performance),
+        sound: action.setting.sound,
         isRead: true,
       };
     case DEF.OWN_INFO.EDIT_COORDS:
@@ -26,14 +28,15 @@ export const ownInfo = (state = INITIAL_STATE, action) => {
           latitude: action.coords.latitude,
           longitude: action.coords.longitude,
           speed: action.coords.speed,
-          isRead: true,
         },
+        isRead: true,
       };
     case DEF.OWN_INFO.EDIT_SETTING:
       return {
         ...state,
         distance: action.ownInfo.distance,
         performance: action.ownInfo.performance,
+        sound: action.ownInfo.sound,
         isRead: true,
       };
     case DEF.OWN_INFO.EDIT_SELECTED_INDEX:

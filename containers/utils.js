@@ -133,3 +133,26 @@ export const getNumTime = time => {
     time.substr(0, time.indexOf(':')) + time.substr(time.indexOf(':') + 1)
   );
 };
+
+export const getBgColor = item => {
+  return { backgroundColor: getColor(item) };
+};
+
+export const getColor = item => {
+  let status = getStatusIcon(item);
+  let coords2 = item.coords;
+  let alermDistance = item.alermDistance;
+  switch (status) {
+    case STATUS.AVAILABLE:
+      return 'deepskyblue';
+    case STATUS.DISABLE:
+      return 'lightslategray';
+    case STATUS.ALERMED:
+      return 'forestgreen';
+    case STATUS.OUT_WEEK_DAY:
+      return 'lightsteelblue';
+    case STATUS.OUT_TIME:
+      return 'darkorange';
+  }
+  return 'deepskyblue';
+};

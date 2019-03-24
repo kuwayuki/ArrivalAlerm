@@ -70,7 +70,6 @@ export async function getStorageDataOwnInfo() {
 export async function getJsonData(props) {
   let isRet = await isExistsAsyncStorage(props);
   if (isRet) {
-    console.log('AsyncStorageファイルから読み込み');
     AsyncStorage.getAllKeys((err, keys) => {
       AsyncStorage.multiGet(keys, (err, stores) => {
         stores.map((result, i, store) => {
