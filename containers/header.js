@@ -15,7 +15,7 @@ const settingBtn = props => {
   props.navigation.navigate('Setting');
 };
 
-const newRegistBtn = props => {
+export const newRegistBtn = props => {
   let count = props.alermList.length;
   if (props.ownInfo.isFree && count > DEF.MAX_TRIAL) {
     alert(
@@ -24,7 +24,8 @@ const newRegistBtn = props => {
   } else if (count > DEF.MAX_OFFICAL) {
     alert(DEF.MAX_OFFICAL + 1 + LANGUAGE.wd.freeAlert2);
   } else {
-    props.navigation.navigate('NewRegist');
+    props.navigation.navigate('Search');
+    // props.navigation.navigate('NewRegist');
   }
 };
 
@@ -101,6 +102,28 @@ async function editMarkerClick(state, props, listIndex) {
   props.navigation.navigate('Top');
 }
 export const topHeader = props => {
+  let speed = props.ownInfo.coords.speed;
+  let homeIcon = 'home';
+  let type = 'material';
+  if (speed == 0) {
+    // 停滞・維持レベル(目的地までの距離)
+    homeIcon = 'home';
+  }
+  else if (speed < 1) {
+    // 停滞・維持レベル(目的地までの距離)
+    homeIcon = 'airline-seat-recline-normal';
+  } else if (speed < 10) {
+    // 徒歩レベル(目的地までの距離)
+    homeIcon = 'directions-walk';
+  } else if (speed < 30) {
+    // 電車・車レベル(目的地までの距離と通知距離に反比例)
+    homeIcon = 'train';
+  } else {
+    // 新幹線レベル
+    homeIcon = 'car-traction-control';
+    type = 'material-community';
+  }
+
   return (
     <Header
       leftComponent={{
@@ -111,7 +134,8 @@ export const topHeader = props => {
         onPress: () => settingBtn(props),
       }}
       centerComponent={{
-        icon: 'home',
+        icon: homeIcon,
+        type: type,
         color: ICON_COLOR,
         size: ICON_SIZE,
       }}
@@ -150,6 +174,35 @@ export const newRegistHeader = (state, props) => {
         style: { color: ICON_COLOR, fontSize: FONT_SIZE },
         underlayColor: BG_COLOR,
         onPress: () => newMarkerClick(state, props),
+      }}
+      containerStyle={{
+        backgroundColor: BG_COLOR,
+        justifyContent: 'space-around',
+      }}
+    />
+  );
+};
+
+export const searchHeader = props => {
+  return (
+    <Header
+      leftComponent={{
+        icon: 'arrow-back',
+        color: ICON_COLOR,
+        size: ICON_SIZE,
+        underlayColor: BG_COLOR,
+        onPress: () => props.navigation.navigate('Top'),
+      }}
+      centerComponent={{
+        icon: 'map',
+        color: ICON_COLOR,
+        size: ICON_SIZE,
+      }}
+      rightComponent={{
+        text: LANGUAGE.wd.decision,
+        style: { color: ICON_COLOR, fontSize: FONT_SIZE },
+        underlayColor: BG_COLOR,
+        onPress: () => newRegistBtn(props),
       }}
       containerStyle={{
         backgroundColor: BG_COLOR,

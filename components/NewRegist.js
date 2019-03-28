@@ -7,6 +7,7 @@ import { Header } from 'react-native-elements';
 import * as json from '../containers/jsonFile';
 import { LANGUAGE } from '../constants/language';
 import { newRegistHeader } from '../containers/header';
+import axios from 'axios';
 
 let timer = null;
 

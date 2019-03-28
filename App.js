@@ -4,6 +4,7 @@ import { Constants } from 'expo';
 import { createStore } from 'redux';
 import Top from './components/Top';
 import NewRegist from './components/NewRegist';
+import Search from './components/Search';
 import EditRegist from './components/EditRegist';
 import Setting from './components/Setting';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
@@ -24,6 +25,12 @@ const Stack = createStackNavigator(
     },
     NewRegist: {
       screen: NewRegist,
+      navigationOptions: {
+        // title: '新規登録',
+      },
+    },
+    Search: {
+      screen: Search,
       navigationOptions: {
         // title: '新規登録',
       },

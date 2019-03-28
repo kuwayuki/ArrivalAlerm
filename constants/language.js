@@ -58,5 +58,6 @@ export const LANGUAGE = {
     arrivedNear: '付近に到着しました',
     freeAlert1: '無料版は',
     freeAlert2: '件までしか登録できません。',
+    search: '検索',
   },
 };

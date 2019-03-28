@@ -99,7 +99,11 @@ export class Top extends Component {
     };
   }
   onRefresh() {
-    this.setState({ isFetching: true });
+    this.setState({ isFetching: true }, async function() {
+      const position = await getCurrentPosition(5000);
+      this.props.setOwnInfoCoords(position.coords);
+      this.setState({ isFetching: false });
+    });
   }
   async componentDidMount() {
     if (this.timer == null) {

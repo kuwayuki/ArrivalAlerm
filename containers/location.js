@@ -19,7 +19,6 @@ import {
 import { Vibration } from 'react-native';
 import { getDistanceMeter } from './utils';
 import { LANGUAGE } from '../constants/language';
-
 const LOCATION_TASK_NAME = 'background-location-task';
 
 let isChecking = false;
