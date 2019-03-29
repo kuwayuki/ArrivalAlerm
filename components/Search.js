@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as React from 'react';
 import {
   Text,
@@ -18,29 +17,17 @@ import {
   clearStore,
 } from '../actions/actions';
 import { PERFORMANCE_KIND } from '../constants/constants';
-import { Header, Button, ButtonGroup } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { startLocation } from '../containers/location';
 import * as json from '../containers/jsonFile';
 import { LANGUAGE } from '../constants/language';
 import { getCurrentPosition } from '../containers/position';
 import { newRegistBtn, searchHeader } from '../containers/header';
+import axios from 'axios';
 
 const GEOCODE_ENDPOINT =
   'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
-// 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=43.041403,141.31998&radius=5000&keyword=ボーリング&key=AIzaSyARtoLl2mHUxeBJfh40wax-k1crkR6ymo0';
 
-// export const getAPI = (coords, word) => {
-//   let api =
-//     GEOCODE_ENDPOINT +
-//     coords.latitude +
-//     ',' +
-//     coords.longtitude +
-//     '&radius=5000' +
-//     '&keyword=' +
-//     word +
-//     '&type=restaurant' +
-//     '&key=AIzaSyARtoLl2mHUxeBJfh40wax-k1crkR6ymo0';
-// };
 class Search extends React.Component {
   constructor(props) {
     super(props);

@@ -58,6 +58,10 @@ export const LANGUAGE = {
     arrivedNear: '付近に到着しました',
     freeAlert1: '無料版は',
     freeAlert2: '件までしか登録できません。',
+    searchInit: '現地',
     search: '検索',
+    searchResult: '検索結果：',
+    searchSuccessMessage: '件見つかりました。',
+    searchErrorMessage: '見つかりませんでした。\n検索対象は現在地より50km以内です。',
   },
 };

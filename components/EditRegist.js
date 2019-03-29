@@ -75,9 +75,11 @@ export class EditRegist extends React.Component {
       isFriday: props.alermList[listIndex].isFriday,
       isSaturday: props.alermList[listIndex].isSaturday,
       isSunday: props.alermList[listIndex].isSunday,
-      coords: {
+      region: {
         latitude: props.alermList[listIndex].coords.latitude,
         longitude: props.alermList[listIndex].coords.longitude,
+        latitudeDelta: 0.00003 * props.alermList[listIndex].alermDistance,
+        longitudeDelta: 0.00003 * props.alermList[listIndex].alermDistance,
       },
       // editAlerm: props.alermList[listIndex],
       markers: [
@@ -119,7 +121,11 @@ export class EditRegist extends React.Component {
         selectMeter = DISTANCE_KIND_METER[6];
         break;
     }
-    this.setState({ alermDistance: String(selectMeter) });
+    let region = this.state.region;
+    region.latitudeDelta = 0.00003 * selectMeter;
+    region.longitudeDelta = 0.00003 * selectMeter;
+
+    this.setState({ alermDistance: String(selectMeter), region });
   };
 
   markerSetting = e => {
@@ -206,12 +212,12 @@ export class EditRegist extends React.Component {
             provider={PROVIDER_GOOGLE}
             style={styles.map}
             onPoiClick={e => this.markerSetting(e)}
-            onRegionChange={this.onRegionChange}
+            onRegionChangeComplete={region => this.setState({ region })}
             region={{
-              latitude: this.state.markers[0].latlng.latitude,
-              longitude: this.state.markers[0].latlng.longitude,
-              latitudeDelta: 0.00003 * this.state.alermDistance,
-              longitudeDelta: 0.00003 * this.state.alermDistance,
+              latitude: this.state.region.latitude,
+              longitude: this.state.region.longitude,
+              latitudeDelta: this.state.region.latitudeDelta,
+              longitudeDelta: this.state.region.longitudeDelta,
             }}>
             {this.state.markers.map(marker => (
               <Marker
@@ -219,7 +225,6 @@ export class EditRegist extends React.Component {
                 coordinate={marker.latlng}
                 title={marker.title}
                 description={marker.description}
-                onPress={() => this.markerClick()}
               />
             ))}
             <MapView.Circle
@@ -264,7 +269,12 @@ export class EditRegist extends React.Component {
               <TextInput
                 style={styles.textNum}
                 keyboardType={'number-pad'}
-                onChangeText={alermDistance => this.setState({ alermDistance })}
+                onChangeText={alermDistance => {
+                  let region = this.state.region;
+                  region.latitudeDelta = 0.00003 * alermDistance;
+                  region.longitudeDelta = 0.00003 * alermDistance;
+                  this.setState({ alermDistance, region });
+                }}
                 value={this.state.alermDistance}
               />
               <Text>{LANGUAGE.wd.meter}</Text>

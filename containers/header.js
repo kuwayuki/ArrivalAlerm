@@ -24,8 +24,8 @@ export const newRegistBtn = props => {
   } else if (count > DEF.MAX_OFFICAL) {
     alert(DEF.MAX_OFFICAL + 1 + LANGUAGE.wd.freeAlert2);
   } else {
-    props.navigation.navigate('Search');
-    // props.navigation.navigate('NewRegist');
+    // props.navigation.navigate('Search');
+    props.navigation.navigate('NewRegist');
   }
 };
 
@@ -84,7 +84,6 @@ async function editMarkerClick(state, props, listIndex) {
   item.alermMessage = state.title + LANGUAGE.wd.arrivedNear;
   item.isAlermed = false;
   item.alermDistance = Number(state.alermDistance);
-  item.coords = state.coords;
   item.isLimitTimeZone = state.isLimitTimeZone;
   item.timeZoneStart = state.timeZoneStart;
   item.timeZoneEnd = state.timeZoneEnd;
@@ -105,7 +104,7 @@ export const topHeader = props => {
   let speed = props.ownInfo.coords.speed;
   let homeIcon = 'home';
   let type = 'material';
-  if (speed == 0) {
+  if (speed < 0.2) {
     // 停滞・維持レベル(目的地までの距離)
     homeIcon = 'home';
   }
