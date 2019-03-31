@@ -39,6 +39,14 @@ const settingUpdate = (state, props) => {
   ownInfo.performance = performance;
   ownInfo.distance = state.distance;
   ownInfo.sound = state.sound;
+  let recoveryTime = 0;
+  if (state.recoveryTime) {
+    recoveryTime = DEF.RECOVERY_TIME;
+  }
+  ownInfo.recoveryTime = recoveryTime;
+  ownInfo.recoveryDistance = state.recoveryDistance;
+  ownInfo.sortKind = state.sortKind;
+  ownInfo.sortType = state.sortType;
   json.setStorageDataOwnInfo(ownInfo);
   props.setOwnInfoSetting(ownInfo);
   props.navigation.navigate('Top');
@@ -107,8 +115,7 @@ export const topHeader = props => {
   if (speed < 0.2) {
     // 停滞・維持レベル(目的地までの距離)
     homeIcon = 'home';
-  }
-  else if (speed < 1) {
+  } else if (speed < 1) {
     // 停滞・維持レベル(目的地までの距離)
     homeIcon = 'airline-seat-recline-normal';
   } else if (speed < 10) {

@@ -28,6 +28,7 @@ export const INITIAL_ITEM = {
   title: LANGUAGE.wd.alermPoint,
   isAvailable: true,
   isAlermed: false,
+  alermTime: null,
   alermMessage: LANGUAGE.wd.alermPoint + LANGUAGE.wd.arrivedNear,
   alermDistance: 300,
   interval: 'auto',
@@ -73,11 +74,13 @@ export const PERFORMANCE_KIND = [
   LANGUAGE.wd.best,
 ];
 
+export const SORT_KIND = [LANGUAGE.wd.sortRegist, LANGUAGE.wd.sortDistance];
+
 export const DISTANCE_KIND_METER = [100, 300, 500, 1000, 3000, 5000, 10000];
 
 export const MAX_TRIAL = 2;
 export const MAX_OFFICAL = 8;
-
+export const RECOVERY_TIME = 60;
 export const STATUS = {
   AVAILABLE: 0,
   DISABLE: 1,

@@ -6,7 +6,7 @@ import {
   setOwnInfoCoords,
   clearStore,
 } from '../actions/actions';
-import { PERFORMANCE_KIND } from '../constants/constants';
+import { PERFORMANCE_KIND, SORT_KIND } from '../constants/constants';
 import { Header, Button, ButtonGroup } from 'react-native-elements';
 import { startLocation } from '../containers/location';
 import * as json from '../containers/jsonFile';
@@ -23,6 +23,10 @@ export class Setting extends React.Component {
         props.ownInfo.performance == 0 ? -1 : props.ownInfo.performance - 1,
       distance: props.ownInfo.distance,
       sound: props.ownInfo.sound,
+      recoveryTime: props.ownInfo.recoveryTime > 0,
+      recoveryDistance: props.ownInfo.recoveryDistance,
+      sortKind: props.ownInfo.sortKind,
+      sortType: props.ownInfo.sortType,
     };
   }
 
@@ -58,9 +62,6 @@ export class Setting extends React.Component {
       <View style={styles.container}>
         {settingHeader(this.state, this.props)}
         <Text style={styles.sectionHeader}>{LANGUAGE.wd.getLocation}</Text>
-        <Text style={styles.sectionHeader}>
-          {LANGUAGE.wd.getLocationInterval}
-        </Text>
         <View style={styles.rowTextSetting}>
           <Text style={styles.text}>
             {this.state.performanceSelect
@@ -92,6 +93,45 @@ export class Setting extends React.Component {
               : LANGUAGE.wd.getLocationDesAuto}
           </Text>
         </View>
+        <Text style={styles.sectionHeader}>{LANGUAGE.wd.recovery}</Text>
+        <Text style={styles.sectionHeader2}>{LANGUAGE.wd.recoveryTime}</Text>
+        <View style={styles.rowTextSetting}>
+          <Text style={styles.text}>
+            {this.state.recoveryTime ? LANGUAGE.wd.on : LANGUAGE.wd.off}
+          </Text>
+          <Switch
+            style={styles.setting}
+            onValueChange={recoveryTime => this.setState({ recoveryTime })}
+            value={this.state.recoveryTime}
+          />
+        </View>
+        {this.state.recoveryTime && (
+          <View style={styles.rowTextSetting}>
+            <Text style={styles.textDes}>{LANGUAGE.wd.recoveryTimeDes}</Text>
+          </View>
+        )}
+        <Text style={styles.sectionHeader2}>
+          {LANGUAGE.wd.recoveryDistance}
+        </Text>
+        <View style={styles.rowTextSetting}>
+          <Text style={styles.text}>
+            {this.state.recoveryDistance ? LANGUAGE.wd.on : LANGUAGE.wd.off}
+          </Text>
+          <Switch
+            style={styles.setting}
+            onValueChange={recoveryDistance =>
+              this.setState({ recoveryDistance })
+            }
+            value={this.state.recoveryDistance}
+          />
+        </View>
+        {this.state.recoveryDistance && (
+          <View style={styles.rowTextSetting}>
+            <Text style={styles.textDes}>
+              {LANGUAGE.wd.recoveryDistanceDes}
+            </Text>
+          </View>
+        )}
         <Text style={styles.sectionHeader}>{LANGUAGE.wd.sound}</Text>
         <View style={styles.rowTextSetting}>
           <Text style={styles.text}>
@@ -101,6 +141,27 @@ export class Setting extends React.Component {
             style={styles.setting}
             onValueChange={sound => this.setState({ sound })}
             value={this.state.sound}
+          />
+        </View>
+        <Text style={styles.sectionHeader}>{LANGUAGE.wd.sort}</Text>
+        <View style={styles.bgColorWhite}>
+          <ButtonGroup
+            onPress={sortKind => this.setState({ sortKind })}
+            selectedButtonStyle={styles.bgColorSelected}
+            buttons={SORT_KIND}
+            selectedIndex={this.state.sortKind}
+          />
+        </View>
+        <View style={styles.rowTextSetting}>
+          <Text style={styles.text}>
+            {this.state.sortType
+              ? LANGUAGE.wd.sortNormal
+              : LANGUAGE.wd.sortReverse}
+          </Text>
+          <Switch
+            style={styles.setting}
+            onValueChange={sortType => this.setState({ sortType })}
+            value={this.state.sortType}
           />
         </View>
         <Text style={styles.sectionHeader}>{LANGUAGE.wd.other}</Text>
@@ -155,6 +216,19 @@ const styles = StyleSheet.create({
     // backgroundColor: 'cornflowerblue',
     // backgroundColor: 'crimson',
     // backgroundColor: 'darkgray',
+    borderStyle: 'solid',
+    borderColor: 'gray',
+    borderWidth: 0.25,
+  },
+  sectionHeader2: {
+    color: 'white',
+    paddingTop: 2,
+    paddingLeft: 30,
+    paddingRight: 10,
+    paddingBottom: 2,
+    fontSize: 16,
+    fontWeight: 'bold',
+    backgroundColor: 'yellowgreen',
     borderStyle: 'solid',
     borderColor: 'gray',
     borderWidth: 0.25,

@@ -94,11 +94,6 @@ export class NewRegist extends React.Component {
         const data = results.data;
         const result = data.results[0];
         const location = result.geometry.location;
-        this.setState({
-          address: result.formatted_address,
-          lat: location.lat,
-          lng: location.lng,
-        });
 
         if (data.results != null || data.results.length > 0) {
           this.setState({
@@ -180,7 +175,7 @@ export class NewRegist extends React.Component {
             <Text style={styles.sectionHeader}>
               {LANGUAGE.wd.searchResult + this.state.searchResult}
             </Text>
-            <ScrollView style={styles.searchList}>
+            <ScrollView>
               <FlatList
                 data={this.state.alermList}
                 extraData={this.state.alermList}
@@ -243,16 +238,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: {
-    height: 600,
+    flex: 14,
   },
   mapShort: {
-    height: 415,
+    flex: 9,
   },
   searchListView: {
-    maxHeight: 185,
+    flex: 5,
   },
-  searchList: {},
   word: {
+    flex: 1,
     padding: 3,
     flexDirection: 'row',
     justifyContent: 'flex-start',

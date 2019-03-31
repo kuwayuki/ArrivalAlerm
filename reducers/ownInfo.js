@@ -7,6 +7,10 @@ const INITIAL_STATE = {
   isFree: true,
   isRead: false,
   sound: true,
+  recoveryTime: 0,
+  recoveryDistance: true,
+  sortKind: 0,
+  sortType: true,
   selectedIndex: 0,
 };
 
@@ -19,6 +23,10 @@ export const ownInfo = (state = INITIAL_STATE, action) => {
         distance: Number(action.setting.distance),
         performance: Number(action.setting.performance),
         sound: action.setting.sound,
+        recoveryTime: action.setting.recoveryTime,
+        recoveryDistance: action.setting.recoveryDistance,
+        sortKind: action.setting.sortKind,
+        sortType: action.setting.sortType,
         isRead: true,
       };
     case DEF.OWN_INFO.EDIT_COORDS:
@@ -37,6 +45,10 @@ export const ownInfo = (state = INITIAL_STATE, action) => {
         distance: action.ownInfo.distance,
         performance: action.ownInfo.performance,
         sound: action.ownInfo.sound,
+        recoveryTime: action.ownInfo.recoveryTime,
+        recoveryDistance: action.ownInfo.recoveryDistance,
+        sortKind: action.ownInfo.sortKind,
+        sortType: action.ownInfo.sortType,
         isRead: true,
       };
     case DEF.OWN_INFO.EDIT_SELECTED_INDEX:

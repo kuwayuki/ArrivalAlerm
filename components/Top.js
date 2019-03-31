@@ -156,15 +156,32 @@ export class Top extends Component {
       },
     ];
 
+    const sortList = () => {
+      return this.props.alermList.sort((a, b) => {
+        let sortA;
+        let sortB;
+        switch (this.props.ownInfo.sortKind) {
+          case 0:
+            sortA = a.index;
+            sortB = b.index;
+            break;
+          case 1:
+            sortA = utils.getDistanceMeter(this.props.ownInfo.coords, a.coords);
+            sortB = utils.getDistanceMeter(this.props.ownInfo.coords, b.coords);
+            break;
+        }
+        if (this.props.ownInfo.sortType) {
+          return sortA - sortB;
+        }
+        return sortB - sortA;
+      });
+    };
+
     return (
       <View style={styles.container}>
         {topHeader(this.props)}
         <FlatList
-          data={this.props.alermList.sort(
-            (a, b) =>
-              utils.getDistanceMeter(this.props.ownInfo.coords, b.coords) -
-              utils.getDistanceMeter(this.props.ownInfo.coords, a.coords)
-          )}
+          data={sortList()}
           extraData={this.props.alermList}
           keyExtractor={item => item.id}
           onRefresh={() => this.onRefresh()}

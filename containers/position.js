@@ -20,6 +20,19 @@ export const isInside = (distance, alermDistance) => {
   return false;
 };
 
+// 一定時間経過したかチェック
+export const elapsedTime = (recoveryTime, alermTime) => {
+  if (alermTime == null) {
+    return true;
+  }
+
+  var diff = new Date().getTime() - alermTime;
+  if (recoveryTime < diff / (1000 * 60)) {
+    return true;
+  }
+  return false;
+};
+
 export const isCheckDayWeek = alermItem => {
   let isCheck = true;
   if (alermItem.isLimitWeekDay) {
@@ -115,10 +128,31 @@ export async function checkPosition(ownInfo, alermList) {
         });
 
         alermItem.isAlermed = true;
+        alermItem.alermTime = new Date().getTime();
         addAsyncStorage(alermItem);
       } else {
-        // 通知済の場合は、範囲外なら未通知に変更
-        if (!isIn) {
+        // 通知済の場合
+        let isOK = false;
+
+        // 範囲外なら未通知に変更
+        if (ownInfo.recoveryDistance) {
+          if (isIn) {
+            continue;
+          } else {
+            isOK = true;
+          }
+        }
+
+        // 一定時間経過なら未通知に変更
+        if (ownInfo.recoveryTime > 0) {
+          if (!elapsedTime(ownInfo.recoveryTime, alermItem.alermTime)) {
+            continue;
+          } else {
+            isOK = true;
+          }
+        }
+
+        if (isOK) {
           alermItem.isAlermed = false;
           addAsyncStorage(alermItem);
         }
