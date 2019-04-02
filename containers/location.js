@@ -87,8 +87,10 @@ const getBestPerformance = (ownCoords, alermList) => {
     }
   }
 
-  if (!hasMap || pointDistance > 5000) {
+  if (!hasMap) {
     return { accuracy: Location.Accuracy.Lowest, distance: 1000 };
+  } else if (pointDistance > 5000) {
+    return { accuracy: Location.Accuracy.balanced, distance: 1000 };
   }
 
   let index = 1;
@@ -125,7 +127,13 @@ const getBestPerformance = (ownCoords, alermList) => {
   //   accuracy: accuracy,
   //   distance: pointDistance,
   // });
-  return { accuracy: accuracy, distance: alermDistance / 2 };
+  // 目的地周辺の場合は再取得距離を短くする
+  if (pointDistance < 1.5 * alermDistance) {
+    alermDistance = alermDistance / 10;
+  } else if (pointDistance < 3 * alermDistance) {
+    alermDistance = alermDistance / 5;
+  }
+  return { accuracy: accuracy, distance: alermDistance };
 };
 
 let beforeSetting = null;
@@ -147,7 +155,7 @@ export async function startLocation(ownInfo, alermList) {
     } else {
       // 手動設定の場合はそのまま設定
       accuracy = ownInfo.performance;
-      distanceInterval = ownInfo.distance;
+      // distanceInterval = ownInfo.distance;
     }
   }
   let nextSetting = { accuracy: accuracy, distance: distanceInterval };

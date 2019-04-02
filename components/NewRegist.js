@@ -8,6 +8,8 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Icon, Button } from 'react-native-elements';
@@ -102,6 +104,8 @@ export class NewRegist extends React.Component {
               data.results.length + LANGUAGE.wd.searchSuccessMessage,
             alermList: data.results,
           });
+          // キーボード非表示
+          Keyboard.dismiss();
         } else {
           alert(LANGUAGE.wd.searchErrorMessage);
           this.setState({
@@ -147,29 +151,31 @@ export class NewRegist extends React.Component {
     return (
       <View style={styles.container}>
         {newRegistHeader(this.state, this.props)}
-        <View style={styles.word}>
-          <Icon name="search" size="25" containerStyle={styles.wordIcon} />
-          <TextInput
-            inlineImagePadding={10}
-            style={styles.wordInput}
-            autoFocus={false}
-            enablesReturnKeyAutomatically={true}
-            onChangeText={word => this.setState({ word })}
-            value={this.state.word}
-            onSubmitEditing={() => this.handleGetLatAndLng()}
-          />
-          <Button
-            style={styles.wordButton}
-            title={LANGUAGE.wd.search}
-            onPress={() => this.handleGetLatAndLng()}
-          />
-          <Button
-            style={styles.wordButton}
-            buttonStyle={styles.bgColorRed}
-            title={LANGUAGE.wd.searchInit}
-            onPress={() => this.initPlace()}
-          />
-        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.word}>
+            <Icon name="search" size="25" containerStyle={styles.wordIcon} />
+            <TextInput
+              inlineImagePadding={10}
+              style={styles.wordInput}
+              autoFocus={false}
+              enablesReturnKeyAutomatically={true}
+              onChangeText={word => this.setState({ word })}
+              value={this.state.word}
+              onSubmitEditing={() => this.handleGetLatAndLng()}
+            />
+            <Button
+              style={styles.wordButton}
+              title={LANGUAGE.wd.search}
+              onPress={() => this.handleGetLatAndLng()}
+            />
+            <Button
+              style={styles.wordButton}
+              buttonStyle={styles.bgColorRed}
+              title={LANGUAGE.wd.searchInit}
+              onPress={() => this.initPlace()}
+            />
+          </View>
+        </TouchableWithoutFeedback>
         {this.state.isSearch && (
           <View style={styles.searchListView}>
             <Text style={styles.sectionHeader}>
@@ -238,16 +244,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: {
-    flex: 14,
+    flex: 1,
   },
   mapShort: {
-    flex: 9,
+    flex: 1,
   },
   searchListView: {
-    flex: 5,
+    maxHeight: 181,
   },
   word: {
-    flex: 1,
     padding: 3,
     flexDirection: 'row',
     justifyContent: 'flex-start',
