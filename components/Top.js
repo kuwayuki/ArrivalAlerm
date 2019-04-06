@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   FlatList,
@@ -9,6 +8,7 @@ import {
   Vibration,
   TouchableOpacity,
 } from 'react-native';
+import { styles } from '../containers/styles';
 import { Icon } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 import { connect } from 'react-redux';
@@ -192,18 +192,18 @@ export class Top extends Component {
               autoClose={true}
               backgroundColor="transparent">
               <TouchableOpacity
-                style={styles.ListRow}
+                style={styles.itemListRow}
                 onPress={() => editRegistBtn(item.index)}>
                 <Text style={[styles.itemFocus, utils.getBgColor(item)]}>
                   {utils.getDistance(this.props.ownInfo.coords, item.coords)}
                 </Text>
                 <View style={styles.viewMiddle}>
-                  <Text style={styles.item} numberOfLines={1}>
+                  <Text style={styles.itemList} numberOfLines={1}>
                     {item.title.replace(/\s+/g, '')}
                   </Text>
                   <View style={styles.icons}>
                     {statusicon(item)}
-                    <Text style={styles.itemDis} numberOfLines={1}>
+                    <Text style={styles.itemListDis} numberOfLines={1}>
                       {getRimDistance(this.props.ownInfo.coords, item)}
                     </Text>
                   </View>
@@ -226,78 +226,6 @@ export class Top extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'aliceblue',
-    flex: 1,
-  },
-  ListRow: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'white',
-    padding: 7,
-    fontSize: 18,
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-    alignItems: 'center',
-    // height: 60,
-  },
-  itemFocus: {
-    textAlign: 'center',
-    width: 60,
-    paddingTop: 8,
-    paddingBottom: 8,
-    borderColor: 'lightblue',
-    color: 'white',
-    // backgroundColor: 'deepskyblue',
-    // backgroundColor: 'turquoise',
-    // backgroundColor: 'slateblue',
-    // backgroundColor: 'yellowgreen',
-    // backgroundColor: 'lightblue',
-    // backgroundColor: 'lawngreen',
-    // backgroundColor: 'royalblue',
-    // backgroundColor: 'lightskyblue',
-    // backgroundColor: 'aquamarine',
-    // backgroundColor: 'azure',
-    // backgroundColor: 'aliceblue',
-    // backgroundColor: 'aqua',
-    // backgroundColor: 'coral',
-    // backgroundColor: 'cornflowerblue',
-    // backgroundColor: 'crimson',
-    // backgroundColor: 'darkgray',
-    borderRadius: 30,
-    borderWidth: 1,
-    overflow: 'hidden',
-    fontSize: 17,
-    // backgroundColor: '#000000',
-  },
-  icons: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    // justifyContent: 'space-between',
-    backgroundColor: 'white',
-    alignItems: 'center',
-  },
-  viewMiddle: {
-    width: '60%',
-  },
-  item: {
-    paddingTop: 5,
-    paddingLeft: 3,
-    fontSize: 20,
-  },
-  itemDis: {
-    paddingLeft: 10,
-    fontSize: 14,
-  },
-  itemSwitch: {
-    width: 60,
-  },
-});
 
 const mapStateToProps = state => {
   return state;

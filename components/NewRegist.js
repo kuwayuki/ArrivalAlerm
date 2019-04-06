@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
+import { styles } from '../containers/styles';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Icon, Button } from 'react-native-elements';
 import { connect } from 'react-redux';
@@ -197,7 +198,7 @@ export class NewRegist extends React.Component {
                       size="25"
                       containerStyle={styles.icon}
                     />
-                    <View style={styles.item}>
+                    <View style={styles.itemNew}>
                       <Text style={styles.itemTitle} numberOfLines={1}>
                         {item.name}
                       </Text>
@@ -213,7 +214,7 @@ export class NewRegist extends React.Component {
         )}
         <MapView
           provider={PROVIDER_GOOGLE}
-          style={!this.state.isSearch ? styles.map : styles.mapShort}
+          style={styles.container}
           onPoiClick={e => {
             this.regionSetting(e.nativeEvent.coordinate);
             this.markerSetting(e.nativeEvent.coordinate, e.nativeEvent.name);
@@ -238,87 +239,6 @@ export class NewRegist extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-  },
-  mapShort: {
-    flex: 1,
-  },
-  searchListView: {
-    maxHeight: 181,
-  },
-  word: {
-    padding: 3,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    // justifyContent: 'center',
-    backgroundColor: 'white',
-  },
-  wordIcon: {
-    backgroundColor: 'white',
-    padding: 5,
-  },
-  wordInput: {
-    marginLeft: 20,
-    borderWidth: 1,
-    fontSize: 18,
-    width: '50%',
-    borderRadius: 5,
-    height: 34,
-  },
-  wordButton: {
-    width: 60,
-    height: 34,
-    paddingLeft: 10,
-  },
-  sectionHeader: {
-    color: 'white',
-    paddingTop: 2,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 2,
-    fontSize: 16,
-    fontWeight: 'bold',
-    backgroundColor: 'turquoise',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-  },
-  ListRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    backgroundColor: 'white',
-    padding: 3,
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-    alignItems: 'left',
-  },
-  icon: {
-    backgroundColor: 'white',
-    alignItems: 'center',
-    padding: 10,
-  },
-  item: {
-    paddingTop: 5,
-    paddingLeft: 10,
-  },
-  itemTitle: {
-    fontSize: 18,
-  },
-  itemDis: {
-    paddingTop: 3,
-    fontSize: 12,
-  },
-  bgColorRed: {
-    backgroundColor: 'red',
-  },
-});
 
 const mapStateToProps = state => {
   return state;

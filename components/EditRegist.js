@@ -5,9 +5,9 @@ import {
   TextInput,
   View,
   ScrollView,
-  StyleSheet,
   SectionList,
 } from 'react-native';
+import { styles } from '../containers/styles';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { connect } from 'react-redux';
 import { setAlermItem } from '../actions/actions';
@@ -354,114 +354,6 @@ export class EditRegist extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'aliceblue',
-    flex: 1,
-  },
-  map: {
-    // flex: 1
-    height: 220,
-  },
-  sectionHeader: {
-    color: 'white',
-    paddingTop: 2,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 2,
-    fontSize: 16,
-    fontWeight: 'bold',
-    backgroundColor: 'turquoise',
-    // backgroundColor: 'lightblue',
-    // backgroundColor: 'deepskyblue',
-    // backgroundColor: 'slateblue',
-    // backgroundColor: 'yellowgreen',
-    // backgroundColor: 'lightskyblue',
-    // backgroundColor: 'aquamarine',
-    // backgroundColor: 'azure',
-    // backgroundColor: 'aliceblue',
-    // backgroundColor: 'aqua',
-    // backgroundColor: 'coral',
-    // backgroundColor: 'cornflowerblue',
-    // backgroundColor: 'crimson',
-    // backgroundColor: 'darkgray',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-  },
-  item: {
-    padding: 10,
-    margin: 0,
-    paddingLeft: 50,
-    fontSize: 18,
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-    // textAlign: 'right',
-  },
-  rowStyle: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-  rowTextSetting: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-    alignItems: 'center',
-    paddingTop: 5,
-    paddingBottom: 5,
-  },
-  text: {
-    width: '80%',
-    paddingLeft: 30,
-    fontSize: 18,
-    // textAlign: 'right',
-  },
-  bgColorWhite: {
-    backgroundColor: 'white',
-  },
-  bgColorSelected: {
-    backgroundColor: 'cornflowerblue',
-  },
-  textNum: {
-    width: '80%',
-    padding: 9,
-    paddingLeft: 30,
-    fontSize: 18,
-    textAlign: 'right',
-  },
-  setting: {
-    paddingLeft: 150,
-  },
-  checkBox: {
-    padding: 0,
-    margin: 0,
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0,
-    textAlign: 'right',
-  },
-  timeZone: {
-    width: '40%',
-    paddingLeft: 50,
-    fontSize: 18,
-  },
-});
-
 const mapStateToProps = state => {
   return state;
 };

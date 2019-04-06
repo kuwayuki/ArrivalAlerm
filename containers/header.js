@@ -5,9 +5,8 @@ import { LANGUAGE } from '../constants/language';
 import * as DEF from '../constants/constants';
 import * as json from '../containers/jsonFile';
 import { getNumTime, getTimeFromDateTime } from '../containers/utils';
+import { CL_HEADER, CL_ICON_HEADER } from './styles';
 
-const BG_COLOR = 'royalblue';
-const ICON_COLOR = '#fff';
 const ICON_SIZE = 30;
 const FONT_SIZE = 18;
 
@@ -134,26 +133,26 @@ export const topHeader = props => {
     <Header
       leftComponent={{
         icon: 'settings',
-        color: ICON_COLOR,
+        color: CL_ICON_HEADER,
         size: ICON_SIZE,
-        underlayColor: BG_COLOR,
+        underlayColor: CL_HEADER,
         onPress: () => settingBtn(props),
       }}
       centerComponent={{
         icon: homeIcon,
         type: type,
-        color: ICON_COLOR,
+        color: CL_ICON_HEADER,
         size: ICON_SIZE,
       }}
       rightComponent={{
         icon: 'add',
-        color: ICON_COLOR,
+        color: CL_ICON_HEADER,
         size: ICON_SIZE,
-        underlayColor: BG_COLOR,
+        underlayColor: CL_HEADER,
         onPress: () => newRegistBtn(props),
       }}
       containerStyle={{
-        backgroundColor: BG_COLOR,
+        backgroundColor: CL_HEADER,
         justifyContent: 'space-around',
       }}
     />
@@ -165,24 +164,24 @@ export const newRegistHeader = (state, props) => {
     <Header
       leftComponent={{
         icon: 'arrow-back',
-        color: ICON_COLOR,
+        color: CL_ICON_HEADER,
         size: ICON_SIZE,
-        underlayColor: BG_COLOR,
+        underlayColor: CL_HEADER,
         onPress: () => props.navigation.navigate('Top'),
       }}
       centerComponent={{
         icon: 'map',
-        color: ICON_COLOR,
+        color: CL_ICON_HEADER,
         size: ICON_SIZE,
       }}
       rightComponent={{
         text: LANGUAGE.wd.decision,
-        style: { color: ICON_COLOR, fontSize: FONT_SIZE },
-        underlayColor: BG_COLOR,
+        style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
+        underlayColor: CL_HEADER,
         onPress: () => newMarkerClick(state, props),
       }}
       containerStyle={{
-        backgroundColor: BG_COLOR,
+        backgroundColor: CL_HEADER,
         justifyContent: 'space-around',
       }}
     />
@@ -194,24 +193,24 @@ export const searchHeader = props => {
     <Header
       leftComponent={{
         icon: 'arrow-back',
-        color: ICON_COLOR,
+        color: CL_ICON_HEADER,
         size: ICON_SIZE,
-        underlayColor: BG_COLOR,
+        underlayColor: CL_HEADER,
         onPress: () => props.navigation.navigate('Top'),
       }}
       centerComponent={{
         icon: 'map',
-        color: ICON_COLOR,
+        color: CL_ICON_HEADER,
         size: ICON_SIZE,
       }}
       rightComponent={{
         text: LANGUAGE.wd.decision,
-        style: { color: ICON_COLOR, fontSize: FONT_SIZE },
-        underlayColor: BG_COLOR,
+        style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
+        underlayColor: CL_HEADER,
         onPress: () => newRegistBtn(props),
       }}
       containerStyle={{
-        backgroundColor: BG_COLOR,
+        backgroundColor: CL_HEADER,
         justifyContent: 'space-around',
       }}
     />
@@ -223,24 +222,24 @@ export const editRegistHeader = (state, props, listIndex) => {
     <Header
       leftComponent={{
         icon: 'arrow-back',
-        color: ICON_COLOR,
+        color: CL_ICON_HEADER,
         size: ICON_SIZE,
-        underlayColor: BG_COLOR,
+        underlayColor: CL_HEADER,
         onPress: () => props.navigation.navigate('Top'),
       }}
       centerComponent={{
         icon: 'explore',
-        color: ICON_COLOR,
+        color: CL_ICON_HEADER,
         size: ICON_SIZE,
       }}
       rightComponent={{
         text: LANGUAGE.wd.decision,
-        style: { color: ICON_COLOR, fontSize: FONT_SIZE },
-        underlayColor: BG_COLOR,
+        style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
+        underlayColor: CL_HEADER,
         onPress: () => editMarkerClick(state, props, listIndex),
       }}
       containerStyle={{
-        backgroundColor: BG_COLOR,
+        backgroundColor: CL_HEADER,
         justifyContent: 'space-around',
       }}
     />
@@ -252,20 +251,20 @@ export const settingHeader = (state, props) => {
     <Header
       leftComponent={{
         icon: 'arrow-back',
-        color: ICON_COLOR,
+        color: CL_ICON_HEADER,
         size: ICON_SIZE,
-        underlayColor: BG_COLOR,
+        underlayColor: CL_HEADER,
         onPress: () => props.navigation.navigate('Top'),
       }}
-      centerComponent={{ icon: 'settings', color: ICON_COLOR, size: ICON_SIZE }}
+      centerComponent={{ icon: 'settings', color: CL_ICON_HEADER, size: ICON_SIZE }}
       rightComponent={{
         text: LANGUAGE.wd.update,
-        style: { color: ICON_COLOR, fontSize: FONT_SIZE },
-        underlayColor: BG_COLOR,
+        style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
+        underlayColor: CL_HEADER,
         onPress: () => settingUpdate(state, props),
       }}
       containerStyle={{
-        backgroundColor: BG_COLOR,
+        backgroundColor: CL_HEADER,
         justifyContent: 'space-around',
       }}
     />

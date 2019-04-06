@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Button, AppRegistry } from 'react-native';
+import { Text, View, Button, AppRegistry } from 'react-native';
 import { Constants } from 'expo';
+import { styles } from './containers/styles';
 import { createStore } from 'redux';
 import Top from './components/Top';
 import NewRegist from './components/NewRegist';
-import Search from './components/Search';
 import EditRegist from './components/EditRegist';
 import Setting from './components/Setting';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
@@ -25,12 +25,6 @@ const Stack = createStackNavigator(
     },
     NewRegist: {
       screen: NewRegist,
-      navigationOptions: {
-        // title: '新規登録',
-      },
-    },
-    Search: {
-      screen: Search,
       navigationOptions: {
         // title: '新規登録',
       },
@@ -70,11 +64,3 @@ export default class App extends React.Component {
     );
   }
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    // paddingTop: Constants.statusBarHeight,
-    backgroundColor: 'aliceblue',
-  },
-});

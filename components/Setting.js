@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Text, Switch, View, StyleSheet, Alert } from 'react-native';
+import { Text, Switch, View, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import {
   setOwnInfoSetting,
   setOwnInfoCoords,
   clearStore,
 } from '../actions/actions';
+import { styles } from '../containers/styles';
 import { PERFORMANCE_KIND, SORT_KIND } from '../constants/constants';
 import { Header, Button, ButtonGroup } from 'react-native-elements';
 import { startLocation } from '../containers/location';
@@ -188,90 +189,6 @@ export class Setting extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'aliceblue',
-    flex: 1,
-  },
-  sectionHeader: {
-    color: 'white',
-    paddingTop: 2,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 2,
-    fontSize: 16,
-    fontWeight: 'bold',
-    backgroundColor: 'turquoise',
-    // backgroundColor: 'lightblue',
-    // backgroundColor: 'deepskyblue',
-    // backgroundColor: 'slateblue',
-    // backgroundColor: 'yellowgreen',
-    // backgroundColor: 'lightskyblue',
-    // backgroundColor: 'aquamarine',
-    // backgroundColor: 'azure',
-    // backgroundColor: 'aliceblue',
-    // backgroundColor: 'aqua',
-    // backgroundColor: 'coral',
-    // backgroundColor: 'cornflowerblue',
-    // backgroundColor: 'crimson',
-    // backgroundColor: 'darkgray',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-  },
-  sectionHeader2: {
-    color: 'white',
-    paddingTop: 2,
-    paddingLeft: 30,
-    paddingRight: 10,
-    paddingBottom: 2,
-    fontSize: 16,
-    fontWeight: 'bold',
-    backgroundColor: 'yellowgreen',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-  },
-  rowTextSetting: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    borderWidth: 0.25,
-    alignItems: 'center',
-    paddingTop: 5,
-    paddingBottom: 5,
-  },
-  textDes: {
-    paddingLeft: 30,
-    fontSize: 14,
-    // textAlign: 'right',
-  },
-  text: {
-    width: '60%',
-    paddingLeft: 30,
-    fontSize: 18,
-    // textAlign: 'right',
-  },
-  button: {
-    width: 90,
-    paddingRight: 20,
-  },
-  setting: {
-    width: 80,
-  },
-  bgColorWhite: {
-    backgroundColor: 'white',
-  },
-  bgColorRed: {
-    backgroundColor: 'red',
-  },
-  bgColorSelected: {
-    backgroundColor: 'cornflowerblue',
-  },
-});
 
 const mapStateToProps = state => {
   return state;
