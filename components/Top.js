@@ -217,7 +217,7 @@ export class Top extends Component {
           )}
         />
         <AdMobBanner
-          bannerSize="fullBanner"
+          bannerSize="smartBannerPortrait"
           adUnitID="ca-app-pub-2103807205659646/2958032499" // Test ID, Replace with your-admob-unit-id
           onDidFailToReceiveAdWithError={this.bannerError}
         />

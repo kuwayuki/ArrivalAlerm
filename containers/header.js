@@ -74,10 +74,20 @@ async function newMarkerClick(state, props) {
   } else {
     endTime = numNowTime + 200 - 2400;
   }
-  item.timeZoneStart =
-    String(startTime).substr(0, String(startTime).length - 2) + ':00';
-  item.timeZoneEnd =
-    String(endTime).substr(0, String(endTime).length - 2) + ':00';
+  let hourLen;
+  if (String(startTime).length > 2) {
+    hourLen = String(startTime).substr(0, String(startTime).length - 2);
+  } else {
+    hourLen = '0';
+  }
+  item.timeZoneStart = hourLen + ':00';
+
+  if (String(endTime).length > 2) {
+    hourLen = String(endTime).substr(0, String(endTime).length - 2);
+  } else {
+    hourLen = '0';
+  }
+  item.timeZoneEnd = hourLen + ':00';
   props.addAlermItem(item);
   json.addAsyncStorage(item);
   props.navigation.navigate('Top');

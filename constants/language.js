@@ -12,7 +12,7 @@ export const LANGUAGE = {
     distanceMessageAlermed: '既に通知済みです',
     distanceMessageOutsideWeekDay: '本日は通知しません',
     distanceMessageOutsideTime: '通知時間外です',
-    recovery: '再通知設定条件',
+    recovery: '再通知設定',
     recoveryTime: '一定時間経過',
     recoveryTimeDes: '一定時間経過後に再通知可能となります',
     recoveryDistance: '通知距離範囲外',
