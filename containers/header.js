@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
-import { Header, Icon } from 'react-native-elements';
+import { Header } from 'react-native-elements';
 import { LANGUAGE } from '../constants/language';
 import * as DEF from '../constants/constants';
 import * as json from '../containers/jsonFile';
@@ -138,12 +137,14 @@ export const topHeader = props => {
         underlayColor: CL_HEADER,
         onPress: () => settingBtn(props),
       }}
-      centerComponent={{
-        icon: homeIcon,
-        type: type,
-        color: CL_ICON_HEADER,
-        size: ICON_SIZE,
-      }}
+      centerComponent={
+        DEF.DISPLAY_HEADER_ICON && {
+          icon: homeIcon,
+          type: type,
+          color: CL_ICON_HEADER,
+          size: ICON_SIZE,
+        }
+      }
       rightComponent={{
         icon: 'add',
         color: CL_ICON_HEADER,
@@ -169,11 +170,13 @@ export const newRegistHeader = (state, props) => {
         underlayColor: CL_HEADER,
         onPress: () => props.navigation.navigate('Top'),
       }}
-      centerComponent={{
-        icon: 'map',
-        color: CL_ICON_HEADER,
-        size: ICON_SIZE,
-      }}
+      centerComponent={
+        DEF.DISPLAY_HEADER_ICON && {
+          icon: 'map',
+          color: CL_ICON_HEADER,
+          size: ICON_SIZE,
+        }
+      }
       rightComponent={{
         text: LANGUAGE.wd.decision,
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
@@ -198,11 +201,13 @@ export const searchHeader = props => {
         underlayColor: CL_HEADER,
         onPress: () => props.navigation.navigate('Top'),
       }}
-      centerComponent={{
-        icon: 'map',
-        color: CL_ICON_HEADER,
-        size: ICON_SIZE,
-      }}
+      centerComponent={
+        DEF.DISPLAY_HEADER_ICON && {
+          icon: 'map',
+          color: CL_ICON_HEADER,
+          size: ICON_SIZE,
+        }
+      }
       rightComponent={{
         text: LANGUAGE.wd.decision,
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
@@ -227,11 +232,13 @@ export const editRegistHeader = (state, props, listIndex) => {
         underlayColor: CL_HEADER,
         onPress: () => props.navigation.navigate('Top'),
       }}
-      centerComponent={{
-        icon: 'explore',
-        color: CL_ICON_HEADER,
-        size: ICON_SIZE,
-      }}
+      centerComponent={
+        DEF.DISPLAY_HEADER_ICON && {
+          icon: 'explore',
+          color: CL_ICON_HEADER,
+          size: ICON_SIZE,
+        }
+      }
       rightComponent={{
         text: LANGUAGE.wd.decision,
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
@@ -256,7 +263,13 @@ export const settingHeader = (state, props) => {
         underlayColor: CL_HEADER,
         onPress: () => props.navigation.navigate('Top'),
       }}
-      centerComponent={{ icon: 'settings', color: CL_ICON_HEADER, size: ICON_SIZE }}
+      centerComponent={
+        DEF.DISPLAY_HEADER_ICON && {
+          icon: 'settings',
+          color: CL_ICON_HEADER,
+          size: ICON_SIZE,
+        }
+      }
       rightComponent={{
         text: LANGUAGE.wd.update,
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },

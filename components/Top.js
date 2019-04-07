@@ -33,8 +33,12 @@ import {
 } from '../actions/actions';
 import * as DEF from '../constants/constants';
 import { LANGUAGE } from '../constants/language';
-import { Location, TaskManager, Notifications, Speech } from 'expo';
-import TimerMixin from 'react-timer-mixin';
+import {
+  TaskManager,
+  Notifications,
+  AdMobBanner,
+  PublisherBanner,
+} from 'expo';
 
 const ICON_SIZE = 20;
 const statusicon = item => {
@@ -221,6 +225,11 @@ export class Top extends Component {
               </TouchableOpacity>
             </Swipeout>
           )}
+        />
+        <AdMobBanner
+          bannerSize="fullBanner"
+          adUnitID="ca-app-pub-2103807205659646/2958032499" // Test ID, Replace with your-admob-unit-id
+          onDidFailToReceiveAdWithError={this.bannerError}
         />
       </View>
     );

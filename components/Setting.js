@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, Switch, View, Alert } from 'react-native';
+import { Text, Switch, View, Alert, NativeModules } from 'react-native';
 import { connect } from 'react-redux';
 import {
   setOwnInfoSetting,
@@ -9,12 +9,12 @@ import {
 import { styles } from '../containers/styles';
 import { PERFORMANCE_KIND, SORT_KIND } from '../constants/constants';
 import { Header, Button, ButtonGroup } from 'react-native-elements';
-import { startLocation } from '../containers/location';
 import * as json from '../containers/jsonFile';
 import { LANGUAGE } from '../constants/language';
 import { getCurrentPosition } from '../containers/position';
 import { settingHeader } from '../containers/header';
 
+const { RNIapModule } = NativeModules;
 export class Setting extends React.Component {
   constructor(props) {
     super(props);
@@ -58,6 +58,30 @@ export class Setting extends React.Component {
     ]);
   }
 
+  getDesDitance = index => {
+    let text = LANGUAGE.wd.getLocationDesChoice;
+    switch (index) {
+      case 0:
+        text = LANGUAGE.wd.getLocationDesChoiceLowest;
+        break;
+      case 1:
+        text = LANGUAGE.wd.getLocationDesChoiceLow;
+        break;
+      case 2:
+        text = LANGUAGE.wd.getLocationDesChoiceBalanced;
+        break;
+      case 3:
+        text = LANGUAGE.wd.getLocationDesChoiceHigh;
+        break;
+      case 4:
+        text = LANGUAGE.wd.getLocationDesChoicehigHest;
+        break;
+      case 5:
+        text = LANGUAGE.wd.getLocationDesChoicehigBest;
+        break;
+    }
+    return text;
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -90,7 +114,7 @@ export class Setting extends React.Component {
         <View style={styles.rowTextSetting}>
           <Text style={styles.textDes}>
             {!this.state.performanceSelect
-              ? LANGUAGE.wd.getLocationDesChoice
+              ? this.getDesDitance(this.state.performance)
               : LANGUAGE.wd.getLocationDesAuto}
           </Text>
         </View>

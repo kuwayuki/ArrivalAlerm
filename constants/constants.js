@@ -1,5 +1,8 @@
 import { LANGUAGE } from '../constants/language';
 let unique = '_NAME';
+
+export const DISPLAY_HEADER_ICON = false;
+
 export const ALERM_LIST = {
   ADD: 'ADD' + unique,
   EDIT: 'EDIT' + unique,

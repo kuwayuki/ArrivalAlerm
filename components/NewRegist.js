@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   View,
-  StyleSheet,
   Text,
   TextInput,
   Alert,

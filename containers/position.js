@@ -1,4 +1,3 @@
-import { Vibration } from 'react-native';
 import { getDistanceMeter, getNumTime, getTimeFromDateTime } from './utils';
 import { addAsyncStorage } from './jsonFile';
 import { Notifications } from 'expo';

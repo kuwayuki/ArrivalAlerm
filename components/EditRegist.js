@@ -12,7 +12,6 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { connect } from 'react-redux';
 import { setAlermItem } from '../actions/actions';
 import {
-  INITIAL_ITEM,
   DISTANCE_KIND,
   DISTANCE_KIND_METER,
   WEEK_DAY,

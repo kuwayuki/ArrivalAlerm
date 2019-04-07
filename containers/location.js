@@ -1,7 +1,6 @@
 import {
   Location,
   TaskManager,
-  Notifications,
   Speech,
   Permissions,
 } from 'expo';
@@ -12,7 +11,6 @@ import {
 } from '../containers/jsonFile';
 import {
   checkPosition,
-  getCurrentPosition,
   isCheckTime,
   isCheckDayWeek,
 } from '../containers/position';
