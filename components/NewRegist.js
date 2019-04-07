@@ -12,13 +12,14 @@ import {
 } from 'react-native';
 import { styles } from '../containers/styles';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Icon, Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { addAlermItem } from '../actions/actions';
 import * as json from '../containers/jsonFile';
 import { LANGUAGE } from '../constants/language';
 import { newRegistHeader } from '../containers/header';
 import axios from 'axios';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
 const GEOCODE_ENDPOINT =
   'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
@@ -153,7 +154,7 @@ export class NewRegist extends React.Component {
         {newRegistHeader(this.state, this.props)}
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={styles.word}>
-            <Icon name="search" size="25" containerStyle={styles.wordIcon} />
+            <MaterialIcons name="search" size="25" style={styles.wordIcon} />
             <TextInput
               inlineImagePadding={10}
               style={styles.wordInput}
@@ -190,12 +191,11 @@ export class NewRegist extends React.Component {
                   <TouchableOpacity
                     style={styles.ListRow}
                     onPress={() => this.listSelect(item)}>
-                    <Icon
+                    <FontAwesome
                       name="map-pin"
-                      type="font-awesome"
                       color="red"
                       size="25"
-                      containerStyle={styles.icon}
+                      style={styles.icon}
                     />
                     <View style={styles.itemNew}>
                       <Text style={styles.itemTitle} numberOfLines={1}>

@@ -22,6 +22,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import * as utils from '../containers/utils';
 import { LANGUAGE } from '../constants/language';
 import { editRegistHeader } from '../containers/header';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 let listIndex = 0;
 let selectTimer = 0; // 0:start / 1:end
@@ -130,11 +131,15 @@ export class EditRegist extends React.Component {
   markerSetting = e => {
     const position = e.nativeEvent.coordinate;
     const marker_copy = this.state.markers.slice();
+    const region = this.state.region;
+    region.latitude = position.latitude;
+    region.longitude = position.longitude;
     marker_copy[0].latlng = position;
     marker_copy[0].title = e.nativeEvent.name;
     this.setState({
       title: e.nativeEvent.name,
       markers: marker_copy,
+      region,
     });
   };
 
@@ -157,31 +162,36 @@ export class EditRegist extends React.Component {
   render() {
     const checkBoxContainer = (index, stateWeekDay) => {
       return (
-        <CheckBox
-          containerStyle={styles.checkBox}
-          textStyle={styles.checkBox}
-          title={WEEK_DAY[index]}
-          checked={stateWeekDay}
-          onPress={() => {
-            switch (index) {
-              case 0:
-                return this.setState({ isMonday: !stateWeekDay });
-              case 1:
-                return this.setState({ isTuesday: !stateWeekDay });
-              case 2:
-                return this.setState({ isWednesday: !stateWeekDay });
-              case 3:
-                return this.setState({ isThursday: !stateWeekDay });
-              case 4:
-                return this.setState({ isFriday: !stateWeekDay });
-              case 5:
-                return this.setState({ isSaturday: !stateWeekDay });
-              case 6:
-                return this.setState({ isSunday: !stateWeekDay });
+        <View>
+          <Text style={styles.checkBoxText}>{WEEK_DAY[index]}</Text>
+          <MaterialCommunityIcons
+            style={styles.checkBox}
+            name={
+              stateWeekDay
+                ? 'checkbox-marked-outline'
+                : 'checkbox-blank-outline'
             }
-          }}
-          iconRight
-        />
+            size={30}
+            onPress={() => {
+              switch (index) {
+                case 0:
+                  return this.setState({ isMonday: !stateWeekDay });
+                case 1:
+                  return this.setState({ isTuesday: !stateWeekDay });
+                case 2:
+                  return this.setState({ isWednesday: !stateWeekDay });
+                case 3:
+                  return this.setState({ isThursday: !stateWeekDay });
+                case 4:
+                  return this.setState({ isFriday: !stateWeekDay });
+                case 5:
+                  return this.setState({ isSaturday: !stateWeekDay });
+                case 6:
+                  return this.setState({ isSunday: !stateWeekDay });
+              }
+            }}
+          />
+        </View>
       );
     };
     return (

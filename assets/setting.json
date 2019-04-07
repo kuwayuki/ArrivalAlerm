@@ -5,5 +5,10 @@
     "performance": 0,
     "distance": 100,
     "isFree": false,
+    "sound": true,
+    "recoveryTime": 0,
+    "recoveryDistance": true,
+    "sortKind": 0,
+    "sortType": true,
   }
 ]

@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   isFree: true,
   isRead: false,
   sound: true,
-  recoveryTime: 0,
+  recoveryTime: DEF.RECOVERY_TIME,
   recoveryDistance: true,
   sortKind: 0,
   sortType: true,

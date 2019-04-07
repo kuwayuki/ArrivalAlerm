@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { styles } from '../containers/styles';
-import { Icon } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
 import { connect } from 'react-redux';
 import * as utils from '../containers/utils';
@@ -33,34 +32,25 @@ import {
 } from '../actions/actions';
 import * as DEF from '../constants/constants';
 import { LANGUAGE } from '../constants/language';
-import {
-  TaskManager,
-  Notifications,
-  AdMobBanner,
-  PublisherBanner,
-} from 'expo';
+import { TaskManager, Notifications, AdMobBanner, PublisherBanner } from 'expo';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
 const ICON_SIZE = 20;
 const statusicon = item => {
   let status = utils.getStatusIcon(item);
   switch (status) {
     case DEF.STATUS.AVAILABLE:
-      return <Icon name="volume-up" size={ICON_SIZE} color="lime" />;
+      return <MaterialIcons name="volume-up" size={ICON_SIZE} color="lime" />;
     case DEF.STATUS.DISABLE:
-      return <Icon name="volume-off" size={ICON_SIZE} color="red" />;
+      return <MaterialIcons name="volume-off" size={ICON_SIZE} color="red" />;
     case DEF.STATUS.ALERMED:
-      return <Icon name="volume-off" size={ICON_SIZE} color="red" />;
+      return <MaterialIcons name="volume-off" size={ICON_SIZE} color="red" />;
     case DEF.STATUS.OUT_WEEK_DAY:
       return (
-        <Icon
-          name="calendar-times-o"
-          type="font-awesome"
-          size={ICON_SIZE}
-          color="red"
-        />
+        <FontAwesome name="calendar-times-o" size={ICON_SIZE} color="red" />
       );
     case DEF.STATUS.OUT_TIME:
-      return <Icon name="alarm-off" size={ICON_SIZE} color="red" />;
+      return <MaterialIcons name="alarm-off" size={ICON_SIZE} color="red" />;
   }
 };
 

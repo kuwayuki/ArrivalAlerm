@@ -3,13 +3,15 @@ import { StyleSheet } from 'react-native';
 // 背景色
 const CL_BG = 'aliceblue';
 // リスト背景色
-const CL_LIST_BG = 'white';
+const CL_LIST_BG = 'snow';
 // ヘッダー色
 export const CL_HEADER = 'royalblue';
 // 項目ヘッダー色
-const CL_ITEM_HEADER = 'turquoise';
+const CL_ITEM_HEADER = 'darkturquoise';
+// const CL_ITEM_HEADER = 'darkturquoise';
 // 項目サブヘッダー色
-const CL_ITEM_SUB_HEADER = 'yellowgreen';
+const CL_ITEM_SUB_HEADER = 'darkgray';
+// const CL_ITEM_SUB_HEADER = 'yellowgreen';
 
 // 線色
 const CL_BORDER = 'gray';
@@ -106,6 +108,10 @@ export const styles = StyleSheet.create({
     paddingLeft: 30,
     fontSize: 18,
     textAlign: 'right',
+  },
+  checkBoxText: {
+    flexDirection: 'row',
+    fontSize: 12,
   },
   checkBox: {
     padding: 0,

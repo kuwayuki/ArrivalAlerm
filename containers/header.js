@@ -5,6 +5,7 @@ import * as DEF from '../constants/constants';
 import * as json from '../containers/jsonFile';
 import { getNumTime, getTimeFromDateTime } from '../containers/utils';
 import { CL_HEADER, CL_ICON_HEADER } from './styles';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const ICON_SIZE = 30;
 const FONT_SIZE = 18;
@@ -106,6 +107,25 @@ async function editMarkerClick(state, props, listIndex) {
   json.addAsyncStorage(item);
   props.navigation.navigate('Top');
 }
+const headerIcon = (props, name) => {
+  return (
+    <MaterialIcons
+      name={name}
+      size={ICON_SIZE}
+      color={CL_ICON_HEADER}
+      onPress={() => {
+        if (name == 'settings') {
+          return settingBtn(props);
+        } else if (name == 'add') {
+          return newRegistBtn(props);
+        } else if (name == 'arrow-back') {
+          return props.navigation.navigate('Top');
+        }
+      }}
+    />
+  );
+};
+
 export const topHeader = props => {
   let speed = props.ownInfo.coords.speed;
   let homeIcon = 'home';
@@ -130,13 +150,7 @@ export const topHeader = props => {
 
   return (
     <Header
-      leftComponent={{
-        icon: 'settings',
-        color: CL_ICON_HEADER,
-        size: ICON_SIZE,
-        underlayColor: CL_HEADER,
-        onPress: () => settingBtn(props),
-      }}
+      leftComponent={headerIcon(props, 'settings')}
       centerComponent={
         DEF.DISPLAY_HEADER_ICON && {
           icon: homeIcon,
@@ -145,13 +159,7 @@ export const topHeader = props => {
           size: ICON_SIZE,
         }
       }
-      rightComponent={{
-        icon: 'add',
-        color: CL_ICON_HEADER,
-        size: ICON_SIZE,
-        underlayColor: CL_HEADER,
-        onPress: () => newRegistBtn(props),
-      }}
+      rightComponent={headerIcon(props, 'add')}
       containerStyle={{
         backgroundColor: CL_HEADER,
         justifyContent: 'space-around',
@@ -163,13 +171,7 @@ export const topHeader = props => {
 export const newRegistHeader = (state, props) => {
   return (
     <Header
-      leftComponent={{
-        icon: 'arrow-back',
-        color: CL_ICON_HEADER,
-        size: ICON_SIZE,
-        underlayColor: CL_HEADER,
-        onPress: () => props.navigation.navigate('Top'),
-      }}
+      leftComponent={headerIcon(props, 'arrow-back')}
       centerComponent={
         DEF.DISPLAY_HEADER_ICON && {
           icon: 'map',
@@ -191,47 +193,10 @@ export const newRegistHeader = (state, props) => {
   );
 };
 
-export const searchHeader = props => {
-  return (
-    <Header
-      leftComponent={{
-        icon: 'arrow-back',
-        color: CL_ICON_HEADER,
-        size: ICON_SIZE,
-        underlayColor: CL_HEADER,
-        onPress: () => props.navigation.navigate('Top'),
-      }}
-      centerComponent={
-        DEF.DISPLAY_HEADER_ICON && {
-          icon: 'map',
-          color: CL_ICON_HEADER,
-          size: ICON_SIZE,
-        }
-      }
-      rightComponent={{
-        text: LANGUAGE.wd.decision,
-        style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
-        underlayColor: CL_HEADER,
-        onPress: () => newRegistBtn(props),
-      }}
-      containerStyle={{
-        backgroundColor: CL_HEADER,
-        justifyContent: 'space-around',
-      }}
-    />
-  );
-};
-
 export const editRegistHeader = (state, props, listIndex) => {
   return (
     <Header
-      leftComponent={{
-        icon: 'arrow-back',
-        color: CL_ICON_HEADER,
-        size: ICON_SIZE,
-        underlayColor: CL_HEADER,
-        onPress: () => props.navigation.navigate('Top'),
-      }}
+      leftComponent={headerIcon(props, 'arrow-back')}
       centerComponent={
         DEF.DISPLAY_HEADER_ICON && {
           icon: 'explore',
@@ -256,13 +221,7 @@ export const editRegistHeader = (state, props, listIndex) => {
 export const settingHeader = (state, props) => {
   return (
     <Header
-      leftComponent={{
-        icon: 'arrow-back',
-        color: CL_ICON_HEADER,
-        size: ICON_SIZE,
-        underlayColor: CL_HEADER,
-        onPress: () => props.navigation.navigate('Top'),
-      }}
+      leftComponent={headerIcon(props, 'arrow-back')}
       centerComponent={
         DEF.DISPLAY_HEADER_ICON && {
           icon: 'settings',
