@@ -20,7 +20,7 @@ import { LANGUAGE } from '../constants/language';
 import { newRegistHeader } from '../containers/header';
 import axios from 'axios';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
-import { AdMobBanner, PublisherBanner } from 'expo';
+import { admobBanner } from '../containers/googleAdmob';
 
 const GEOCODE_ENDPOINT =
   'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
@@ -235,11 +235,7 @@ export class NewRegist extends React.Component {
             />
           ))}
         </MapView>
-        <AdMobBanner
-          bannerSize="smartBannerPortrait"
-          adUnitID="ca-app-pub-2103807205659646/2958032499" // Test ID, Replace with your-admob-unit-id
-          onDidFailToReceiveAdWithError={this.bannerError}
-        />
+        {admobBanner()}
       </View>
     );
   }

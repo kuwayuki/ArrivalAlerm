@@ -82,12 +82,13 @@ export async function getJsonData(props) {
       });
     });
   } else {
-    console.log('jsonファイルから読み込み');
-    AsyncStorage.clear();
-    json.filter(function(item, index) {
+    await AsyncStorage.clear();
+    json.filter(async function(item) {
       // 通知項目情報取得
       if (item.isFree != null) {
-        AsyncStorage.setItem(UNIQUE_SETTING, JSON.stringify(item));
+        await AsyncStorage.setItem(UNIQUE_SETTING, JSON.stringify(item));
+        await props.setOwnInfo(item);
+        // await isExistsAsyncStorage(props);
       }
     });
   }

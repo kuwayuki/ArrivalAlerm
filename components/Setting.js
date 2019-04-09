@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Text, Switch, View, Alert, NativeModules } from 'react-native';
 import { connect } from 'react-redux';
 import {
+  setOwnInfo,
   setOwnInfoSetting,
   setOwnInfoCoords,
   clearStore,
@@ -13,6 +14,7 @@ import * as json from '../containers/jsonFile';
 import { LANGUAGE } from '../constants/language';
 import { getCurrentPosition } from '../containers/position';
 import { settingHeader } from '../containers/header';
+import { admobInterstitial } from '../containers/googleAdmob';
 
 const { RNIapModule } = NativeModules;
 export class Setting extends React.Component {
@@ -29,6 +31,10 @@ export class Setting extends React.Component {
       sortKind: props.ownInfo.sortKind,
       sortType: props.ownInfo.sortType,
     };
+  }
+
+  async componentDidMount() {
+    await admobInterstitial();
   }
 
   clearSetting() {
@@ -118,6 +124,38 @@ export class Setting extends React.Component {
               : LANGUAGE.wd.getLocationDesAuto}
           </Text>
         </View>
+        <Text style={styles.sectionHeader}>{LANGUAGE.wd.sort}</Text>
+        <View style={styles.bgColorWhite}>
+          <ButtonGroup
+            onPress={sortKind => this.setState({ sortKind })}
+            selectedButtonStyle={styles.bgColorSelected}
+            buttons={SORT_KIND}
+            selectedIndex={this.state.sortKind}
+          />
+        </View>
+        <View style={styles.rowTextSetting}>
+          <Text style={styles.text}>
+            {this.state.sortType
+              ? LANGUAGE.wd.sortNormal
+              : LANGUAGE.wd.sortReverse}
+          </Text>
+          <Switch
+            style={styles.setting}
+            onValueChange={sortType => this.setState({ sortType })}
+            value={this.state.sortType}
+          />
+        </View>
+        <Text style={styles.sectionHeader}>{LANGUAGE.wd.sound}</Text>
+        <View style={styles.rowTextSetting}>
+          <Text style={styles.text}>
+            {this.state.sound ? LANGUAGE.wd.on : LANGUAGE.wd.off}
+          </Text>
+          <Switch
+            style={styles.setting}
+            onValueChange={sound => this.setState({ sound })}
+            value={this.state.sound}
+          />
+        </View>
         <Text style={styles.sectionHeader}>{LANGUAGE.wd.recovery}</Text>
         <Text style={styles.sectionHeader2}>{LANGUAGE.wd.recoveryTime}</Text>
         <View style={styles.rowTextSetting}>
@@ -157,38 +195,6 @@ export class Setting extends React.Component {
             </Text>
           </View>
         )}
-        <Text style={styles.sectionHeader}>{LANGUAGE.wd.sound}</Text>
-        <View style={styles.rowTextSetting}>
-          <Text style={styles.text}>
-            {this.state.sound ? LANGUAGE.wd.on : LANGUAGE.wd.off}
-          </Text>
-          <Switch
-            style={styles.setting}
-            onValueChange={sound => this.setState({ sound })}
-            value={this.state.sound}
-          />
-        </View>
-        <Text style={styles.sectionHeader}>{LANGUAGE.wd.sort}</Text>
-        <View style={styles.bgColorWhite}>
-          <ButtonGroup
-            onPress={sortKind => this.setState({ sortKind })}
-            selectedButtonStyle={styles.bgColorSelected}
-            buttons={SORT_KIND}
-            selectedIndex={this.state.sortKind}
-          />
-        </View>
-        <View style={styles.rowTextSetting}>
-          <Text style={styles.text}>
-            {this.state.sortType
-              ? LANGUAGE.wd.sortNormal
-              : LANGUAGE.wd.sortReverse}
-          </Text>
-          <Switch
-            style={styles.setting}
-            onValueChange={sortType => this.setState({ sortType })}
-            value={this.state.sortType}
-          />
-        </View>
         <Text style={styles.sectionHeader}>{LANGUAGE.wd.other}</Text>
         {this.props.isFree && (
           <View style={styles.rowTextSetting}>
@@ -218,6 +224,7 @@ const mapStateToProps = state => {
   return state;
 };
 const mapDispatchToProps = {
+  setOwnInfo,
   setOwnInfoSetting,
   setOwnInfoCoords,
   clearStore,

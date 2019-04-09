@@ -6,7 +6,7 @@
     "distance": 100,
     "isFree": false,
     "sound": true,
-    "recoveryTime": 0,
+    "recoveryTime": 60,
     "recoveryDistance": true,
     "sortKind": 0,
     "sortType": true,

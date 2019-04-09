@@ -32,8 +32,9 @@ import {
 } from '../actions/actions';
 import * as DEF from '../constants/constants';
 import { LANGUAGE } from '../constants/language';
-import { TaskManager, Notifications, AdMobBanner, PublisherBanner } from 'expo';
+import { TaskManager, Notifications } from 'expo';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import { admobBanner } from '../containers/googleAdmob';
 
 const ICON_SIZE = 20;
 const statusicon = item => {
@@ -216,11 +217,7 @@ export class Top extends Component {
             </Swipeout>
           )}
         />
-        <AdMobBanner
-          bannerSize="smartBannerPortrait"
-          adUnitID="ca-app-pub-2103807205659646/2958032499" // Test ID, Replace with your-admob-unit-id
-          onDidFailToReceiveAdWithError={this.bannerError}
-        />
+        {admobBanner()}
       </View>
     );
   }

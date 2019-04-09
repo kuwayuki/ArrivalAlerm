@@ -23,7 +23,7 @@ import * as utils from '../containers/utils';
 import { LANGUAGE } from '../constants/language';
 import { editRegistHeader } from '../containers/header';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { AdMobBanner, PublisherBanner } from 'expo';
+import { admobInterstitial } from '../containers/googleAdmob';
 
 let listIndex = 0;
 let selectTimer = 0; // 0:start / 1:end
@@ -93,6 +93,10 @@ export class EditRegist extends React.Component {
         },
       ],
     };
+  }
+
+  async componentDidMount() {
+    await admobInterstitial();
   }
 
   //
@@ -360,11 +364,6 @@ export class EditRegist extends React.Component {
             </View>
           )}
         </ScrollView>
-        <AdMobBanner
-          bannerSize="smartBannerPortrait"
-          adUnitID="ca-app-pub-2103807205659646/2986555298" // Test ID, Replace with your-admob-unit-id
-          onDidFailToReceiveAdWithError={this.bannerError}
-        />
       </View>
     );
   }
