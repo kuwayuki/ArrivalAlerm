@@ -88,7 +88,6 @@ export async function getJsonData(props) {
       if (item.isFree != null) {
         await AsyncStorage.setItem(UNIQUE_SETTING, JSON.stringify(item));
         await props.setOwnInfo(item);
-        // await isExistsAsyncStorage(props);
       }
     });
   }

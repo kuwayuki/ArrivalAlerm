@@ -7,16 +7,16 @@ import {
   setOwnInfoCoords,
   clearStore,
 } from '../actions/actions';
-import { styles } from '../containers/styles';
+import { Button, ButtonGroup } from 'react-native-elements';
+import AppLink from 'react-native-app-link';
 import { PERFORMANCE_KIND, SORT_KIND } from '../constants/constants';
-import { Header, Button, ButtonGroup } from 'react-native-elements';
-import * as json from '../containers/jsonFile';
 import { LANGUAGE } from '../constants/language';
+import * as json from '../containers/jsonFile';
+import { styles } from '../containers/styles';
 import { getCurrentPosition } from '../containers/position';
 import { settingHeader } from '../containers/header';
 import { admobInterstitial } from '../containers/googleAdmob';
 
-const { RNIapModule } = NativeModules;
 export class Setting extends React.Component {
   constructor(props) {
     super(props);
@@ -34,7 +34,22 @@ export class Setting extends React.Component {
   }
 
   async componentDidMount() {
-    await admobInterstitial();
+    if (this.props.ownInfo.isFree) {
+      await admobInterstitial();
+    }
+  }
+
+  buyStore() {
+    let appStoreId = 'id443904275';
+    let playStoreId = 'id443904275';
+
+    AppLink.openInStore({ appStoreId, playStoreId })
+      .then(() => {
+        // do stuff
+      })
+      .catch(err => {
+        // handle error
+      });
   }
 
   clearSetting() {
@@ -196,18 +211,18 @@ export class Setting extends React.Component {
           </View>
         )}
         <Text style={styles.sectionHeader}>{LANGUAGE.wd.other}</Text>
-        {this.props.isFree && (
+        {this.props.ownInfo.isFree && (
           <View style={styles.rowTextSetting}>
-            <Text style={styles.textDes}>{LANGUAGE.wd.payDes}</Text>
+            <Text style={styles.text}>{LANGUAGE.wd.payDes}</Text>
             <Button
               style={styles.button}
               title={LANGUAGE.wd.pay}
-              onPress={() => this.clearSetting()}
+              onPress={() => this.buyStore()}
             />
           </View>
         )}
         <View style={styles.rowTextSetting}>
-          <Text style={styles.textDes}>{LANGUAGE.wd.initializeDes}</Text>
+          <Text style={styles.text}>{LANGUAGE.wd.initializeDes}</Text>
           <Button
             style={styles.button}
             buttonStyle={styles.bgColorRed}

@@ -7,8 +7,11 @@ import {
   ScrollView,
   SectionList,
 } from 'react-native';
+import { ButtonGroup } from 'react-native-elements';
 import { styles } from '../containers/styles';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import { connect } from 'react-redux';
 import { setAlermItem } from '../actions/actions';
 import {
@@ -16,13 +19,9 @@ import {
   DISTANCE_KIND_METER,
   WEEK_DAY,
 } from '../constants/constants';
-import { Header, CheckBox, Button, ButtonGroup } from 'react-native-elements';
-import * as json from '../containers/jsonFile';
-import DateTimePicker from 'react-native-modal-datetime-picker';
-import * as utils from '../containers/utils';
 import { LANGUAGE } from '../constants/language';
+import * as utils from '../containers/utils';
 import { editRegistHeader } from '../containers/header';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { admobInterstitial } from '../containers/googleAdmob';
 
 let listIndex = 0;
@@ -96,7 +95,9 @@ export class EditRegist extends React.Component {
   }
 
   async componentDidMount() {
-    await admobInterstitial();
+    if (this.props.ownInfo.isFree) {
+      await admobInterstitial();
+    }
   }
 
   //

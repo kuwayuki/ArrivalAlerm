@@ -1,26 +1,16 @@
 import React, { Component } from 'react';
-import {
-  Text,
-  View,
-  FlatList,
-  Switch,
-  Alert,
-  Vibration,
-  TouchableOpacity,
-} from 'react-native';
-import { styles } from '../containers/styles';
+import { Text, View, FlatList, Switch, TouchableOpacity } from 'react-native';
+import { Notifications } from 'expo';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import Swipeout from 'react-native-swipeout';
 import { connect } from 'react-redux';
+import { styles } from '../containers/styles';
 import * as utils from '../containers/utils';
 import * as json from '../containers/jsonFile';
 import { _handleNotification, startLocation } from '../containers/location';
 import { topHeader } from '../containers/header';
-import {
-  checkPosition,
-  getCurrentPosition,
-  isCheckDayWeek,
-  isCheckTime,
-} from '../containers/position';
+import { admobBanner } from '../containers/googleAdmob';
+import { getCurrentPosition } from '../containers/position';
 import {
   setOwnInfo,
   setOwnInfoCoords,
@@ -32,9 +22,6 @@ import {
 } from '../actions/actions';
 import * as DEF from '../constants/constants';
 import { LANGUAGE } from '../constants/language';
-import { TaskManager, Notifications } from 'expo';
-import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
-import { admobBanner } from '../containers/googleAdmob';
 
 const ICON_SIZE = 20;
 const statusicon = item => {
@@ -217,7 +204,7 @@ export class Top extends Component {
             </Swipeout>
           )}
         />
-        {admobBanner()}
+        {this.props.ownInfo.isFree && admobBanner()}
       </View>
     );
   }

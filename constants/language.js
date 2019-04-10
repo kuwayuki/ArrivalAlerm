@@ -44,7 +44,7 @@ export const LANGUAGE = {
     initialize: '初期化',
     initializeQuestion: '初期化します、よろしいですか？',
     initializeOK: '初期化しました',
-    initializeDes: '設定情報と登録地点を初期化',
+    initializeDes: '設定情報の初期化',
     editTitle: '登録名称',
     editAlermDistance: '通知距離',
     meter: 'メートル',

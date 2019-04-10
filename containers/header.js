@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Header } from 'react-native-elements';
+import { MaterialIcons } from '@expo/vector-icons';
 import { LANGUAGE } from '../constants/language';
 import * as DEF from '../constants/constants';
 import * as json from '../containers/jsonFile';
 import { getNumTime, getTimeFromDateTime } from '../containers/utils';
 import { CL_HEADER, CL_ICON_HEADER } from './styles';
-import { MaterialIcons } from '@expo/vector-icons';
 
 const ICON_SIZE = 30;
 const FONT_SIZE = 18;

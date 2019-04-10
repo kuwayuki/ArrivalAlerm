@@ -3,24 +3,22 @@ import {
   View,
   Text,
   TextInput,
-  Alert,
   FlatList,
   ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { styles } from '../containers/styles';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Button } from 'react-native-elements';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import axios from 'axios';
 import { connect } from 'react-redux';
 import { addAlermItem } from '../actions/actions';
-import * as json from '../containers/jsonFile';
 import { LANGUAGE } from '../constants/language';
-import { newRegistHeader } from '../containers/header';
-import axios from 'axios';
-import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import { styles } from '../containers/styles';
 import { admobBanner } from '../containers/googleAdmob';
+import { newRegistHeader } from '../containers/header';
 
 const GEOCODE_ENDPOINT =
   'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
@@ -235,7 +233,7 @@ export class NewRegist extends React.Component {
             />
           ))}
         </MapView>
-        {admobBanner()}
+        {this.props.ownInfo.isFree && admobBanner()}
       </View>
     );
   }

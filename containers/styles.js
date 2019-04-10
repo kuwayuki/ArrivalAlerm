@@ -221,7 +221,7 @@ export const styles = StyleSheet.create({
   },
   textDes: {
     paddingLeft: 30,
-    fontSize: 14,
+    fontSize: 12,
   },
   button: {
     width: 90,

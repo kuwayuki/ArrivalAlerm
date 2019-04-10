@@ -33,7 +33,7 @@ export const INITIAL_ITEM = {
   isAlermed: false,
   alermTime: null,
   alermMessage: LANGUAGE.wd.alermPoint + LANGUAGE.wd.arrivedNear,
-  alermDistance: 300,
+  alermDistance: 500,
   interval: 'auto',
   coords: { latitude: null, longitude: null },
   isLimitTimeZone: false,
