@@ -16,14 +16,20 @@ const settingBtn = props => {
 
 export const newRegistBtn = props => {
   let count = props.alermList.length;
-  if (props.ownInfo.isFree && count > DEF.MAX_TRIAL) {
-    alert(
-      LANGUAGE.wd.freeAlert1 + (DEF.MAX_TRIAL + 1) + LANGUAGE.wd.freeAlert2
-    );
-  } else if (count > DEF.MAX_OFFICAL) {
-    alert(DEF.MAX_OFFICAL + 1 + LANGUAGE.wd.freeAlert2);
+  let maxCount = props.ownInfo.reviewed ? 1 : 0;
+
+  if (props.ownInfo.isFree) {
+    maxCount += DEF.MAX_TRIAL;
   } else {
-    // props.navigation.navigate('Search');
+    maxCount += DEF.MAX_OFFICAL;
+  }
+  if (count > maxCount) {
+    if (props.ownInfo.isFree) {
+      alert(LANGUAGE.wd.freeAlert1 + (maxCount + 1) + LANGUAGE.wd.freeAlert2);
+    } else {
+      alert(maxCount + 1 + LANGUAGE.wd.freeAlert2);
+    }
+  } else {
     props.navigation.navigate('NewRegist');
   }
 };
@@ -182,13 +188,11 @@ export const newRegistHeader = (state, props) => {
   return (
     <Header
       leftComponent={headerIcon(props, 'arrow-back')}
-      centerComponent={
-        DEF.DISPLAY_HEADER_ICON && {
-          icon: 'map',
-          color: CL_ICON_HEADER,
-          size: ICON_SIZE,
-        }
-      }
+      centerComponent={{
+        text: LANGUAGE.wd.newRegist,
+        style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
+        underlayColor: CL_HEADER,
+      }}
       rightComponent={{
         text: LANGUAGE.wd.decision,
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
@@ -207,13 +211,11 @@ export const editRegistHeader = (state, props, listIndex) => {
   return (
     <Header
       leftComponent={headerIcon(props, 'arrow-back')}
-      centerComponent={
-        DEF.DISPLAY_HEADER_ICON && {
-          icon: 'explore',
-          color: CL_ICON_HEADER,
-          size: ICON_SIZE,
-        }
-      }
+      centerComponent={{
+        text: props.alermList[listIndex].title,
+        style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
+        underlayColor: CL_HEADER,
+      }}
       rightComponent={{
         text: LANGUAGE.wd.decision,
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
@@ -232,13 +234,11 @@ export const settingHeader = (state, props) => {
   return (
     <Header
       leftComponent={headerIcon(props, 'arrow-back')}
-      centerComponent={
-        DEF.DISPLAY_HEADER_ICON && {
-          icon: 'settings',
-          color: CL_ICON_HEADER,
-          size: ICON_SIZE,
-        }
-      }
+      centerComponent={{
+        text: LANGUAGE.wd.setting,
+        style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
+        underlayColor: CL_HEADER,
+      }}
       rightComponent={{
         text: LANGUAGE.wd.update,
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },

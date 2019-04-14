@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   performance: 0,
   isFree: true,
   isRead: false,
+  reviewed: false,
   sound: true,
   recoveryTime: DEF.RECOVERY_TIME,
   recoveryDistance: true,
@@ -23,6 +24,7 @@ export const ownInfo = (state = INITIAL_STATE, action) => {
         distance: Number(action.setting.distance),
         performance: Number(action.setting.performance),
         sound: action.setting.sound,
+        reviewed: action.setting.reviewed,
         recoveryTime: action.setting.recoveryTime,
         recoveryDistance: action.setting.recoveryDistance,
         sortKind: action.setting.sortKind,
@@ -53,6 +55,8 @@ export const ownInfo = (state = INITIAL_STATE, action) => {
       };
     case DEF.OWN_INFO.EDIT_SELECTED_INDEX:
       return { ...state, selectedIndex: action.selectedIndex };
+    case DEF.OWN_INFO.REVIEWED:
+      return { ...state, reviewed: action.reviewed };
     default:
       return state;
   }

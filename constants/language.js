@@ -2,6 +2,8 @@ export const LANGUAGE = {
   locale: 'ja',
   wd: {
     appTitle: 'ノリスゴ',
+    setting: '設定',
+    newRegist: '新規登録',
     update: '更新',
     decision: '決定',
     del: '削除',
@@ -39,8 +41,7 @@ export const LANGUAGE = {
     sortReverse: '逆順',
     other: 'その他',
     pay: '120円',
-    payDes:
-      '有料版を購入\n・地点登録数が8個まで登録可能\n・通知距離を手動入力可能',
+    payDes: '有料版を購入\n・8個まで地点登録可能\n・広告なし',
     initialize: '初期化',
     initializeQuestion: '初期化します、よろしいですか？',
     initializeOK: '初期化しました',
@@ -81,5 +82,8 @@ export const LANGUAGE = {
     searchSuccessMessage: '件見つかりました。',
     searchErrorMessage:
       '見つかりませんでした。\n検索対象は現在地より50km以内です。',
+    reviewTitle: 'アプリ評価',
+    reviewQuestion:
+      'いつもご利用ありがとうございます。\nアプリ評価にご協力頂けたら登録できる地点が1つ増えます。',
   },
 };

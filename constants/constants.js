@@ -18,6 +18,7 @@ export const OWN_INFO = {
   EDIT_COORDS: 'EDIT_COORDS' + unique,
   EDIT_SETTING: 'EDIT_SETTING' + unique,
   EDIT_SELECTED_INDEX: 'EDIT_SELECTED_INDEX' + unique,
+  REVIEWED: 'REVIEWED' + unique,
 };
 
 export const VIBRATION_PATTERN = {

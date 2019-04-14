@@ -24,6 +24,10 @@ export const setOwnInfoSelectedIndex = selectedIndex => ({
   type: DEF.OWN_INFO.EDIT_SELECTED_INDEX,
   selectedIndex: selectedIndex,
 });
+export const setOwnInfoReviewed = reviewed => ({
+  type: DEF.OWN_INFO.REVIEWED,
+  reviewed: reviewed,
+});
 
 // ★アラームリスト★ //////////////////////
 // アラーム項目：追加

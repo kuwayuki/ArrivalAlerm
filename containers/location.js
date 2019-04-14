@@ -1,9 +1,4 @@
-import {
-  Location,
-  TaskManager,
-  Speech,
-  Permissions,
-} from 'expo';
+import { Location, TaskManager, Speech, Permissions } from 'expo';
 import {
   mergeStorageDataOwnInfo,
   getStorageDataOwnInfo,

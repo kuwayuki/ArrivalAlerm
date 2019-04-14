@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList, Switch, TouchableOpacity } from 'react-native';
+import {
+  Text,
+  View,
+  FlatList,
+  Switch,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import { Notifications } from 'expo';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import Swipeout from 'react-native-swipeout';
@@ -9,12 +16,13 @@ import * as utils from '../containers/utils';
 import * as json from '../containers/jsonFile';
 import { _handleNotification, startLocation } from '../containers/location';
 import { topHeader } from '../containers/header';
-import { admobBanner } from '../containers/googleAdmob';
+import { admobBanner, storeReview } from '../containers/googleAdmob';
 import { getCurrentPosition } from '../containers/position';
 import {
   setOwnInfo,
   setOwnInfoCoords,
   setOwnInfoSelectedIndex,
+  setOwnInfoReviewed,
   addAlermItem,
   deleteAlermItem,
   refleshAlermItem,
@@ -122,6 +130,7 @@ export class Top extends Component {
 
   render() {
     const editRegistBtn = index => {
+      storeReview(this.props);
       this.props.setOwnInfoSelectedIndex(index);
       this.props.navigation.navigate('EditRegist');
     };
@@ -162,48 +171,50 @@ export class Top extends Component {
     return (
       <View style={styles.container}>
         {topHeader(this.props)}
-        <FlatList
-          data={sortList()}
-          extraData={this.props.alermList}
-          keyExtractor={item => item.id}
-          onRefresh={() => this.onRefresh()}
-          refreshing={this.state.isFetching}
-          renderItem={({ item }) => (
-            <Swipeout
-              right={swipeBtns(item.index)}
-              autoClose={true}
-              backgroundColor="transparent">
-              <TouchableOpacity
-                style={styles.itemListRow}
-                onPress={() => editRegistBtn(item.index)}>
-                <Text style={[styles.itemFocus, utils.getBgColor(item)]}>
-                  {utils.getDistance(this.props.ownInfo.coords, item.coords)}
-                </Text>
-                <View style={styles.viewMiddle}>
-                  <Text style={styles.itemList} numberOfLines={1}>
-                    {item.title.replace(/\s+/g, '')}
+        <ScrollView>
+          <FlatList
+            data={sortList()}
+            extraData={this.props.alermList}
+            keyExtractor={item => item.id}
+            onRefresh={() => this.onRefresh()}
+            refreshing={this.state.isFetching}
+            renderItem={({ item }) => (
+              <Swipeout
+                right={swipeBtns(item.index)}
+                autoClose={true}
+                backgroundColor="transparent">
+                <TouchableOpacity
+                  style={styles.itemListRow}
+                  onPress={() => editRegistBtn(item.index)}>
+                  <Text style={[styles.itemFocus, utils.getBgColor(item)]}>
+                    {utils.getDistance(this.props.ownInfo.coords, item.coords)}
                   </Text>
-                  <View style={styles.icons}>
-                    {statusicon(item)}
-                    <Text style={styles.itemListDis} numberOfLines={1}>
-                      {getRimDistance(this.props.ownInfo.coords, item)}
+                  <View style={styles.viewMiddle}>
+                    <Text style={styles.itemList} numberOfLines={1}>
+                      {item.title.replace(/\s+/g, '')}
                     </Text>
+                    <View style={styles.icons}>
+                      {statusicon(item)}
+                      <Text style={styles.itemListDis} numberOfLines={1}>
+                        {getRimDistance(this.props.ownInfo.coords, item)}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-                <Switch
-                  style={styles.itemSwitch}
-                  onValueChange={value => {
-                    json.setPartAsyncStorage(item.index, {
-                      isAvailable: value,
-                    });
-                    this.props.setAlermAvailable(item.index);
-                  }}
-                  value={item.isAvailable}
-                />
-              </TouchableOpacity>
-            </Swipeout>
-          )}
-        />
+                  <Switch
+                    style={styles.itemSwitch}
+                    onValueChange={value => {
+                      json.setPartAsyncStorage(item.index, {
+                        isAvailable: value,
+                      });
+                      this.props.setAlermAvailable(item.index);
+                    }}
+                    value={item.isAvailable}
+                  />
+                </TouchableOpacity>
+              </Swipeout>
+            )}
+          />
+        </ScrollView>
         {this.props.ownInfo.isFree && admobBanner()}
       </View>
     );
@@ -221,6 +232,7 @@ const mapDispatchToProps = {
   refleshAlermItem,
   setAlermAvailable,
   setOwnInfoSelectedIndex,
+  setOwnInfoReviewed,
 };
 
 export default connect(

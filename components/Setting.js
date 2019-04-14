@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { Text, Switch, View, Alert, NativeModules } from 'react-native';
+import {
+  Text,
+  Switch,
+  View,
+  Alert,
+  NativeModules,
+  ScrollView,
+} from 'react-native';
 import { connect } from 'react-redux';
 import {
   setOwnInfo,
@@ -107,129 +114,131 @@ export class Setting extends React.Component {
     return (
       <View style={styles.container}>
         {settingHeader(this.state, this.props)}
-        <Text style={styles.sectionHeader}>{LANGUAGE.wd.getLocation}</Text>
-        <View style={styles.rowTextSetting}>
-          <Text style={styles.text}>
-            {this.state.performanceSelect
-              ? LANGUAGE.wd.auto
-              : LANGUAGE.wd.choice}
-          </Text>
-          <Switch
-            style={styles.setting}
-            onValueChange={performanceSelect =>
-              this.setState({ performanceSelect })
-            }
-            value={this.state.performanceSelect}
-          />
-        </View>
-        {!this.state.performanceSelect && (
-          <View style={styles.bgColorWhite}>
-            <ButtonGroup
-              onPress={performance => this.setState({ performance })}
-              selectedButtonStyle={styles.bgColorSelected}
-              buttons={PERFORMANCE_KIND}
-              selectedIndex={this.state.performance}
+        <ScrollView>
+          <Text style={styles.sectionHeader}>{LANGUAGE.wd.getLocation}</Text>
+          <View style={styles.rowTextSetting}>
+            <Text style={styles.text}>
+              {this.state.performanceSelect
+                ? LANGUAGE.wd.auto
+                : LANGUAGE.wd.choice}
+            </Text>
+            <Switch
+              style={styles.setting}
+              onValueChange={performanceSelect =>
+                this.setState({ performanceSelect })
+              }
+              value={this.state.performanceSelect}
             />
           </View>
-        )}
-        <View style={styles.rowTextSetting}>
-          <Text style={styles.textDes}>
-            {!this.state.performanceSelect
-              ? this.getDesDitance(this.state.performance)
-              : LANGUAGE.wd.getLocationDesAuto}
-          </Text>
-        </View>
-        <Text style={styles.sectionHeader}>{LANGUAGE.wd.sort}</Text>
-        <View style={styles.bgColorWhite}>
-          <ButtonGroup
-            onPress={sortKind => this.setState({ sortKind })}
-            selectedButtonStyle={styles.bgColorSelected}
-            buttons={SORT_KIND}
-            selectedIndex={this.state.sortKind}
-          />
-        </View>
-        <View style={styles.rowTextSetting}>
-          <Text style={styles.text}>
-            {this.state.sortType
-              ? LANGUAGE.wd.sortNormal
-              : LANGUAGE.wd.sortReverse}
-          </Text>
-          <Switch
-            style={styles.setting}
-            onValueChange={sortType => this.setState({ sortType })}
-            value={this.state.sortType}
-          />
-        </View>
-        <Text style={styles.sectionHeader}>{LANGUAGE.wd.sound}</Text>
-        <View style={styles.rowTextSetting}>
-          <Text style={styles.text}>
-            {this.state.sound ? LANGUAGE.wd.on : LANGUAGE.wd.off}
-          </Text>
-          <Switch
-            style={styles.setting}
-            onValueChange={sound => this.setState({ sound })}
-            value={this.state.sound}
-          />
-        </View>
-        <Text style={styles.sectionHeader}>{LANGUAGE.wd.recovery}</Text>
-        <Text style={styles.sectionHeader2}>{LANGUAGE.wd.recoveryTime}</Text>
-        <View style={styles.rowTextSetting}>
-          <Text style={styles.text}>
-            {this.state.recoveryTime ? LANGUAGE.wd.on : LANGUAGE.wd.off}
-          </Text>
-          <Switch
-            style={styles.setting}
-            onValueChange={recoveryTime => this.setState({ recoveryTime })}
-            value={this.state.recoveryTime}
-          />
-        </View>
-        {this.state.recoveryTime && (
-          <View style={styles.rowTextSetting}>
-            <Text style={styles.textDes}>{LANGUAGE.wd.recoveryTimeDes}</Text>
-          </View>
-        )}
-        <Text style={styles.sectionHeader2}>
-          {LANGUAGE.wd.recoveryDistance}
-        </Text>
-        <View style={styles.rowTextSetting}>
-          <Text style={styles.text}>
-            {this.state.recoveryDistance ? LANGUAGE.wd.on : LANGUAGE.wd.off}
-          </Text>
-          <Switch
-            style={styles.setting}
-            onValueChange={recoveryDistance =>
-              this.setState({ recoveryDistance })
-            }
-            value={this.state.recoveryDistance}
-          />
-        </View>
-        {this.state.recoveryDistance && (
+          {!this.state.performanceSelect && (
+            <View style={styles.bgColorWhite}>
+              <ButtonGroup
+                onPress={performance => this.setState({ performance })}
+                selectedButtonStyle={styles.bgColorSelected}
+                buttons={PERFORMANCE_KIND}
+                selectedIndex={this.state.performance}
+              />
+            </View>
+          )}
           <View style={styles.rowTextSetting}>
             <Text style={styles.textDes}>
-              {LANGUAGE.wd.recoveryDistanceDes}
+              {!this.state.performanceSelect
+                ? this.getDesDitance(this.state.performance)
+                : LANGUAGE.wd.getLocationDesAuto}
             </Text>
           </View>
-        )}
-        <Text style={styles.sectionHeader}>{LANGUAGE.wd.other}</Text>
-        {this.props.ownInfo.isFree && (
-          <View style={styles.rowTextSetting}>
-            <Text style={styles.text}>{LANGUAGE.wd.payDes}</Text>
-            <Button
-              style={styles.button}
-              title={LANGUAGE.wd.pay}
-              onPress={() => this.buyStore()}
+          <Text style={styles.sectionHeader}>{LANGUAGE.wd.sort}</Text>
+          <View style={styles.bgColorWhite}>
+            <ButtonGroup
+              onPress={sortKind => this.setState({ sortKind })}
+              selectedButtonStyle={styles.bgColorSelected}
+              buttons={SORT_KIND}
+              selectedIndex={this.state.sortKind}
             />
           </View>
-        )}
-        <View style={styles.rowTextSetting}>
-          <Text style={styles.text}>{LANGUAGE.wd.initializeDes}</Text>
-          <Button
-            style={styles.button}
-            buttonStyle={styles.bgColorRed}
-            title={LANGUAGE.wd.initialize}
-            onPress={() => this.clearSetting()}
-          />
-        </View>
+          <View style={styles.rowTextSetting}>
+            <Text style={styles.text}>
+              {this.state.sortType
+                ? LANGUAGE.wd.sortNormal
+                : LANGUAGE.wd.sortReverse}
+            </Text>
+            <Switch
+              style={styles.setting}
+              onValueChange={sortType => this.setState({ sortType })}
+              value={this.state.sortType}
+            />
+          </View>
+          <Text style={styles.sectionHeader}>{LANGUAGE.wd.sound}</Text>
+          <View style={styles.rowTextSetting}>
+            <Text style={styles.text}>
+              {this.state.sound ? LANGUAGE.wd.on : LANGUAGE.wd.off}
+            </Text>
+            <Switch
+              style={styles.setting}
+              onValueChange={sound => this.setState({ sound })}
+              value={this.state.sound}
+            />
+          </View>
+          <Text style={styles.sectionHeader}>{LANGUAGE.wd.recovery}</Text>
+          <Text style={styles.sectionHeader2}>{LANGUAGE.wd.recoveryTime}</Text>
+          <View style={styles.rowTextSetting}>
+            <Text style={styles.text}>
+              {this.state.recoveryTime ? LANGUAGE.wd.on : LANGUAGE.wd.off}
+            </Text>
+            <Switch
+              style={styles.setting}
+              onValueChange={recoveryTime => this.setState({ recoveryTime })}
+              value={this.state.recoveryTime}
+            />
+          </View>
+          {this.state.recoveryTime && (
+            <View style={styles.rowTextSetting}>
+              <Text style={styles.textDes}>{LANGUAGE.wd.recoveryTimeDes}</Text>
+            </View>
+          )}
+          <Text style={styles.sectionHeader2}>
+            {LANGUAGE.wd.recoveryDistance}
+          </Text>
+          <View style={styles.rowTextSetting}>
+            <Text style={styles.text}>
+              {this.state.recoveryDistance ? LANGUAGE.wd.on : LANGUAGE.wd.off}
+            </Text>
+            <Switch
+              style={styles.setting}
+              onValueChange={recoveryDistance =>
+                this.setState({ recoveryDistance })
+              }
+              value={this.state.recoveryDistance}
+            />
+          </View>
+          {this.state.recoveryDistance && (
+            <View style={styles.rowTextSetting}>
+              <Text style={styles.textDes}>
+                {LANGUAGE.wd.recoveryDistanceDes}
+              </Text>
+            </View>
+          )}
+          <Text style={styles.sectionHeader}>{LANGUAGE.wd.other}</Text>
+          {this.props.ownInfo.isFree && (
+            <View style={styles.rowTextSetting}>
+              <Text style={styles.text}>{LANGUAGE.wd.payDes}</Text>
+              <Button
+                style={styles.button}
+                title={LANGUAGE.wd.pay}
+                onPress={() => this.buyStore()}
+              />
+            </View>
+          )}
+          <View style={styles.rowTextSetting}>
+            <Text style={styles.text}>{LANGUAGE.wd.initializeDes}</Text>
+            <Button
+              style={styles.button}
+              buttonStyle={styles.bgColorRed}
+              title={LANGUAGE.wd.initialize}
+              onPress={() => this.clearSetting()}
+            />
+          </View>
+        </ScrollView>
       </View>
     );
   }
