@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     borderStyle: 'solid',
     borderColor: CL_BORDER,
-    borderWidth: 0.25,
+    borderBottomWidth: 0.25,
     alignItems: 'center',
   },
   itemFocus: {
@@ -82,7 +82,7 @@ export const styles = StyleSheet.create({
     backgroundColor: CL_LIST_BG,
     borderStyle: 'solid',
     borderColor: CL_BORDER,
-    borderWidth: 0.25,
+    borderBottomWidth: 0.25,
   },
   rowStyle: {
     flex: 1,
@@ -91,7 +91,7 @@ export const styles = StyleSheet.create({
     backgroundColor: CL_LIST_BG,
     borderStyle: 'solid',
     borderColor: CL_BORDER,
-    borderWidth: 0.25,
+    borderBottomWidth: 0.25,
     alignItems: 'center',
     paddingTop: 10,
     paddingBottom: 10,
@@ -135,6 +135,9 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     backgroundColor: CL_LIST_BG,
+    borderStyle: 'solid',
+    borderColor: CL_BORDER,
+    borderBottomWidth: 0.25,
   },
   wordIcon: {
     backgroundColor: CL_LIST_BG,
@@ -160,7 +163,7 @@ export const styles = StyleSheet.create({
     padding: 3,
     borderStyle: 'solid',
     borderColor: CL_BORDER,
-    borderWidth: 0.25,
+    borderBottomWidth: 0.25,
     alignItems: 'left',
   },
   icon: {
@@ -193,7 +196,7 @@ export const styles = StyleSheet.create({
     backgroundColor: CL_ITEM_HEADER,
     borderStyle: 'solid',
     borderColor: CL_BORDER,
-    borderWidth: 0.25,
+    borderBottomWidth: 0.25,
   },
   sectionHeader2: {
     color: FONT_MOJI,
@@ -206,7 +209,7 @@ export const styles = StyleSheet.create({
     backgroundColor: CL_ITEM_SUB_HEADER,
     borderStyle: 'solid',
     borderColor: CL_BORDER,
-    borderWidth: 0.25,
+    borderBottomWidth: 0.25,
   },
   rowTextSetting: {
     flexDirection: 'row',
@@ -230,7 +233,7 @@ export const styles = StyleSheet.create({
   text: {
     width: '60%',
     paddingLeft: 30,
-    fontSize: 18,
+    fontSize: 16,
   },
   setting: {
     width: 80,
