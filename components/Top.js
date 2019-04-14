@@ -14,7 +14,11 @@ import { connect } from 'react-redux';
 import { styles } from '../containers/styles';
 import * as utils from '../containers/utils';
 import * as json from '../containers/jsonFile';
-import { _handleNotification, startLocation } from '../containers/location';
+import {
+  _handleNotification,
+  startLocation,
+  clearBefore,
+} from '../containers/location';
 import { topHeader } from '../containers/header';
 import { admobBanner, storeReview } from '../containers/googleAdmob';
 import { getCurrentPosition } from '../containers/position';
@@ -31,6 +35,7 @@ import {
 import * as DEF from '../constants/constants';
 import { LANGUAGE } from '../constants/language';
 
+let before = null;
 const ICON_SIZE = 20;
 const statusicon = item => {
   let status = utils.getStatusIcon(item);
@@ -125,7 +130,12 @@ export class Top extends Component {
   }
 
   componentDidUpdate() {
-    startLocation(this.props.ownInfo, this.props.alermList);
+    if (before != this.props.alermList) {
+      // 設定が変わったら再設定
+      clearBefore();
+      startLocation(this.props.ownInfo, this.props.alermList);
+      before = this.props.alermList;
+    }
   }
 
   render() {

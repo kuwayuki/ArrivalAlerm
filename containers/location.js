@@ -53,9 +53,9 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
   isChecking = false;
 });
 
-const getBestPerformance = (ownCoords, alermList) => {
+async function getBestPerformance(ownCoords, alermList) {
   let accuracy = Location.Accuracy.Lowest;
-  let alermDistance = 1000;
+  let alermDistance = 100000;
   let pointDistance = 0;
   let hasMap = false;
   for (let alermItem of alermList) {
@@ -79,11 +79,10 @@ const getBestPerformance = (ownCoords, alermList) => {
       }
     }
   }
-
   if (!hasMap) {
     return { accuracy: Location.Accuracy.Lowest, distance: 1000 };
   } else if (pointDistance > 5000) {
-    return { accuracy: Location.Accuracy.balanced, distance: 1000 };
+    return { accuracy: Location.Accuracy.Balanced, distance: 1000 };
   }
 
   let index = 1;
@@ -100,6 +99,7 @@ const getBestPerformance = (ownCoords, alermList) => {
     // 新幹線レベル
     index = 3;
   }
+
   if (pointDistance < 10 * index) {
     accuracy = Location.Accuracy.Highest;
   } else if (pointDistance < 100 * index) {
@@ -115,11 +115,6 @@ const getBestPerformance = (ownCoords, alermList) => {
     // 3000m範囲
     accuracy = Location.Accuracy.Lowest;
   }
-  // console.log({
-  //   speed: ownCoords.speed,
-  //   accuracy: accuracy,
-  //   distance: pointDistance,
-  // });
   // 目的地周辺の場合は再取得距離を短くする
   if (pointDistance < 1.5 * alermDistance) {
     alermDistance = alermDistance / 10;
@@ -127,10 +122,14 @@ const getBestPerformance = (ownCoords, alermList) => {
     alermDistance = alermDistance / 5;
   }
   return { accuracy: accuracy, distance: alermDistance };
-};
+}
 
 let beforeSetting = null;
+export const clearBefore = () => {
+  beforeSetting = null;
+};
 export async function startLocation(ownInfo, alermList) {
+  if (beforeSetting != null && !isChecking) return;
   let accuracy = Location.Accuracy.Balanced;
   let distanceInterval = 10;
   if (ownInfo != null) {
@@ -138,7 +137,7 @@ export async function startLocation(ownInfo, alermList) {
     if (ownInfo.performance == 0) {
       if (alermList != null && alermList.length > 0) {
         // 自動取得設定
-        let retPer = getBestPerformance(ownInfo.coords, alermList);
+        let retPer = await getBestPerformance(ownInfo.coords, alermList);
         accuracy = retPer.accuracy;
         distanceInterval = retPer.distance;
       } else {
@@ -152,16 +151,23 @@ export async function startLocation(ownInfo, alermList) {
     }
   }
   let nextSetting = { accuracy: accuracy, distance: distanceInterval };
+  if (ownInfo.debug) {
+    console.log(nextSetting);
+  }
   if (
     beforeSetting == null ||
     (beforeSetting.accuracy != nextSetting.accuracy ||
       beforeSetting.distance != nextSetting.distance)
   ) {
+    if (ownInfo.debug) {
+      console.log('change');
+    }
     beforeSetting = nextSetting;
-    await TaskManager.unregisterAllTasksAsync();
+    // await TaskManager.unregisterAllTasksAsync();
     await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
       accuracy: accuracy,
       distanceInterval: distanceInterval,
+      // showsBackgroundLocationIndicator: true,
     });
   }
 }
