@@ -1,7 +1,9 @@
 import { Notifications, Permissions } from 'expo';
-import { Platform, PermissionsAndroid } from 'react-native';
+import { Platform, PermissionsAndroid, Alert } from 'react-native';
+import { _handleNotification } from './location';
 import { isCheckDayWeek, isCheckTime } from './position';
 import { STATUS } from '../constants/constants';
+import { LANGUAGE } from '../constants/language';
 import {
   CL_ABAILABLE,
   CL_DISABLE,
@@ -16,7 +18,11 @@ export const distanceMtoKm = meter => {
 
   return distanceKeta(km);
 };
+
+let isRead = false;
 export async function initNotification() {
+  if (this.isRead) return;
+  this.isRead = true;
   // 既存のパーミッションを取得
   const { permissions } = await Permissions.getAsync(
     Permissions.NOTIFICATIONS,
@@ -38,20 +44,25 @@ export async function initNotification() {
     }
   }
 
+  console.log(currentNotificationPermission);
   if (currentNotificationPermission.status !== 'granted') {
     // (iOS向け) プッシュ通知の許可をユーザーに求める
     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
     if (status !== 'granted') {
-      console.log('notification permission is denied');
+      Alert.alert(LANGUAGE.wd.alermError, LANGUAGE.wd.alermNotification);
       return;
     }
   }
-  // プッシュ通知を開いた時のイベントハンドラーを登録
-  // Notifications.addListener(this.handleNotification);
+  await Notifications.addListener(_handleNotification);
 
-  if (currentLocationPermission !== 'granted') {
+  console.log(currentLocationPermission);
+  if (currentLocationPermission.status !== 'granted') {
     // (iOS向け) 位置情報利用の許可をユーザーに求める
-    await Permissions.askAsync(Permissions.LOCATION);
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      Alert.alert(LANGUAGE.wd.alermError, LANGUAGE.wd.alermLocation);
+      return;
+    }
   }
 }
 

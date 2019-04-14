@@ -14,11 +14,7 @@ import { connect } from 'react-redux';
 import { styles } from '../containers/styles';
 import * as utils from '../containers/utils';
 import * as json from '../containers/jsonFile';
-import {
-  _handleNotification,
-  startLocation,
-  clearBefore,
-} from '../containers/location';
+import { startLocation, clearBefore } from '../containers/location';
 import { topHeader } from '../containers/header';
 import { admobBanner, storeReview } from '../containers/googleAdmob';
 import { getCurrentPosition } from '../containers/position';
@@ -122,8 +118,6 @@ export class Top extends Component {
       this.props.setOwnInfoCoords(position.coords);
       // 設定済情報取得
       await json.getJsonData(this.props);
-
-      Notifications.addListener(_handleNotification);
     } catch (e) {
       // alert(e.message);
     }
