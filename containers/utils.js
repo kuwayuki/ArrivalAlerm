@@ -2,6 +2,13 @@ import { Notifications, Permissions } from 'expo';
 import { Platform, PermissionsAndroid } from 'react-native';
 import { isCheckDayWeek, isCheckTime } from './position';
 import { STATUS } from '../constants/constants';
+import {
+  CL_ABAILABLE,
+  CL_DISABLE,
+  CL_ALERMED,
+  CL_OUT_WEEK_DAY,
+  CL_OUT_TIME,
+} from './styles';
 
 export const distanceMtoKm = meter => {
   var n = 2;
@@ -144,15 +151,15 @@ export const getColor = item => {
   let alermDistance = item.alermDistance;
   switch (status) {
     case STATUS.AVAILABLE:
-      return 'deepskyblue';
+      return CL_ABAILABLE;
     case STATUS.DISABLE:
-      return 'lightslategray';
+      return CL_DISABLE;
     case STATUS.ALERMED:
-      return 'forestgreen';
+      return CL_ALERMED;
     case STATUS.OUT_WEEK_DAY:
-      return 'lightsteelblue';
+      return CL_OUT_WEEK_DAY;
     case STATUS.OUT_TIME:
-      return 'darkorange';
+      return CL_OUT_TIME;
   }
-  return 'deepskyblue';
+  return CL_ABAILABLE;
 };

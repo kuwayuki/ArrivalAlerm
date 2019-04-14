@@ -12,11 +12,20 @@ const CL_ITEM_HEADER = 'darkturquoise';
 // 項目サブヘッダー色
 const CL_ITEM_SUB_HEADER = 'darkgray';
 // const CL_ITEM_SUB_HEADER = 'yellowgreen';
+// 距離有効カラー
+export const CL_ABAILABLE = 'deepskyblue';
+export const CL_DISABLE = 'lightslategray';
+export const CL_ALERMED = 'lightslategray';
+export const CL_OUT_WEEK_DAY = 'lightslategray';
+export const CL_OUT_TIME = 'lightslategray';
 
 // 線色
 const CL_BORDER = 'gray';
 // 文字色
 const FONT_MOJI = 'white';
+// 文字色(説明)
+const FONT_TEXT = '#202124';
+const FONT_DES = '#1a73e8';
 // 残り距離文字色
 const FONT_DISTANCE = 'white';
 export const CL_ICON_HEADER = 'white';
@@ -43,10 +52,8 @@ export const styles = StyleSheet.create({
     width: 60,
     paddingTop: 8,
     paddingBottom: 8,
-    borderColor: 'lightblue',
     color: FONT_DISTANCE,
     borderRadius: 30,
-    borderWidth: 1,
     overflow: 'hidden',
     fontSize: 17,
   },
@@ -177,6 +184,7 @@ export const styles = StyleSheet.create({
   },
   itemTitle: {
     fontSize: 18,
+    color: FONT_TEXT,
   },
   itemDis: {
     paddingTop: 3,
@@ -225,6 +233,7 @@ export const styles = StyleSheet.create({
   textDes: {
     paddingLeft: 30,
     fontSize: 12,
+    color: FONT_DES,
   },
   button: {
     width: 90,
@@ -234,6 +243,7 @@ export const styles = StyleSheet.create({
     width: '60%',
     paddingLeft: 30,
     fontSize: 16,
+    color: FONT_TEXT,
   },
   setting: {
     width: 80,

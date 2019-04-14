@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   sortKind: 0,
   sortType: true,
   selectedIndex: 0,
+  debug: false,
 };
 
 export const ownInfo = (state = INITIAL_STATE, action) => {
@@ -30,6 +31,7 @@ export const ownInfo = (state = INITIAL_STATE, action) => {
         sortKind: action.setting.sortKind,
         sortType: action.setting.sortType,
         isRead: true,
+        debug: action.setting.debug,
       };
     case DEF.OWN_INFO.EDIT_COORDS:
       return {
