@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Header } from 'react-native-elements';
+import { Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LANGUAGE } from '../constants/language';
 import * as DEF from '../constants/constants';
 import * as json from '../containers/jsonFile';
 import { getNumTime, getTimeFromDateTime } from '../containers/utils';
+import { storeReview } from '../containers/googleAdmob';
 import { CL_HEADER, CL_ICON_HEADER } from './styles';
 
 const ICON_SIZE = 30;
@@ -25,10 +27,33 @@ export const newRegistBtn = props => {
   }
   if (count > maxCount) {
     if (props.ownInfo.isFree) {
-      alert(LANGUAGE.wd.freeAlert1 + (maxCount + 1) + LANGUAGE.wd.freeAlert2);
+      Alert.alert(
+        LANGUAGE.wd.blank,
+        LANGUAGE.wd.freeAlert1 + (maxCount + 1) + LANGUAGE.wd.freeAlert2,
+        [
+          {
+            text: 'OK',
+            onPress: async () => {
+              storeReview(props);
+            },
+          },
+        ]
+      );
     } else {
-      alert(maxCount + 1 + LANGUAGE.wd.freeAlert2);
+      Alert.alert(
+        LANGUAGE.wd.blank,
+        maxCount + 1 + LANGUAGE.wd.freeAlert2,
+        [
+          {
+            text: 'OK',
+            onPress: async () => {
+              storeReview(props);
+            },
+          },
+        ]
+      );
     }
+    // storeReview(props);
   } else {
     props.navigation.navigate('NewRegist');
   }

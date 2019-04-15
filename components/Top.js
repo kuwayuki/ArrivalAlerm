@@ -16,7 +16,7 @@ import * as utils from '../containers/utils';
 import * as json from '../containers/jsonFile';
 import { startLocation, clearBefore } from '../containers/location';
 import { topHeader } from '../containers/header';
-import { admobBanner, storeReview } from '../containers/googleAdmob';
+import { admobBanner } from '../containers/googleAdmob';
 import { getCurrentPosition } from '../containers/position';
 import {
   setOwnInfo,
@@ -134,7 +134,6 @@ export class Top extends Component {
 
   render() {
     const editRegistBtn = index => {
-      storeReview(this.props);
       this.props.setOwnInfoSelectedIndex(index);
       this.props.navigation.navigate('EditRegist');
     };

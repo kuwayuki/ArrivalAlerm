@@ -32,21 +32,18 @@ export async function admobInterstitial() {
 export const storeReview = props => {
   if (props.ownInfo.reviewed) return;
   if (StoreReview.isSupported()) {
-    let randomNum = random();
-    if (randomNum == 0) {
-      Alert.alert(LANGUAGE.wd.reviewTitle, LANGUAGE.wd.reviewQuestion, [
-        {
-          text: 'OK',
-          onPress: async () => {
-            await StoreReview.requestReview();
-            props.setOwnInfoReviewed(true);
-            await json.mergeStorageDataOwnInfo({ reviewed: true });
-          },
+    Alert.alert(LANGUAGE.wd.reviewTitle, LANGUAGE.wd.reviewQuestion, [
+      {
+        text: 'OK',
+        onPress: async () => {
+          await StoreReview.requestReview();
+          props.setOwnInfoReviewed(true);
+          await json.mergeStorageDataOwnInfo({ reviewed: true });
         },
-        {
-          text: 'Cancel',
-        },
-      ]);
-    }
+      },
+      {
+        text: 'Cancel',
+      },
+    ]);
   }
 };

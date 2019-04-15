@@ -2,6 +2,7 @@ export const LANGUAGE = {
   locale: 'ja',
   wd: {
     appTitle: 'ノリスゴ',
+    blank: '',
     setting: '設定',
     newRegist: '新規登録',
     update: '更新',
@@ -76,17 +77,18 @@ export const LANGUAGE = {
     arrivedNear: '付近に到着しました',
     freeAlert1: '無料版は',
     freeAlert2: '件までしか登録できません。',
-    alermError:'エラー',
-    alermNotification:'通知設定をオンにしてから起動して下さい',
-    alermLocation:'位置情報設定をオンにしてから起動して下さい',
+    alermError: 'エラー',
+    alermNotification: '通知設定をオンにしてから起動して下さい',
+    alermLocation: '位置情報設定をオンにしてから起動して下さい',
     searchInit: '現地',
     search: '検索',
     searchResult: '検索結果：',
     searchSuccessMessage: '件見つかりました。',
     searchErrorMessage:
       '見つかりませんでした。\n検索対象は現在地より50km以内です。',
-    reviewTitle: 'アプリ評価',
+    reviewTitle: 'アプリ評価のお願い',
     reviewQuestion:
-      'いつもご利用ありがとうございます。\nアプリ評価にご協力頂けたら登録できる地点が1つ増えます。',
+      'いつもご利用ありがとうございます。\n\n' +
+      'もしよろしければレビューをしてくれませんか？アプリ評価にご協力頂けたら登録できる地点が1つ増えます。',
   },
 };
