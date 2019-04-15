@@ -52,42 +52,40 @@ export class EditRegist extends React.Component {
   constructor(props) {
     super(props);
     listIndex = getListIndex(props);
-    let selectIndex = getSelectedDistanceIndex(
-      props.alermList[listIndex].alermDistance
-    );
+    let alermItem = props.alermList[listIndex];
+    let selectIndex = getSelectedDistanceIndex(alermItem.alermDistance);
     this.state = {
       isSelectedDistance: selectIndex != 9,
       selectedDistanceIndex: selectIndex,
-      title: props.alermList[listIndex].title,
-      isAvailable: props.alermList[listIndex].isAvailable,
-      isAlermed: props.alermList[listIndex].isAlermed,
-      alermMessage: props.alermList[listIndex].alermMessage,
-      alermDistance: String(props.alermList[listIndex].alermDistance),
-      interval: props.alermList[listIndex].interval,
-      isLimitTimeZone: props.alermList[listIndex].isLimitTimeZone,
-      timeZoneStart: props.alermList[listIndex].timeZoneStart,
-      timeZoneEnd: props.alermList[listIndex].timeZoneEnd,
-      isLimitWeekDay: props.alermList[listIndex].isLimitWeekDay,
-      isMonday: props.alermList[listIndex].isMonday,
-      isTuesday: props.alermList[listIndex].isTuesday,
-      isWednesday: props.alermList[listIndex].isWednesday,
-      isThursday: props.alermList[listIndex].isThursday,
-      isFriday: props.alermList[listIndex].isFriday,
-      isSaturday: props.alermList[listIndex].isSaturday,
-      isSunday: props.alermList[listIndex].isSunday,
+      title: alermItem.title,
+      isAvailable: alermItem.isAvailable,
+      isAlermed: alermItem.isAlermed,
+      alermMessage: alermItem.alermMessage,
+      alermDistance: String(alermItem.alermDistance),
+      interval: alermItem.interval,
+      isLimitTimeZone: alermItem.isLimitTimeZone,
+      timeZoneStart: alermItem.timeZoneStart,
+      timeZoneEnd: alermItem.timeZoneEnd,
+      isLimitWeekDay: alermItem.isLimitWeekDay,
+      isMonday: alermItem.isMonday,
+      isTuesday: alermItem.isTuesday,
+      isWednesday: alermItem.isWednesday,
+      isThursday: alermItem.isThursday,
+      isFriday: alermItem.isFriday,
+      isSaturday: alermItem.isSaturday,
+      isSunday: alermItem.isSunday,
       region: {
-        latitude: props.alermList[listIndex].coords.latitude,
-        longitude: props.alermList[listIndex].coords.longitude,
-        latitudeDelta: 0.00003 * props.alermList[listIndex].alermDistance,
-        longitudeDelta: 0.00003 * props.alermList[listIndex].alermDistance,
+        latitude: alermItem.coords.latitude,
+        longitude: alermItem.coords.longitude,
+        latitudeDelta: 0.00003 * alermItem.alermDistance,
+        longitudeDelta: 0.00003 * alermItem.alermDistance,
       },
-      // editAlerm: props.alermList[listIndex],
       markers: [
         {
-          title: props.alermList[listIndex].title,
+          title: alermItem.title,
           latlng: {
-            latitude: props.alermList[listIndex].coords.latitude,
-            longitude: props.alermList[listIndex].coords.longitude,
+            latitude: alermItem.coords.latitude,
+            longitude: alermItem.coords.longitude,
           },
         },
       ],

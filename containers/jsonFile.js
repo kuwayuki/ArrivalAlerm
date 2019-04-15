@@ -4,6 +4,7 @@ const UNIQUE_INDEX = 'INDEX';
 const UNIQUE_SETTING = 'SETTING';
 const UNIQUE_ALERM = 'ALERM';
 
+let save = null;
 export async function getSetIndex() {
   let strIndex = await AsyncStorage.getItem(UNIQUE_INDEX);
   let index = 0;
@@ -34,7 +35,15 @@ export async function setPartAsyncStorage(index, setItem) {
 export async function deleteAsyncStorage(index) {
   AsyncStorage.removeItem(UNIQUE_ALERM + index);
 }
+export async function saveInfo() {
+  const value = await AsyncStorage.getItem(UNIQUE_SETTING);
+  if (value != null) {
+    save = JSON.parse(value);
+  }
+}
+
 export async function clearAsyncStorage(index) {
+  await saveInfo();
   AsyncStorage.clear();
 }
 
@@ -86,6 +95,10 @@ export async function getJsonData(props) {
     json.filter(async function(item) {
       // 通知項目情報取得
       if (item.isFree != null) {
+        if (save != null) {
+          item.isFree = save.isFree;
+          item.reviewed = save.reviewed;
+        }
         await AsyncStorage.setItem(UNIQUE_SETTING, JSON.stringify(item));
         await props.setOwnInfo(item);
       }
