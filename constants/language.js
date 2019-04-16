@@ -42,7 +42,7 @@ export const LANGUAGE = {
     sortReverse: '逆順',
     other: 'その他',
     pay: '120円',
-    payDes: '有料版を購入\n・8個まで地点登録可能\n・広告なし',
+    payDes: '有料版を購入\n・8個(+1)まで地点登録可能\n・広告なし',
     initialize: '初期化',
     initializeQuestion: '初期化します、よろしいですか？',
     initializeOK: '初期化しました',
