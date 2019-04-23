@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  Text,
-  Switch,
-  View,
-  Alert,
-  ScrollView,
-} from 'react-native';
+import { Text, Switch, View, Alert, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import {
   setOwnInfo,
@@ -155,7 +149,7 @@ export class Setting extends React.Component {
               selectedIndex={this.state.sortKind}
             />
           </View>
-          <View style={styles.rowTextSetting}>
+          <View style={styles.rowBottonSetting}>
             <Text style={styles.text}>
               {this.state.sortType
                 ? LANGUAGE.wd.sortNormal
