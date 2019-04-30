@@ -6,7 +6,7 @@ import {
   StoreReview,
 } from 'expo';
 import { Alert } from 'react-native';
-import { LANGUAGE } from '../constants/language';
+import I18n from '../i18n/index';
 import * as json from './jsonFile';
 
 export const BANNER = 'ca-app-pub-2103807205659646/2958032499';
@@ -32,7 +32,7 @@ export async function admobInterstitial() {
 export const storeReview = props => {
   if (props.ownInfo.reviewed) return;
   if (StoreReview.isSupported()) {
-    Alert.alert(LANGUAGE.wd.reviewTitle, LANGUAGE.wd.reviewQuestion, [
+    Alert.alert(I18n.t('reviewTitle'), I18n.t('reviewQuestion'), [
       {
         text: 'OK',
         onPress: async () => {

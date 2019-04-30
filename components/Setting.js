@@ -9,13 +9,12 @@ import {
 } from '../actions/actions';
 import { Button, ButtonGroup } from 'react-native-elements';
 import AppLink from 'react-native-app-link';
-import { PERFORMANCE_KIND, SORT_KIND } from '../constants/constants';
-import { LANGUAGE } from '../constants/language';
 import * as json from '../containers/jsonFile';
 import { styles } from '../containers/styles';
 import { getCurrentPosition } from '../containers/position';
 import { settingHeader } from '../containers/header';
 import { admobInterstitial } from '../containers/googleAdmob';
+import I18n from '../i18n/index';
 
 export class Setting extends React.Component {
   constructor(props) {
@@ -52,15 +51,25 @@ export class Setting extends React.Component {
       });
   }
 
+  SORT_KIND = [I18n.t('sortRegist'), I18n.t('sortDistance')];
+  PERFORMANCE_KIND = [
+    I18n.t('lowest'),
+    I18n.t('low'),
+    I18n.t('balanced'),
+    I18n.t('high'),
+    I18n.t('highest'),
+    I18n.t('best'),
+  ];
+
   clearSetting() {
-    Alert.alert(LANGUAGE.wd.initialize, LANGUAGE.wd.initializeQuestion, [
+    Alert.alert(I18n.t('initialize'), I18n.t('initializeQuestion'), [
       {
         text: 'OK',
         onPress: async () => {
           this.props.clearStore();
           const position = await getCurrentPosition(5000);
           this.props.setOwnInfoCoords(position.coords);
-          Alert.alert(LANGUAGE.wd.initialize, LANGUAGE.wd.initializeOK, [
+          Alert.alert(I18n.t('initialize'), I18n.t('initializeOK'), [
             {
               text: 'OK',
               onPress: async () => {
@@ -80,25 +89,25 @@ export class Setting extends React.Component {
   }
 
   getDesDitance = index => {
-    let text = LANGUAGE.wd.getLocationDesChoice;
+    let text = I18n.t('getLocationDesChoice');
     switch (index) {
       case 0:
-        text = LANGUAGE.wd.getLocationDesChoiceLowest;
+        text = I18n.t('getLocationDesChoiceLowest');
         break;
       case 1:
-        text = LANGUAGE.wd.getLocationDesChoiceLow;
+        text = I18n.t('getLocationDesChoiceLow');
         break;
       case 2:
-        text = LANGUAGE.wd.getLocationDesChoiceBalanced;
+        text = I18n.t('getLocationDesChoiceBalanced');
         break;
       case 3:
-        text = LANGUAGE.wd.getLocationDesChoiceHigh;
+        text = I18n.t('getLocationDesChoiceHigh');
         break;
       case 4:
-        text = LANGUAGE.wd.getLocationDesChoicehigHest;
+        text = I18n.t('getLocationDesChoicehigHest');
         break;
       case 5:
-        text = LANGUAGE.wd.getLocationDesChoicehigBest;
+        text = I18n.t('getLocationDesChoicehigBest');
         break;
     }
     return text;
@@ -108,12 +117,10 @@ export class Setting extends React.Component {
       <View style={styles.container}>
         {settingHeader(this.state, this.props)}
         <ScrollView>
-          <Text style={styles.sectionHeader}>{LANGUAGE.wd.getLocation}</Text>
+          <Text style={styles.sectionHeader}>{I18n.t('getLocation')}</Text>
           <View style={styles.rowTextSetting}>
             <Text style={styles.text}>
-              {this.state.performanceSelect
-                ? LANGUAGE.wd.auto
-                : LANGUAGE.wd.choice}
+              {this.state.performanceSelect ? I18n.t('auto') : I18n.t('choice')}
             </Text>
             <Switch
               style={styles.setting}
@@ -128,7 +135,7 @@ export class Setting extends React.Component {
               <ButtonGroup
                 onPress={performance => this.setState({ performance })}
                 selectedButtonStyle={styles.bgColorSelected}
-                buttons={PERFORMANCE_KIND}
+                buttons={this.PERFORMANCE_KIND}
                 selectedIndex={this.state.performance}
               />
             </View>
@@ -137,23 +144,23 @@ export class Setting extends React.Component {
             <Text style={styles.textDes}>
               {!this.state.performanceSelect
                 ? this.getDesDitance(this.state.performance)
-                : LANGUAGE.wd.getLocationDesAuto}
+                : I18n.t('getLocationDesAuto')}
             </Text>
           </View>
-          <Text style={styles.sectionHeader}>{LANGUAGE.wd.sort}</Text>
+          <Text style={styles.sectionHeader}>{I18n.t('sort')}</Text>
           <View style={styles.bgColorWhite}>
             <ButtonGroup
               onPress={sortKind => this.setState({ sortKind })}
               selectedButtonStyle={styles.bgColorSelected}
-              buttons={SORT_KIND}
+              buttons={this.SORT_KIND}
               selectedIndex={this.state.sortKind}
             />
           </View>
           <View style={styles.rowBottonSetting}>
             <Text style={styles.text}>
               {this.state.sortType
-                ? LANGUAGE.wd.sortNormal
-                : LANGUAGE.wd.sortReverse}
+                ? I18n.t('sortNormal')
+                : I18n.t('sortReverse')}
             </Text>
             <Switch
               style={styles.setting}
@@ -161,10 +168,10 @@ export class Setting extends React.Component {
               value={this.state.sortType}
             />
           </View>
-          <Text style={styles.sectionHeader}>{LANGUAGE.wd.sound}</Text>
+          <Text style={styles.sectionHeader}>{I18n.t('sound')}</Text>
           <View style={styles.rowTextSetting}>
             <Text style={styles.text}>
-              {this.state.sound ? LANGUAGE.wd.on : LANGUAGE.wd.off}
+              {this.state.sound ? I18n.t('on') : I18n.t('off')}
             </Text>
             <Switch
               style={styles.setting}
@@ -172,11 +179,11 @@ export class Setting extends React.Component {
               value={this.state.sound}
             />
           </View>
-          <Text style={styles.sectionHeader}>{LANGUAGE.wd.recovery}</Text>
-          <Text style={styles.sectionHeader2}>{LANGUAGE.wd.recoveryTime}</Text>
+          <Text style={styles.sectionHeader}>{I18n.t('recovery')}</Text>
+          <Text style={styles.sectionHeader2}>{I18n.t('recoveryTime')}</Text>
           <View style={styles.rowTextSetting}>
             <Text style={styles.text}>
-              {this.state.recoveryTime ? LANGUAGE.wd.on : LANGUAGE.wd.off}
+              {this.state.recoveryTime ? I18n.t('on') : I18n.t('off')}
             </Text>
             <Switch
               style={styles.setting}
@@ -186,15 +193,15 @@ export class Setting extends React.Component {
           </View>
           {this.state.recoveryTime && (
             <View style={styles.rowTextSetting}>
-              <Text style={styles.textDes}>{LANGUAGE.wd.recoveryTimeDes}</Text>
+              <Text style={styles.textDes}>{I18n.t('recoveryTimeDes')}</Text>
             </View>
           )}
           <Text style={styles.sectionHeader2}>
-            {LANGUAGE.wd.recoveryDistance}
+            {I18n.t('recoveryDistance')}
           </Text>
           <View style={styles.rowTextSetting}>
             <Text style={styles.text}>
-              {this.state.recoveryDistance ? LANGUAGE.wd.on : LANGUAGE.wd.off}
+              {this.state.recoveryDistance ? I18n.t('on') : I18n.t('off')}
             </Text>
             <Switch
               style={styles.setting}
@@ -207,27 +214,27 @@ export class Setting extends React.Component {
           {this.state.recoveryDistance && (
             <View style={styles.rowTextSetting}>
               <Text style={styles.textDes}>
-                {LANGUAGE.wd.recoveryDistanceDes}
+                {I18n.t('recoveryDistanceDes')}
               </Text>
             </View>
           )}
-          <Text style={styles.sectionHeader}>{LANGUAGE.wd.other}</Text>
+          <Text style={styles.sectionHeader}>{I18n.t('other')}</Text>
           {this.props.ownInfo.isFree && (
             <View style={styles.rowTextSetting}>
-              <Text style={styles.text}>{LANGUAGE.wd.payDes}</Text>
+              <Text style={styles.text}>{I18n.t('payDes')}</Text>
               <Button
                 style={styles.button}
-                title={LANGUAGE.wd.pay}
+                title={I18n.t('pay')}
                 onPress={() => this.buyStore()}
               />
             </View>
           )}
           <View style={styles.rowTextSetting}>
-            <Text style={styles.text}>{LANGUAGE.wd.initializeDes}</Text>
+            <Text style={styles.text}>{I18n.t('initializeDes')}</Text>
             <Button
               style={styles.button}
               buttonStyle={styles.bgColorRed}
-              title={LANGUAGE.wd.initialize}
+              title={I18n.t('initialize')}
               onPress={() => this.clearSetting()}
             />
           </View>

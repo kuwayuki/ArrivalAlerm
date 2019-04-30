@@ -3,7 +3,7 @@ import { Platform, PermissionsAndroid, Alert } from 'react-native';
 import { _handleNotification } from './location';
 import { isCheckDayWeek, isCheckTime } from './position';
 import { STATUS } from '../constants/constants';
-import { LANGUAGE } from '../constants/language';
+import I18n from '../i18n/index';
 import {
   CL_ABAILABLE,
   CL_DISABLE,
@@ -49,7 +49,7 @@ export async function initNotification() {
     // (iOS向け) プッシュ通知の許可をユーザーに求める
     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
     if (status !== 'granted') {
-      Alert.alert(LANGUAGE.wd.alermError, LANGUAGE.wd.alermNotification);
+      Alert.alert(I18n.t('alermError'), I18n.t('alermNotification'));
       return;
     }
   }
@@ -60,7 +60,7 @@ export async function initNotification() {
     // (iOS向け) 位置情報利用の許可をユーザーに求める
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
-      Alert.alert(LANGUAGE.wd.alermError, LANGUAGE.wd.alermLocation);
+      Alert.alert(I18n.t('alermError'), I18n.t('alermLocation'));
       return;
     }
   }

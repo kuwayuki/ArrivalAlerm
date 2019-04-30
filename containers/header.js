@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Header } from 'react-native-elements';
 import { Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { LANGUAGE } from '../constants/language';
 import * as DEF from '../constants/constants';
 import * as json from '../containers/jsonFile';
 import { getNumTime, getTimeFromDateTime } from '../containers/utils';
 import { storeReview } from '../containers/googleAdmob';
 import { CL_HEADER, CL_ICON_HEADER } from './styles';
+import I18n from '../i18n/index';
 
 const ICON_SIZE = 30;
 const FONT_SIZE = 18;
@@ -28,8 +28,8 @@ export const newRegistBtn = props => {
   if (count > maxCount) {
     if (props.ownInfo.isFree) {
       Alert.alert(
-        LANGUAGE.wd.blank,
-        LANGUAGE.wd.freeAlert1 + (maxCount + 1) + LANGUAGE.wd.freeAlert2,
+        I18n.t('blank'),
+        I18n.t('freeAlert1') + (maxCount + 1) + I18n.t('freeAlert2'),
         [
           {
             text: 'OK',
@@ -40,18 +40,14 @@ export const newRegistBtn = props => {
         ]
       );
     } else {
-      Alert.alert(
-        LANGUAGE.wd.blank,
-        maxCount + 1 + LANGUAGE.wd.freeAlert2,
-        [
-          {
-            text: 'OK',
-            onPress: async () => {
-              storeReview(props);
-            },
+      Alert.alert(I18n.t('blank'), maxCount + 1 + I18n.t('freeAlert2'), [
+        {
+          text: 'OK',
+          onPress: async () => {
+            storeReview(props);
           },
-        ]
-      );
+        },
+      ]);
     }
     // storeReview(props);
   } else {
@@ -84,7 +80,29 @@ const settingUpdate = (state, props) => {
 
 async function newMarkerClick(state, props) {
   let item = {};
-  Object.assign(item, DEF.INITIAL_ITEM);
+  let INITIAL_ITEM = {
+    index: 0,
+    title: I18n.t('alermPoint'),
+    isAvailable: true,
+    isAlermed: false,
+    alermTime: null,
+    alermMessage: I18n.t('alermPoint') + I18n.t('arrivedNear'),
+    alermDistance: 500,
+    interval: 'auto',
+    coords: { latitude: null, longitude: null },
+    isLimitTimeZone: false,
+    timeZoneStart: '12:00',
+    timeZoneEnd: '12:00',
+    isLimitWeekDay: false,
+    isMonday: true,
+    isTuesday: true,
+    isWednesday: true,
+    isThursday: true,
+    isFriday: true,
+    isSaturday: true,
+    isSunday: true,
+  };
+  Object.assign(item, INITIAL_ITEM);
   let markers = state.markers.slice();
   item.index = await json.getSetIndex();
   item.title = markers[0].title;
@@ -129,7 +147,7 @@ async function editMarkerClick(state, props, listIndex) {
   Object.assign(item, props.alermList[listIndex]);
   let markers = state.markers.slice();
   item.title = state.title;
-  item.alermMessage = state.title + LANGUAGE.wd.arrivedNear;
+  item.alermMessage = state.title + I18n.t('arrivedNear');
   item.isAlermed = false;
   item.alermDistance = Number(state.alermDistance);
   item.isLimitTimeZone = state.isLimitTimeZone;
@@ -214,12 +232,12 @@ export const newRegistHeader = (state, props) => {
     <Header
       leftComponent={headerIcon(props, 'arrow-back')}
       centerComponent={{
-        text: LANGUAGE.wd.newRegist,
+        text: I18n.t('newRegist'),
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
         underlayColor: CL_HEADER,
       }}
       rightComponent={{
-        text: LANGUAGE.wd.decision,
+        text: I18n.t('decision'),
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
         underlayColor: CL_HEADER,
         onPress: () => newMarkerClick(state, props),
@@ -242,7 +260,7 @@ export const editRegistHeader = (state, props, listIndex) => {
         underlayColor: CL_HEADER,
       }}
       rightComponent={{
-        text: LANGUAGE.wd.decision,
+        text: I18n.t('decision'),
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
         underlayColor: CL_HEADER,
         onPress: () => editMarkerClick(state, props, listIndex),
@@ -260,12 +278,12 @@ export const settingHeader = (state, props) => {
     <Header
       leftComponent={headerIcon(props, 'arrow-back')}
       centerComponent={{
-        text: LANGUAGE.wd.setting,
+        text: I18n.t('setting'),
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
         underlayColor: CL_HEADER,
       }}
       rightComponent={{
-        text: LANGUAGE.wd.update,
+        text: I18n.t('update'),
         style: { color: CL_ICON_HEADER, fontSize: FONT_SIZE },
         underlayColor: CL_HEADER,
         onPress: () => settingUpdate(state, props),

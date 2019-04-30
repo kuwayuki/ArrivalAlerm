@@ -11,8 +11,8 @@ import {
 } from '../containers/position';
 import { Vibration } from 'react-native';
 import { getDistanceMeter } from './utils';
-import { LANGUAGE } from '../constants/language';
 const LOCATION_TASK_NAME = 'background-location-task';
+import I18n from '../i18n/index';
 
 let isChecking = false;
 let alermList = null;
@@ -26,7 +26,9 @@ export async function _handleNotification(notification) {
       //フォアグラウンドで通知
       const PATTERN = [1000, 2000, 3000];
       Vibration.vibrate(PATTERN);
-      Speech.speak(notification.data.message, { 'language ': LANGUAGE.locale });
+      Speech.speak(notification.data.message, {
+        'language ': I18n.t('locale'),
+      });
     }
   } else if (notification.origin !== 'granted') {
     // (iOS向け) 位置情報利用の許可をユーザーに求める

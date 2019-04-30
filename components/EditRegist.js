@@ -14,15 +14,11 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { connect } from 'react-redux';
 import { setAlermItem } from '../actions/actions';
-import {
-  DISTANCE_KIND,
-  DISTANCE_KIND_METER,
-  WEEK_DAY,
-} from '../constants/constants';
-import { LANGUAGE } from '../constants/language';
+import { DISTANCE_KIND, DISTANCE_KIND_METER } from '../constants/constants';
 import * as utils from '../containers/utils';
 import { editRegistHeader } from '../containers/header';
 import { admobInterstitial } from '../containers/googleAdmob';
+import I18n from '../i18n/index';
 
 let listIndex = 0;
 let selectTimer = 0; // 0:start / 1:end
@@ -163,11 +159,21 @@ export class EditRegist extends React.Component {
     this._hideDateTimePicker();
   };
 
+  WEEK_DAY = [
+    I18n.t('monday'),
+    I18n.t('tuesday'),
+    I18n.t('wednesday'),
+    I18n.t('thursday'),
+    I18n.t('friday'),
+    I18n.t('saturday'),
+    I18n.t('sunday'),
+  ];
+
   render() {
     const checkBoxContainer = (index, stateWeekDay) => {
       return (
         <View>
-          <Text style={styles.checkBoxText}>{WEEK_DAY[index]}</Text>
+          <Text style={styles.checkBoxText}>{this.WEEK_DAY[index]}</Text>
           <MaterialCommunityIcons
             style={styles.checkBox}
             name={
@@ -205,7 +211,7 @@ export class EditRegist extends React.Component {
           <SectionList
             sections={[
               {
-                title: LANGUAGE.wd.editTitle,
+                title: I18n.t('editTitle'),
                 data: [this.state.title],
               },
             ]}
@@ -252,13 +258,13 @@ export class EditRegist extends React.Component {
             />
           </MapView>
           <Text style={styles.sectionHeader}>
-            {LANGUAGE.wd.editAlermDistance}
+            {I18n.t('editAlermDistance')}
           </Text>
           <View style={styles.rowTextSetting}>
             <Text style={styles.text}>
               {this.state.isSelectedDistance
-                ? LANGUAGE.wd.editChoiceInput
-                : LANGUAGE.wd.editManualInput}
+                ? I18n.t('editChoiceInput')
+                : I18n.t('editManualInput')}
             </Text>
             <Switch
               style={styles.setting}
@@ -290,14 +296,12 @@ export class EditRegist extends React.Component {
                 }}
                 value={this.state.alermDistance}
               />
-              <Text>{LANGUAGE.wd.meter}</Text>
+              <Text>{I18n.t('meter')}</Text>
             </View>
           )}
-          <Text style={styles.sectionHeader}>
-            {LANGUAGE.wd.editAlermWeekDay}
-          </Text>
+          <Text style={styles.sectionHeader}>{I18n.t('editAlermWeekDay')}</Text>
           <View style={styles.rowTextSetting}>
-            <Text style={styles.text}>{LANGUAGE.wd.editChoiceWeekDay}</Text>
+            <Text style={styles.text}>{I18n.t('editChoiceWeekDay')}</Text>
             <Switch
               style={styles.setting}
               onValueChange={isLimitWeekDay =>
@@ -326,8 +330,8 @@ export class EditRegist extends React.Component {
             }
             titleIOS={
               selectTimer == 0
-                ? LANGUAGE.wd.editAlermTimeZone + LANGUAGE.wd.start
-                : LANGUAGE.wd.editAlermTimeZone + LANGUAGE.wd.end
+                ? I18n.t('editAlermTimeZone ') + I18n.t('start')
+                : I18n.t('editAlermTimeZone ') + I18n.t('end')
             }
             confirmTextIOS={'OK'}
             isVisible={this.state.isDateTimePickerVisible}
@@ -335,10 +339,10 @@ export class EditRegist extends React.Component {
             onCancel={this._hideDateTimePicker}
           />
           <Text style={styles.sectionHeader}>
-            {LANGUAGE.wd.editAlermTimeZone}
+            {I18n.t('editAlermTimeZone')}
           </Text>
           <View style={styles.rowTextSetting}>
-            <Text style={styles.text}>{LANGUAGE.wd.editAlermTimeChoice}</Text>
+            <Text style={styles.text}>{I18n.t('editAlermTimeChoice')}</Text>
             <Switch
               style={styles.setting}
               onValueChange={isLimitTimeZone =>

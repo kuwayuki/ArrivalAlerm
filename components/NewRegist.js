@@ -15,10 +15,10 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { addAlermItem } from '../actions/actions';
-import { LANGUAGE } from '../constants/language';
 import { styles } from '../containers/styles';
 import { admobBanner } from '../containers/googleAdmob';
 import { newRegistHeader } from '../containers/header';
+import I18n from '../i18n/index';
 
 const GEOCODE_ENDPOINT =
   'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
@@ -40,7 +40,7 @@ export class NewRegist extends React.Component {
       },
       markers: [
         {
-          title: LANGUAGE.wd.alermPoint,
+          title: I18n.t('alermPoint'),
           latlng: {
             latitude: props.ownInfo.coords.latitude,
             longitude: props.ownInfo.coords.longitude,
@@ -61,7 +61,7 @@ export class NewRegist extends React.Component {
       },
       markers: [
         {
-          title: LANGUAGE.wd.alermPoint,
+          title: I18n.t('alermPoint'),
           latlng: {
             latitude: this.props.ownInfo.coords.latitude,
             longitude: this.props.ownInfo.coords.longitude,
@@ -78,7 +78,7 @@ export class NewRegist extends React.Component {
       return;
     }
     let option = {
-      language: LANGUAGE.wd.locale,
+      language: I18n.t('locale'),
       location:
         this.props.ownInfo.coords.latitude +
         ',' +
@@ -100,21 +100,20 @@ export class NewRegist extends React.Component {
         if (data.results != null || data.results.length > 0) {
           this.setState({
             isSearch: true,
-            searchResult:
-              data.results.length + LANGUAGE.wd.searchSuccessMessage,
+            searchResult: data.results.length + I18n.t('searchSuccessMessage'),
             alermList: data.results,
           });
           // キーボード非表示
           Keyboard.dismiss();
         } else {
-          alert(LANGUAGE.wd.searchErrorMessage);
+          alert(I18n.t('searchErrorMessage'));
           this.setState({
             isSearch: false,
           });
         }
       })
       .catch(() => {
-        alert(LANGUAGE.wd.searchErrorMessage);
+        alert(I18n.t('searchErrorMessage'));
         this.setState({
           isSearch: false,
         });
@@ -165,13 +164,13 @@ export class NewRegist extends React.Component {
             />
             <Button
               style={styles.wordButton}
-              title={LANGUAGE.wd.search}
+              title={I18n.t('search')}
               onPress={() => this.handleGetLatAndLng()}
             />
             <Button
               style={styles.wordButton}
               buttonStyle={styles.bgColorRed}
-              title={LANGUAGE.wd.searchInit}
+              title={I18n.t('searchInit')}
               onPress={() => this.initPlace()}
             />
           </View>
@@ -179,7 +178,7 @@ export class NewRegist extends React.Component {
         {this.state.isSearch && (
           <View style={styles.searchListView}>
             <Text style={styles.sectionHeader}>
-              {LANGUAGE.wd.searchResult + this.state.searchResult}
+              {I18n.t('searchResult') + this.state.searchResult}
             </Text>
             <ScrollView>
               <FlatList

@@ -1,4 +1,4 @@
-import { LANGUAGE } from '../constants/language';
+import I18n from '../i18n/index';
 let unique = '_NAME';
 
 export const DISPLAY_HEADER_ICON = false;
@@ -27,38 +27,6 @@ export const VIBRATION_PATTERN = {
   PTN_3: [1000, 2000, 3000],
 };
 
-export const INITIAL_ITEM = {
-  index: 0,
-  title: LANGUAGE.wd.alermPoint,
-  isAvailable: true,
-  isAlermed: false,
-  alermTime: null,
-  alermMessage: LANGUAGE.wd.alermPoint + LANGUAGE.wd.arrivedNear,
-  alermDistance: 500,
-  interval: 'auto',
-  coords: { latitude: null, longitude: null },
-  isLimitTimeZone: false,
-  timeZoneStart: '12:00',
-  timeZoneEnd: '12:00',
-  isLimitWeekDay: false,
-  isMonday: true,
-  isTuesday: true,
-  isWednesday: true,
-  isThursday: true,
-  isFriday: true,
-  isSaturday: true,
-  isSunday: true,
-};
-
-export const WEEK_DAY = [
-  LANGUAGE.wd.monday,
-  LANGUAGE.wd.tuesday,
-  LANGUAGE.wd.wednesday,
-  LANGUAGE.wd.thursday,
-  LANGUAGE.wd.friday,
-  LANGUAGE.wd.saturday,
-  LANGUAGE.wd.sunday,
-];
 export const DISTANCE_KIND = [
   '100M',
   '300M',
@@ -68,17 +36,6 @@ export const DISTANCE_KIND = [
   '5KM',
   '10KM',
 ];
-
-export const PERFORMANCE_KIND = [
-  LANGUAGE.wd.lowest,
-  LANGUAGE.wd.low,
-  LANGUAGE.wd.balanced,
-  LANGUAGE.wd.high,
-  LANGUAGE.wd.highest,
-  LANGUAGE.wd.best,
-];
-
-export const SORT_KIND = [LANGUAGE.wd.sortRegist, LANGUAGE.wd.sortDistance];
 
 export const DISTANCE_KIND_METER = [100, 300, 500, 1000, 3000, 5000, 10000];
 

@@ -10,6 +10,7 @@ import Setting from './components/Setting';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { Provider } from 'react-redux';
 import { rootReducer } from './reducers/index';
+import I18n from './i18n/index';
 
 export const store = createStore(rootReducer);
 
@@ -53,6 +54,18 @@ export default class App extends React.Component {
   }
   static navigationOptions = {
     title: 'Welcome',
+  };
+  async componentWillMount() {
+    await this.loadAssetsAsync();
+  }
+  loadAssetsAsync = async () => {
+    try {
+      await I18n.initAsync();
+    } catch (e) {
+      // console.log(e.message)
+    } finally {
+      // this.setState({ isAssetsLoaded: true });
+    }
   };
   render() {
     return (

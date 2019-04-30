@@ -1,7 +1,7 @@
 import { getDistanceMeter, getNumTime, getTimeFromDateTime } from './utils';
 import { addAsyncStorage } from './jsonFile';
 import { Notifications } from 'expo';
-import { LANGUAGE } from '../constants/language';
+import I18n from '../i18n/index';
 
 export async function getCurrentPosition(timeoutMillis = 10000) {
   return new Promise((resolve, reject) => {
@@ -118,7 +118,7 @@ export async function checkPosition(ownInfo, alermList) {
 
         // 対象範囲なので通知を行う
         await Notifications.presentLocalNotificationAsync({
-          title: LANGUAGE.wd.appTitle,
+          title: I18n.t('appTitle'),
           body: alermItem.alermMessage,
           sound: ownInfo.sound,
           data: {

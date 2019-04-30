@@ -29,7 +29,7 @@ import {
   setAlermAvailable,
 } from '../actions/actions';
 import * as DEF from '../constants/constants';
-import { LANGUAGE } from '../constants/language';
+import I18n from '../i18n/index';
 
 let before = null;
 const ICON_SIZE = 20;
@@ -60,25 +60,23 @@ const getRimDistance = (coords1, item) => {
   switch (status) {
     case DEF.STATUS.AVAILABLE:
       if (disstance < alermDistance) {
-        message = LANGUAGE.wd.distanceInside;
+        message = I18n.t('distanceInside');
       } else {
         disstance = (disstance - item.alermDistance) / 1000;
         let distanceMe =
           utils.distanceKeta(disstance) + utils.distanceUnit(disstance);
         message =
-          LANGUAGE.wd.distanceMessage1 +
-          distanceMe +
-          LANGUAGE.wd.distanceMessage2;
+          I18n.t('distanceMessage1') + distanceMe + I18n.t('distanceMessage2');
       }
       return message;
     case DEF.STATUS.DISABLE:
-      return LANGUAGE.wd.distanceMessageNone;
+      return I18n.t('distanceMessageNone');
     case DEF.STATUS.ALERMED:
-      return LANGUAGE.wd.distanceMessageAlermed;
+      return I18n.t('distanceMessageAlermed');
     case DEF.STATUS.OUT_WEEK_DAY:
-      return LANGUAGE.wd.distanceMessageOutsideWeekDay;
+      return I18n.t('distanceMessageOutsideWeekDay');
     case DEF.STATUS.OUT_TIME:
-      return LANGUAGE.wd.distanceMessageOutsideTime;
+      return I18n.t('distanceMessageOutsideTime');
   }
 };
 
@@ -140,7 +138,7 @@ export class Top extends Component {
 
     const swipeBtns = index => [
       {
-        text: LANGUAGE.wd.del,
+        text: I18n.t('del'),
         backgroundColor: 'red',
         underlayColor: 'rgba(0,0,0,1)',
         onPress: () => {
