@@ -9,7 +9,7 @@ import {
   isCheckTime,
   isCheckDayWeek,
 } from '../containers/position';
-import { Vibration } from 'react-native';
+import { Alert, Vibration } from 'react-native';
 import { getDistanceMeter } from './utils';
 const LOCATION_TASK_NAME = 'background-location-task';
 import I18n from '../i18n/index';
@@ -26,9 +26,13 @@ export async function _handleNotification(notification) {
       //フォアグラウンドで通知
       const PATTERN = [1000, 2000, 3000];
       Vibration.vibrate(PATTERN);
-      Speech.speak(notification.data.message, {
-        'language ': I18n.t('locale'),
-      });
+      if (notification.sound) {
+        Speech.speak(notification.data.message, {
+          'language ': I18n.t('locale'),
+        });
+      } else {
+        Alert.alert(I18n.t('blank'), notification.data.message);
+      }
     }
   } else if (notification.origin !== 'granted') {
     // (iOS向け) 位置情報利用の許可をユーザーに求める
@@ -169,7 +173,7 @@ export async function startLocation(ownInfo, alermList) {
     await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
       accuracy: accuracy,
       distanceInterval: distanceInterval,
-      // showsBackgroundLocationIndicator: true,
+      showsBackgroundLocationIndicator: false,
     });
   }
 }

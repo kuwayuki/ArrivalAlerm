@@ -330,8 +330,8 @@ export class EditRegist extends React.Component {
             }
             titleIOS={
               selectTimer == 0
-                ? I18n.t('editAlermTimeZone ') + I18n.t('start')
-                : I18n.t('editAlermTimeZone ') + I18n.t('end')
+                ? I18n.t('editAlermTimeZone') + I18n.t('start')
+                : I18n.t('editAlermTimeZone') + I18n.t('end')
             }
             confirmTextIOS={'OK'}
             isVisible={this.state.isDateTimePickerVisible}

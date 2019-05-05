@@ -1,16 +1,16 @@
 [
   // 設定各種
   {
+    "isFree": false,
     "key": "setting",
     "performance": 0,
     "distance": 100,
-    "isFree": true,
     "reviewed": false,
-    "sound": true,
+    "sound": false,
     "recoveryTime": 60,
     "recoveryDistance": true,
     "sortKind": 0,
     "sortType": true,
-    "debug": true,
+    "debug": false,
   }
 ]

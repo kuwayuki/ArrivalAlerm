@@ -20,6 +20,8 @@ export class Setting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isDisplay: false,
+      isFree: this.props.ownInfo.isFree,
       performanceSelect: props.ownInfo.performance == 0,
       performance:
         props.ownInfo.performance == 0 ? -1 : props.ownInfo.performance - 1,
@@ -33,7 +35,7 @@ export class Setting extends React.Component {
   }
 
   async componentDidMount() {
-    if (this.props.ownInfo.isFree) {
+    if (this.state.isFree) {
       await admobInterstitial();
     }
   }
@@ -73,7 +75,7 @@ export class Setting extends React.Component {
             {
               text: 'OK',
               onPress: async () => {
-                json.clearAsyncStorage();
+                await json.clearAsyncStorage();
                 // 設定済情報取得
                 await json.getJsonData(this.props);
                 this.props.navigation.navigate('Top');
@@ -117,36 +119,42 @@ export class Setting extends React.Component {
       <View style={styles.container}>
         {settingHeader(this.state, this.props)}
         <ScrollView>
-          <Text style={styles.sectionHeader}>{I18n.t('getLocation')}</Text>
-          <View style={styles.rowTextSetting}>
-            <Text style={styles.text}>
-              {this.state.performanceSelect ? I18n.t('auto') : I18n.t('choice')}
-            </Text>
-            <Switch
-              style={styles.setting}
-              onValueChange={performanceSelect =>
-                this.setState({ performanceSelect })
-              }
-              value={this.state.performanceSelect}
-            />
-          </View>
-          {!this.state.performanceSelect && (
-            <View style={styles.bgColorWhite}>
-              <ButtonGroup
-                onPress={performance => this.setState({ performance })}
-                selectedButtonStyle={styles.bgColorSelected}
-                buttons={this.PERFORMANCE_KIND}
-                selectedIndex={this.state.performance}
-              />
+          {this.state.isDisplay && (
+            <View>
+              <Text style={styles.sectionHeader}>{I18n.t('getLocation')}</Text>
+              <View style={styles.rowTextSetting}>
+                <Text style={styles.text}>
+                  {this.state.performanceSelect
+                    ? I18n.t('auto')
+                    : I18n.t('choice')}
+                </Text>
+                <Switch
+                  style={styles.setting}
+                  onValueChange={performanceSelect =>
+                    this.setState({ performanceSelect })
+                  }
+                  value={this.state.performanceSelect}
+                />
+              </View>
+              {!this.state.performanceSelect && (
+                <View style={styles.bgColorWhite}>
+                  <ButtonGroup
+                    onPress={performance => this.setState({ performance })}
+                    selectedButtonStyle={styles.bgColorSelected}
+                    buttons={this.PERFORMANCE_KIND}
+                    selectedIndex={this.state.performance}
+                  />
+                </View>
+              )}
+              <View style={styles.rowTextSetting}>
+                <Text style={styles.textDes}>
+                  {!this.state.performanceSelect
+                    ? this.getDesDitance(this.state.performance)
+                    : I18n.t('getLocationDesAuto')}
+                </Text>
+              </View>
             </View>
           )}
-          <View style={styles.rowTextSetting}>
-            <Text style={styles.textDes}>
-              {!this.state.performanceSelect
-                ? this.getDesDitance(this.state.performance)
-                : I18n.t('getLocationDesAuto')}
-            </Text>
-          </View>
           <Text style={styles.sectionHeader}>{I18n.t('sort')}</Text>
           <View style={styles.bgColorWhite}>
             <ButtonGroup
@@ -168,17 +176,21 @@ export class Setting extends React.Component {
               value={this.state.sortType}
             />
           </View>
-          <Text style={styles.sectionHeader}>{I18n.t('sound')}</Text>
-          <View style={styles.rowTextSetting}>
-            <Text style={styles.text}>
-              {this.state.sound ? I18n.t('on') : I18n.t('off')}
-            </Text>
-            <Switch
-              style={styles.setting}
-              onValueChange={sound => this.setState({ sound })}
-              value={this.state.sound}
-            />
-          </View>
+          {this.state.isDisplay && (
+            <View>
+              <Text style={styles.sectionHeader}>{I18n.t('sound')}</Text>
+              <View style={styles.rowTextSetting}>
+                <Text style={styles.text}>
+                  {this.state.sound ? I18n.t('on') : I18n.t('off')}
+                </Text>
+                <Switch
+                  style={styles.setting}
+                  onValueChange={sound => this.setState({ sound })}
+                  value={this.state.sound}
+                />
+              </View>
+            </View>
+          )}
           <Text style={styles.sectionHeader}>{I18n.t('recovery')}</Text>
           <Text style={styles.sectionHeader2}>{I18n.t('recoveryTime')}</Text>
           <View style={styles.rowTextSetting}>
@@ -219,7 +231,7 @@ export class Setting extends React.Component {
             </View>
           )}
           <Text style={styles.sectionHeader}>{I18n.t('other')}</Text>
-          {this.props.ownInfo.isFree && (
+          {this.state.isFree && (
             <View style={styles.rowTextSetting}>
               <Text style={styles.text}>{I18n.t('payDes')}</Text>
               <Button

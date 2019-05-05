@@ -25,11 +25,12 @@ export const newRegistBtn = props => {
   } else {
     maxCount += DEF.MAX_OFFICAL;
   }
-  if (count > maxCount) {
+  console.log(maxCount);
+  if (count >= maxCount) {
     if (props.ownInfo.isFree) {
       Alert.alert(
         I18n.t('blank'),
-        I18n.t('freeAlert1') + (maxCount + 1) + I18n.t('freeAlert2'),
+        I18n.t('freeAlert1') + (maxCount) + I18n.t('freeAlert2'),
         [
           {
             text: 'OK',
@@ -40,7 +41,7 @@ export const newRegistBtn = props => {
         ]
       );
     } else {
-      Alert.alert(I18n.t('blank'), maxCount + 1 + I18n.t('freeAlert2'), [
+      Alert.alert(I18n.t('blank'), maxCount + I18n.t('freeAlert2'), [
         {
           text: 'OK',
           onPress: async () => {
@@ -49,7 +50,6 @@ export const newRegistBtn = props => {
         },
       ]);
     }
-    // storeReview(props);
   } else {
     props.navigation.navigate('NewRegist');
   }
