@@ -44,7 +44,6 @@ export async function initNotification() {
     }
   }
 
-  console.log(currentNotificationPermission);
   if (currentNotificationPermission.status !== 'granted') {
     // (iOS向け) プッシュ通知の許可をユーザーに求める
     const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
@@ -55,7 +54,6 @@ export async function initNotification() {
   }
   await Notifications.addListener(_handleNotification);
 
-  console.log(currentLocationPermission);
   if (currentLocationPermission.status !== 'granted') {
     // (iOS向け) 位置情報利用の許可をユーザーに求める
     const { status } = await Permissions.askAsync(Permissions.LOCATION);

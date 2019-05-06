@@ -8,7 +8,7 @@ import {
   SectionList,
 } from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
-import { styles } from '../containers/styles';
+import { styles, CHECK_SIZE } from '../containers/styles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -181,7 +181,7 @@ export class EditRegist extends React.Component {
                 ? 'checkbox-marked-outline'
                 : 'checkbox-blank-outline'
             }
-            size={30}
+            size={CHECK_SIZE}
             onPress={() => {
               switch (index) {
                 case 0:

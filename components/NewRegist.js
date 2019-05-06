@@ -15,7 +15,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { addAlermItem } from '../actions/actions';
-import { styles } from '../containers/styles';
+import { styles, ICON_SIZE } from '../containers/styles';
 import { admobBanner } from '../containers/googleAdmob';
 import { newRegistHeader } from '../containers/header';
 import I18n from '../i18n/index';
@@ -152,7 +152,11 @@ export class NewRegist extends React.Component {
         {newRegistHeader(this.state, this.props)}
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={styles.word}>
-            <MaterialIcons name="search" size="25" style={styles.wordIcon} />
+            <MaterialIcons
+              name="search"
+              size={ICON_SIZE}
+              style={styles.wordIcon}
+            />
             <TextInput
               inlineImagePadding={10}
               style={styles.wordInput}
@@ -192,7 +196,7 @@ export class NewRegist extends React.Component {
                     <FontAwesome
                       name="map-pin"
                       color="red"
-                      size="25"
+                      size={ICON_SIZE}
                       style={styles.icon}
                     />
                     <View style={styles.itemNew}>

@@ -25,7 +25,6 @@ export const newRegistBtn = props => {
   } else {
     maxCount += DEF.MAX_OFFICAL;
   }
-  console.log(maxCount);
   if (count >= maxCount) {
     if (props.ownInfo.isFree) {
       Alert.alert(

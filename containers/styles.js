@@ -1,5 +1,8 @@
 import { StyleSheet } from 'react-native';
 
+export const ICON_SIZE = 25;
+export const CHECK_SIZE = 30;
+
 // 背景色
 const CL_BG = 'aliceblue';
 // リスト背景色
