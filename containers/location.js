@@ -26,12 +26,12 @@ export async function _handleNotification(notification) {
       //フォアグラウンドで通知
       const PATTERN = [1000, 2000, 3000];
       Vibration.vibrate(PATTERN);
-      if (notification.sound) {
+      if (true) {
+        Alert.alert(I18n.t('blank'), notification.data.message);
+      } else {
         Speech.speak(notification.data.message, {
           'language ': I18n.t('locale'),
         });
-      } else {
-        Alert.alert(I18n.t('blank'), notification.data.message);
       }
     }
   } else if (notification.origin !== 'granted') {
