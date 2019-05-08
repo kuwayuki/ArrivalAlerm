@@ -32,12 +32,6 @@ export class NewRegist extends React.Component {
       word: '',
       searchResult: '',
       isSearch: false,
-      region: {
-        latitude: props.ownInfo.coords.latitude,
-        longitude: props.ownInfo.coords.longitude,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
-      },
       markers: [
         {
           title: I18n.t('alermPoint'),
@@ -49,6 +43,14 @@ export class NewRegist extends React.Component {
       ],
     };
   }
+
+  componentWillMount() {
+    let region = this.props.ownInfo.coords;
+    region.latitudeDelta = 0.05;
+    region.longitudeDelta = 0.05;
+    this.setState({ region });
+  }
+
   initPlace() {
     this.setState({
       word: '',

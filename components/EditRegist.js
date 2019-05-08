@@ -70,12 +70,6 @@ export class EditRegist extends React.Component {
       isFriday: alermItem.isFriday,
       isSaturday: alermItem.isSaturday,
       isSunday: alermItem.isSunday,
-      region: {
-        latitude: alermItem.coords.latitude,
-        longitude: alermItem.coords.longitude,
-        latitudeDelta: 0.00003 * alermItem.alermDistance,
-        longitudeDelta: 0.00003 * alermItem.alermDistance,
-      },
       markers: [
         {
           title: alermItem.title,
@@ -86,6 +80,14 @@ export class EditRegist extends React.Component {
         },
       ],
     };
+  }
+
+  componentWillMount() {
+    let alermItem = this.props.alermList[listIndex];
+    let region = alermItem.coords;
+    region.latitudeDelta = 0.00003 * alermItem.alermDistance;
+    region.longitudeDelta = 0.00003 * alermItem.alermDistance;
+    this.setState({ region });
   }
 
   async componentDidMount() {
