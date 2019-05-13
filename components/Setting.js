@@ -43,7 +43,6 @@ export class Setting extends React.Component {
   buyStore() {
     let appStoreId = 'id443904275';
     let playStoreId = 'id443904275';
-
     AppLink.openInStore({ appStoreId, playStoreId })
       .then(() => {
         // do stuff

@@ -60,6 +60,8 @@ export class EditRegist extends React.Component {
       alermDistance: String(alermItem.alermDistance),
       interval: alermItem.interval,
       isLimitTimeZone: alermItem.isLimitTimeZone,
+      localTimeZoneStart: alermItem.timeZoneStart,
+      localTimeZoneEnd: alermItem.timeZoneEnd,
       timeZoneStart: alermItem.timeZoneStart,
       timeZoneEnd: alermItem.timeZoneEnd,
       isLimitWeekDay: alermItem.isLimitWeekDay,
@@ -159,6 +161,14 @@ export class EditRegist extends React.Component {
       this.setState({ timeZoneEnd: utils.getTimeFromDateTime(time) });
     }
     this._hideDateTimePicker();
+  };
+
+  setDate = newDate => {
+    if (selectTimer == 0) {
+      this.setState({ localTimeZoneStart: utils.getTimeFromDateTime(newDate) });
+    } else {
+      this.setState({ localTimeZoneEnd: utils.getTimeFromDateTime(newDate) });
+    }
   };
 
   WEEK_DAY = [
@@ -327,8 +337,8 @@ export class EditRegist extends React.Component {
             mode={'time'}
             date={
               selectTimer == 0
-                ? new Date('2019/03/10 ' + this.state.timeZoneStart)
-                : new Date('2019/03/10 ' + this.state.timeZoneEnd)
+                ? new Date('2019/03/10 ' + this.state.localTimeZoneStart)
+                : new Date('2019/03/10 ' + this.state.localTimeZoneEnd)
             }
             titleIOS={
               selectTimer == 0
@@ -339,6 +349,7 @@ export class EditRegist extends React.Component {
             isVisible={this.state.isDateTimePickerVisible}
             onConfirm={this._handleDatePicked}
             onCancel={this._hideDateTimePicker}
+            onDateChange={this.setDate}
           />
           <Text style={styles.sectionHeader}>
             {I18n.t('editAlermTimeZone')}
