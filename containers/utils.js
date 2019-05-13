@@ -1,5 +1,5 @@
 import { Notifications, Permissions } from 'expo';
-import { Platform, PermissionsAndroid, Alert } from 'react-native';
+import { Platform, PermissionsAndroid, Alert, Linking } from 'react-native';
 import { _handleNotification } from './location';
 import { isCheckDayWeek, isCheckTime } from './position';
 import { STATUS } from '../constants/constants';
@@ -21,6 +21,7 @@ export const distanceMtoKm = meter => {
 
 let isRead = false;
 export async function initNotification() {
+  let isOK = false;
   if (this.isRead) return;
   this.isRead = true;
   // 既存のパーミッションを取得
@@ -45,23 +46,32 @@ export async function initNotification() {
   }
 
   if (currentNotificationPermission.status !== 'granted') {
-    // (iOS向け) プッシュ通知の許可をユーザーに求める
-    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-    if (status !== 'granted') {
-      Alert.alert(I18n.t('alermError'), I18n.t('alermNotification'));
-      return;
-    }
+    Alert.alert(I18n.t('alermError'), I18n.t('alermNotification'), [
+      {
+        text: 'OK',
+        onPress: async () => {
+          Linking.openURL('app-settings://notification/expo');
+        },
+      },
+    ]);
+    return isOK;
   }
   await Notifications.addListener(_handleNotification);
 
-  if (currentLocationPermission.status !== 'granted') {
+  if (currentLocationPermission.ios.scope !== 'always') {
     // (iOS向け) 位置情報利用の許可をユーザーに求める
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      Alert.alert(I18n.t('alermError'), I18n.t('alermLocation'));
-      return;
-    }
+    Alert.alert(I18n.t('alermError'), I18n.t('alermLocation'), [
+      {
+        text: 'OK',
+        onPress: async () => {
+          Linking.openURL('app-settings://notification/expo');
+        },
+      },
+    ]);
+    return isOK;
   }
+  isOK = true;
+  return isOK;
 }
 
 export const getDistance = (coords1, coords2) => {

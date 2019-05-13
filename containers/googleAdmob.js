@@ -4,6 +4,7 @@ import {
   AdMobInterstitial,
   PublisherBanner,
   StoreReview,
+  Linking,
 } from 'expo';
 import { Alert } from 'react-native';
 import I18n from '../i18n/index';
@@ -29,6 +30,21 @@ export async function admobInterstitial() {
   }
 }
 
+async function storeDetailReview() {
+  Alert.alert(I18n.t('reviewTitle'), I18n.t('reviewQuestion'), [
+    {
+      text: 'OK',
+      onPress: async () => {
+        const url = StoreReview.storeUrl();
+        Linking.openURL(url);
+      },
+    },
+    {
+      text: 'Cancel',
+    },
+  ]);
+}
+
 export const storeReview = props => {
   if (props.ownInfo.reviewed) return;
   if (StoreReview.isSupported()) {
@@ -37,6 +53,7 @@ export const storeReview = props => {
         text: 'OK',
         onPress: async () => {
           await StoreReview.requestReview();
+          await storeDetailReview();
           props.setOwnInfoReviewed(true);
           await json.mergeStorageDataOwnInfo({ reviewed: true });
         },

@@ -89,4 +89,5 @@ export default {
   reviewQuestion:
     'いつもご利用ありがとうございます。\n\n' +
     'もしよろしければレビューをしてくれませんか？アプリ評価にご協力頂けたら登録できる地点が1つ増えます。',
+  reviewDetailQuestion: '詳細レビューも記載する',
 };

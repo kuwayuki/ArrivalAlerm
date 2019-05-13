@@ -23,7 +23,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "jp.kuwatan.norisugo"
+      "bundleIdentifier": "jp.kuwatan.norisugo",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses the camera to scan barcodes on event tickets."
+      }
     }
   }
 }

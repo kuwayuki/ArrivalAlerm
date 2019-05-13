@@ -31,13 +31,13 @@ export const DISTANCE_KIND = [
   '100M',
   '300M',
   '500M',
+  '750M',
   '1KM',
   '3KM',
   '5KM',
-  '10KM',
 ];
 
-export const DISTANCE_KIND_METER = [100, 300, 500, 1000, 3000, 5000, 10000];
+export const DISTANCE_KIND_METER = [100, 300, 500, 750, 1000, 3000, 5000];
 
 export const MAX_TRIAL = 2;
 export const MAX_OFFICAL = 9;

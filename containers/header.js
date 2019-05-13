@@ -29,7 +29,7 @@ export const newRegistBtn = props => {
     if (props.ownInfo.isFree) {
       Alert.alert(
         I18n.t('blank'),
-        I18n.t('freeAlert1') + (maxCount) + I18n.t('freeAlert2'),
+        I18n.t('freeAlert1') + maxCount + I18n.t('freeAlert2'),
         [
           {
             text: 'OK',
@@ -86,7 +86,7 @@ async function newMarkerClick(state, props) {
     isAlermed: false,
     alermTime: null,
     alermMessage: I18n.t('alermPoint') + I18n.t('arrivedNear'),
-    alermDistance: 500,
+    alermDistance: 750,
     interval: 'auto',
     coords: { latitude: null, longitude: null },
     isLimitTimeZone: false,
@@ -221,6 +221,7 @@ export const topHeader = props => {
       containerStyle={{
         backgroundColor: CL_HEADER,
         justifyContent: 'space-around',
+        borderBottomWidth: 0,
       }}
     />
   );
@@ -244,6 +245,7 @@ export const newRegistHeader = (state, props) => {
       containerStyle={{
         backgroundColor: CL_HEADER,
         justifyContent: 'space-around',
+        borderBottomWidth: 0,
       }}
     />
   );
@@ -267,6 +269,7 @@ export const editRegistHeader = (state, props, listIndex) => {
       containerStyle={{
         backgroundColor: CL_HEADER,
         justifyContent: 'space-around',
+        borderBottomWidth: 0,
       }}
     />
   );
@@ -290,6 +293,7 @@ export const settingHeader = (state, props) => {
       containerStyle={{
         backgroundColor: CL_HEADER,
         justifyContent: 'space-around',
+        borderBottomWidth: 0,
       }}
     />
   );

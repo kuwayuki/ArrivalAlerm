@@ -34,9 +34,6 @@ export async function _handleNotification(notification) {
         });
       }
     }
-  } else if (notification.origin !== 'granted') {
-    // (iOS向け) 位置情報利用の許可をユーザーに求める
-    await Permissions.askAsync(Permissions.LOCATION);
   }
 }
 

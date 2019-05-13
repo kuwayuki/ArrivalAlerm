@@ -78,7 +78,7 @@ export default {
   freeAlert2: '件までしか登録できません。',
   alermError: 'エラー',
   alermNotification: '通知設定をオンにしてから起動して下さい',
-  alermLocation: '位置情報設定をオンにしてから起動して下さい',
+  alermLocation: '位置情報設定を"常に許可"にしてから起動して下さい',
   searchInit: '現地',
   search: '検索',
   searchResult: '検索結果：',
@@ -89,4 +89,6 @@ export default {
   reviewQuestion:
     'いつもご利用ありがとうございます。\n\n' +
     'もしよろしければレビューをしてくれませんか？アプリ評価にご協力頂けたら登録できる地点が1つ増えます。',
+  reviewDetailQuestion:
+    '詳細レビューも記載する',
 };
