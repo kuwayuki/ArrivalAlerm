@@ -1,7 +1,12 @@
 import I18n from '../i18n/index';
 let unique = '_NAME';
 
+// export const DISPLAY_HEADER_ICON = true;
 export const DISPLAY_HEADER_ICON = false;
+// export const SETTING_APP_URL = 'app-settings://notification/expo';// TODO:
+export const SETTING_APP_URL = 'app-settings://notification/norisugo';// TODO:
+export const APP_STORE_ID = 'id443904275';// TODO:
+export const PLAY_STORE_ID = 'id443904275';// TODO:
 
 export const ALERM_LIST = {
   ADD: 'ADD' + unique,

@@ -2,7 +2,7 @@ import { Notifications, Permissions } from 'expo';
 import { Platform, PermissionsAndroid, Alert, Linking } from 'react-native';
 import { _handleNotification } from './location';
 import { isCheckDayWeek, isCheckTime } from './position';
-import { STATUS } from '../constants/constants';
+import { STATUS, SETTING_APP_URL } from '../constants/constants';
 import I18n from '../i18n/index';
 import {
   CL_ABAILABLE,
@@ -50,7 +50,7 @@ export async function initNotification() {
       {
         text: 'OK',
         onPress: async () => {
-          Linking.openURL('app-settings://notification/expo');
+          Linking.openURL(SETTING_APP_URL);
         },
       },
     ]);
@@ -64,7 +64,7 @@ export async function initNotification() {
       {
         text: 'OK',
         onPress: async () => {
-          Linking.openURL('app-settings://notification/expo');
+          Linking.openURL(SETTING_APP_URL);
         },
       },
     ]);

@@ -32,6 +32,7 @@ const FONT_DES = '#1a73e8';
 // 残り距離文字色
 const FONT_DISTANCE = 'white';
 export const CL_ICON_HEADER = 'white';
+export const RIDE_ICON_HEADER = 'gold';
 
 export const styles = StyleSheet.create({
   container: {

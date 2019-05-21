@@ -6,7 +6,7 @@ import * as DEF from '../constants/constants';
 import * as json from '../containers/jsonFile';
 import { getNumTime, getTimeFromDateTime } from '../containers/utils';
 import { storeReview } from '../containers/googleAdmob';
-import { CL_HEADER, CL_ICON_HEADER } from './styles';
+import { CL_HEADER, CL_ICON_HEADER, RIDE_ICON_HEADER } from './styles';
 import I18n from '../i18n/index';
 
 const ICON_SIZE = 30;
@@ -184,38 +184,35 @@ const headerIcon = (props, name) => {
   );
 };
 
-export const topHeader = props => {
-  let speed = props.ownInfo.coords.speed;
-  let homeIcon = 'home';
+const rideIcon = speed => {
+  let homeIcon = 'airline-seat-recline-normal';
   let type = 'material';
   if (speed < 0.2) {
     // 停滞・維持レベル(目的地までの距離)
-    homeIcon = 'home';
-  } else if (speed < 1) {
-    // 停滞・維持レベル(目的地までの距離)
     homeIcon = 'airline-seat-recline-normal';
-  } else if (speed < 10) {
-    // 徒歩レベル(目的地までの距離)
+  } else if (speed < 1.5) {
     homeIcon = 'directions-walk';
-  } else if (speed < 30) {
-    // 電車・車レベル(目的地までの距離と通知距離に反比例)
-    homeIcon = 'train';
+  } else if (speed < 5) {
+    // 徒歩レベル(目的地までの距離)
+    homeIcon = 'directions-run';
+  } else if (speed < 13) {
+    // バス・車レベル(目的地までの距離と通知距離に反比例)
+    homeIcon = 'directions-bus';
   } else {
-    // 新幹線レベル
-    homeIcon = 'car-traction-control';
-    type = 'material-community';
+    // 電車レベル(目的地までの距離と通知距離に反比例)
+    homeIcon = 'train';
   }
+  return (
+    <MaterialIcons name={homeIcon} size={ICON_SIZE} color={RIDE_ICON_HEADER} />
+  );
+};
 
+export const topHeader = props => {
   return (
     <Header
       leftComponent={headerIcon(props, 'settings')}
       centerComponent={
-        DEF.DISPLAY_HEADER_ICON && {
-          icon: homeIcon,
-          type: type,
-          color: CL_ICON_HEADER,
-          size: ICON_SIZE,
-        }
+        DEF.DISPLAY_HEADER_ICON && rideIcon(props.ownInfo.coords.speed)
       }
       rightComponent={headerIcon(props, 'add')}
       containerStyle={{

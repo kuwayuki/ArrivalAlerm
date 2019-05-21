@@ -119,9 +119,9 @@ async function getBestPerformance(ownCoords, alermList) {
     accuracy = Location.Accuracy.Lowest;
   }
   // 目的地周辺の場合は再取得距離を短くする
-  if (pointDistance < 1.5 * alermDistance) {
+  if (pointDistance < 1.5 * alermDistance * index) {
     alermDistance = alermDistance / 10;
-  } else if (pointDistance < 3 * alermDistance) {
+  } else if (pointDistance < 3 * alermDistance * index) {
     alermDistance = alermDistance / 5;
   }
   return { accuracy: accuracy, distance: alermDistance };

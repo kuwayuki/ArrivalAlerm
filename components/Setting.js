@@ -14,6 +14,7 @@ import { styles } from '../containers/styles';
 import { getCurrentPosition } from '../containers/position';
 import { settingHeader } from '../containers/header';
 import { admobInterstitial } from '../containers/googleAdmob';
+import { APP_STORE_ID, PLAY_STORE_ID } from '../constants/constants';
 import I18n from '../i18n/index';
 
 export class Setting extends React.Component {
@@ -41,9 +42,7 @@ export class Setting extends React.Component {
   }
 
   buyStore() {
-    let appStoreId = 'id443904275';
-    let playStoreId = 'id443904275';
-    AppLink.openInStore({ appStoreId, playStoreId })
+    AppLink.openInStore({ APP_STORE_ID, PLAY_STORE_ID })
       .then(() => {
         // do stuff
       })
