@@ -4,7 +4,11 @@ import { Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as DEF from '../constants/constants';
 import * as json from '../containers/jsonFile';
-import { getNumTime, getTimeFromDateTime } from '../containers/utils';
+import {
+  getNumTime,
+  getTimeFromDateTime,
+  checkOSSetting,
+} from '../containers/utils';
 import { storeReview } from '../containers/googleAdmob';
 import { CL_HEADER, CL_ICON_HEADER, RIDE_ICON_HEADER } from './styles';
 import I18n from '../i18n/index';
@@ -12,11 +16,17 @@ import I18n from '../i18n/index';
 const ICON_SIZE = 30;
 const FONT_SIZE = 18;
 
-const settingBtn = props => {
+export async function settingBtn(props) {
+  if (!(await checkOSSetting())) {
+    return;
+  }
   props.navigation.navigate('Setting');
-};
+}
 
-export const newRegistBtn = props => {
+export async function newRegistBtn(props) {
+  if (!(await checkOSSetting())) {
+    return;
+  }
   let count = props.alermList.length;
   let maxCount = props.ownInfo.reviewed ? 1 : 0;
 
@@ -52,7 +62,7 @@ export const newRegistBtn = props => {
   } else {
     props.navigation.navigate('NewRegist');
   }
-};
+}
 
 const settingUpdate = (state, props) => {
   let ownInfo = {};

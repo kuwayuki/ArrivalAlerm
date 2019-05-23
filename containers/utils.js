@@ -19,6 +19,39 @@ export const distanceMtoKm = meter => {
   return distanceKeta(km);
 };
 
+export async function checkOSSetting() {
+  const { permissions } = await Permissions.askAsync(
+    Permissions.NOTIFICATIONS,
+    Permissions.LOCATION
+  );
+  const currentNotificationPermission = permissions[Permissions.NOTIFICATIONS];
+  const currentLocationPermission = permissions[Permissions.LOCATION];
+  if (currentNotificationPermission.status !== 'granted') {
+    Alert.alert(I18n.t('alermError'), I18n.t('alermNotification'), [
+      {
+        text: 'OK',
+        onPress: async () => {
+          Linking.openURL(SETTING_APP_URL);
+        },
+      },
+    ]);
+    return false;
+  }
+  if (currentLocationPermission.ios.scope !== 'always') {
+    // (iOS向け) 位置情報利用の許可をユーザーに求める
+    Alert.alert(I18n.t('alermError'), I18n.t('alermLocation'), [
+      {
+        text: 'OK',
+        onPress: async () => {
+          Linking.openURL(SETTING_APP_URL);
+        },
+      },
+    ]);
+    return false;
+  }
+  return true;
+}
+
 let isRead = false;
 export async function initNotification() {
   let isOK = false;
