@@ -3,6 +3,8 @@ export default {
   appTitle: 'ノリスゴ',
   blank: '',
   setting: '設定',
+  goSet: '設定する',
+  cancel: 'キャンセル',
   newRegist: '新規登録',
   update: '更新',
   decision: '決定',

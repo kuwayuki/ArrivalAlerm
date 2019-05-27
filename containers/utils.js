@@ -20,23 +20,8 @@ export const distanceMtoKm = meter => {
 };
 
 export async function checkOSSetting() {
-  const { permissions } = await Permissions.askAsync(
-    Permissions.NOTIFICATIONS,
-    Permissions.LOCATION
-  );
-  const currentNotificationPermission = permissions[Permissions.NOTIFICATIONS];
+  const { permissions } = await Permissions.askAsync(Permissions.LOCATION);
   const currentLocationPermission = permissions[Permissions.LOCATION];
-  if (currentNotificationPermission.status !== 'granted') {
-    Alert.alert(I18n.t('alermError'), I18n.t('alermNotification'), [
-      {
-        text: 'OK',
-        onPress: async () => {
-          Linking.openURL(SETTING_APP_URL);
-        },
-      },
-    ]);
-    return false;
-  }
   if (currentLocationPermission.ios.scope !== 'always') {
     // (iOS向け) 位置情報利用の許可をユーザーに求める
     Alert.alert(I18n.t('alermError'), I18n.t('alermLocation'), [
@@ -58,7 +43,7 @@ export async function initNotification() {
   if (this.isRead) return;
   this.isRead = true;
   // 既存のパーミッションを取得
-  const { permissions } = await Permissions.getAsync(
+  const { permissions } = await Permissions.askAsync(
     Permissions.NOTIFICATIONS,
     Permissions.LOCATION
   );
@@ -79,15 +64,17 @@ export async function initNotification() {
   }
 
   if (currentNotificationPermission.status !== 'granted') {
-    Alert.alert(I18n.t('alermError'), I18n.t('alermNotification'), [
+    Alert.alert(I18n.t('setting'), I18n.t('alermNotification'), [
       {
-        text: 'OK',
+        text: I18n.t('goSet'),
         onPress: async () => {
           Linking.openURL(SETTING_APP_URL);
         },
       },
+      {
+        text: I18n.t('cancel'),
+      },
     ]);
-    return isOK;
   }
   await Notifications.addListener(_handleNotification);
 

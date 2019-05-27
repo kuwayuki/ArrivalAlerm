@@ -14,11 +14,11 @@
     "prop-types": ">=15.5.0",
     "react-native-app-link": "1.0.0",
     "react-native-elements": "1.1.0",
-    "react-native-modal-datetime-picker": "7.4.0",
+    "react-native-modal-datetime-picker": "7.4.2",
     "react-native-swipeout": "2.3.6",
-    "react-navigation": "3.3.2",
+    "react-navigation": "3.11.0",
     "react-redux": "6.0.1",
     "react-timer-mixin": "0.13.4",
-    "redux": "4.0.1"
+    "redux": "^4.0.0-0"
   }
 }

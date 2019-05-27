@@ -5,7 +5,7 @@
     "slug": "snack-BJH0fIl9N",
     "privacy": "unlisted",
     "sdkVersion": "32.0.0",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
     "icon": "./assets/snack-icon.png",
@@ -25,9 +25,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "jp.kuwatan.norisugo",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "このアプリは位置情報を使用します。\r\n位置情報設定を「常に許可」にしてから起動して下さい",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "このアプリは位置情報を使用します。\r\n位置情報設定を「常に許可」にしてから起動して下さい",
-        "NSLocationAlwaysUsageDescription": "このアプリは位置情報を使用します。\r\n位置情報設定を「常に許可」にしてから起動して下さい"
+        "NSLocationWhenInUseUsageDescription": "このアプリは、目的地に近づいたかを判断するために位置情報を利用します。\r\n\r\n位置情報サービスは「常に許可」を設定して下さい。",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "このアプリは、目的地に近づいたかを判断するために位置情報を利用します。\r\n\r\n位置情報サービスは「常に許可」を設定して下さい。",
+        "NSLocationAlwaysUsageDescription": "このアプリは、目的地に近づいたかを判断するために位置情報を利用します。\r\n\r\n位置情報サービスは「常に許可」を設定して下さい。"
       }
     }
   }
