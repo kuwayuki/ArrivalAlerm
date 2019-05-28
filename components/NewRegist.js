@@ -98,7 +98,6 @@ export class NewRegist extends React.Component {
         const data = results.data;
         const result = data.results[0];
         const location = result.geometry.location;
-
         if (data.results != null || data.results.length > 0) {
           this.setState({
             isSearch: true,

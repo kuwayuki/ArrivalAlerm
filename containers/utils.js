@@ -44,10 +44,11 @@ export async function initNotification() {
   this.isRead = true;
   // 既存のパーミッションを取得
   const { permissions } = await Permissions.askAsync(
-    Permissions.NOTIFICATIONS,
+    Permissions.USER_FACING_NOTIFICATIONS,
     Permissions.LOCATION
   );
-  const currentNotificationPermission = permissions[Permissions.NOTIFICATIONS];
+  const currentNotificationPermission =
+    permissions[Permissions.USER_FACING_NOTIFICATIONS];
   const currentLocationPermission = permissions[Permissions.LOCATION];
   if (Platform.OS === 'android') {
     const ok = await PermissionsAndroid.check(
@@ -62,7 +63,7 @@ export async function initNotification() {
       }
     }
   }
-
+  console.log(currentNotificationPermission);
   if (currentNotificationPermission.status !== 'granted') {
     Alert.alert(I18n.t('setting'), I18n.t('alermNotification'), [
       {

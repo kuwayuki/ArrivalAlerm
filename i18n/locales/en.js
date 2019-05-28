@@ -9,6 +9,7 @@ export default {
   update: '更新',
   decision: '決定',
   del: '削除',
+  nearest: '最寄\n駅',
   distanceInside: '通知範囲内',
   distanceMessage1: '残り',
   distanceMessage2: 'で通知します',

@@ -5,6 +5,8 @@ export const CHECK_SIZE = 30;
 
 // 背景色
 const CL_BG = 'aliceblue';
+// 最寄り背景色
+const CL_NEAR_BG = 'teal';
 // リスト背景色
 const CL_LIST_BG = 'snow';
 // ヘッダー色
@@ -38,6 +40,42 @@ export const styles = StyleSheet.create({
   container: {
     backgroundColor: CL_BG,
     flex: 1,
+  },
+  nearRest: {
+    height: 75,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    backgroundColor: CL_NEAR_BG,
+    padding: 7,
+    fontSize: 18,
+    borderStyle: 'solid',
+    borderColor: CL_BORDER,
+    borderBottomWidth: 0.25,
+    alignItems: 'center',
+  },
+  nearRestTitle: {
+    textAlign: 'center',
+    width: 60,
+    paddingTop: 8,
+    paddingBottom: 8,
+    color: FONT_DISTANCE,
+    overflow: 'hidden',
+    fontSize: 17,
+  },
+  nearRestInfo: {
+    paddingLeft: 12,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  nearRestName: {
+    paddingLeft: 10,
+    fontSize: 15,
+  },
+  nearRestDistance: {
+    paddingTop: 1,
+    paddingLeft: 10,
+    fontSize: 14,
   },
   itemListRow: {
     flex: 1,

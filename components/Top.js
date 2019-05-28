@@ -11,6 +11,7 @@ import { Notifications } from 'expo';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import Swipeout from 'react-native-swipeout';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import { styles } from '../containers/styles';
 import * as utils from '../containers/utils';
 import * as json from '../containers/jsonFile';
@@ -32,7 +33,10 @@ import * as DEF from '../constants/constants';
 import I18n from '../i18n/index';
 
 let before = null;
+let nearest = false;
 const ICON_SIZE = 20;
+const GEOCODE_ENDPOINT = 'http://map.simpleapi.net/stationapi';
+
 const statusicon = item => {
   let status = utils.getStatusIcon(item);
   switch (status) {
@@ -49,6 +53,26 @@ const statusicon = item => {
     case DEF.STATUS.OUT_TIME:
       return <MaterialIcons name="alarm-off" size={ICON_SIZE} color="red" />;
   }
+};
+
+const exceptStationLine = line => {
+  let pos = line.indexOf('（');
+  if (pos > 0) {
+    line = line.substring(0, pos);
+  }
+  pos = line.indexOf(' (');
+  if (pos > 0) {
+    line = line.substring(0, pos);
+  }
+  pos = line.indexOf('(');
+  if (pos > 0) {
+    line = line.substring(0, pos);
+  }
+  pos = line.indexOf('ほか');
+  if (pos > 0) {
+    line = line.substring(0, pos);
+  }
+  return line + ' ';
 };
 
 const getRimDistance = (coords1, item) => {
@@ -79,12 +103,13 @@ const getRimDistance = (coords1, item) => {
       return I18n.t('distanceMessageOutsideTime');
   }
 };
-
+const nearestStationPart = { name: '', distanceKm: '' };
 export class Top extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isFetching: false,
+      nearestStation: null,
     };
   }
   onRefresh() {
@@ -96,10 +121,15 @@ export class Top extends Component {
   }
   async componentDidMount() {
     if (this.timer == null) {
+      let initOwnInfo = await json.getStorageDataOwnInfo();
+      this.props.setOwnInfoCoords(initOwnInfo.coords);
+      this.handleGetLatAndLng();
+
       this.timer = setInterval(async () => {
         let ownInfo = await json.getStorageDataOwnInfo();
         this.props.setOwnInfoCoords(ownInfo.coords);
         this.setState({ isFetching: false });
+        this.handleGetLatAndLng();
       }, 5000);
     }
   }
@@ -128,6 +158,24 @@ export class Top extends Component {
       startLocation(this.props.ownInfo, this.props.alermList);
       before = this.props.alermList;
     }
+  }
+
+  handleGetLatAndLng() {
+    let option = {
+      x: this.props.ownInfo.coords.longitude,
+      y: this.props.ownInfo.coords.latitude,
+      output: 'json',
+    };
+    axios
+      .get(GEOCODE_ENDPOINT, { params: option })
+      .then(results => {
+        const datas = results.data;
+        if (datas != null || datas.length > 0) {
+          const newDatas = datas.filter(n => n.distance <= 1500);
+          this.setState({ nearestStation: newDatas });
+        }
+      })
+      .catch(() => {});
   }
 
   render() {
@@ -169,9 +217,52 @@ export class Top extends Component {
       });
     };
 
+    const nearestStationPart = (nearestStation, index) => {
+      if (nearestStation == null || nearestStation[index] == null) {
+        return;
+      }
+      const station = nearestStation[index];
+      return (
+        <View style={styles.nearRestInfo}>
+          <Text style={styles.nearRestName} numberOfLines={1}>
+            {station != null ? station.name : ''}
+          </Text>
+          <Text style={styles.nearRestDistance} numberOfLines={1}>
+            {station != null ? station.distanceM : ''}
+          </Text>
+        </View>
+      );
+    };
+    const nearestStation = nearestStation => {
+      return (
+        <View style={styles.nearRest}>
+          <Text
+            style={[styles.nearRestTitle, { backgroundColor: 'darkgreen' }]}>
+            {I18n.t('nearest')}
+          </Text>
+          <FlatList
+            data={this.state.nearestStation}
+            extraData={this.state.nearestStation}
+            keyExtractor={item => item.id}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <View style={styles.nearRestInfo}>
+                <MaterialIcons name="train" size={ICON_SIZE} color="orange" />
+                <Text style={styles.nearRestName}>
+                  {exceptStationLine(item.line) + item.name}
+                </Text>
+                <Text style={styles.nearRestDistance}>{item.distanceKm}</Text>
+              </View>
+            )}
+          />
+        </View>
+      );
+    };
+
     return (
       <View style={styles.container}>
         {topHeader(this.props)}
+        {nearest && nearestStation(this.state.nearestStation)}
         <ScrollView>
           <FlatList
             data={sortList()}
