@@ -113,27 +113,58 @@ export class Top extends Component {
     super(props);
     this.state = {
       isFetching: false,
+      isNearestFetching: false,
       nearestStation: null,
       nearestCoords: null,
     };
   }
-  onRefresh() {
-    this.setState({ isFetching: true }, async function() {
-      const position = await getCurrentPosition(5000);
-      this.props.setOwnInfoCoords(position.coords);
-      this.setState({ isFetching: false });
-    });
+
+  handleGetLatAndLng() {
+    if (!this.props.ownInfo.isNearestDisplay) {
+      return;
+    }
+    if (
+      this.noneExecuteApi(this.props.ownInfo.coords, this.state.nearestCoords)
+    ) {
+      return;
+    }
+    let option = {
+      x: this.props.ownInfo.coords.longitude,
+      y: this.props.ownInfo.coords.latitude,
+      output: 'json',
+    };
+    this.setState({ isNearestFetching: false });
+    axios
+      .get(GEOCODE_ENDPOINT, { params: option })
+      .then(results => {
+        const datas = results.data;
+        if (datas != null || datas.length > 0) {
+          const newDatas = datas.filter(n => n.distance <= NEAREST_DIS);
+          this.setState({ nearestStation: newDatas });
+          this.setState({ nearestCoords: this.props.ownInfo.coords });
+        }
+      })
+      .catch(() => {
+        nearest = false;
+      })
+      .finally(() => {
+        this.setState({ isNearestFetching: true });
+      });
   }
+
   async componentDidMount() {
     if (this.timer == null) {
+      // 初回情報取得
       let initOwnInfo = await json.getStorageDataOwnInfo();
       this.props.setOwnInfoCoords(initOwnInfo.coords);
       this.handleGetLatAndLng();
 
       this.timer = setInterval(async () => {
-        let ownInfo = await json.getStorageDataOwnInfo();
-        this.props.setOwnInfoCoords(ownInfo.coords);
-        this.setState({ isFetching: false });
+        this.setState({ isFetching: true }, async function() {
+          let ownInfo = await json.getStorageDataOwnInfo();
+          this.props.setOwnInfoCoords(ownInfo.coords);
+          this.setState({ isFetching: false });
+        });
         this.handleGetLatAndLng();
       }, TIMER);
     }
@@ -188,35 +219,6 @@ export class Top extends Component {
       return true;
     }
     return false;
-  }
-
-  handleGetLatAndLng() {
-    if (!this.props.ownInfo.isNearestDisplay) {
-      return;
-    }
-    if (
-      this.noneExecuteApi(this.props.ownInfo.coords, this.state.nearestCoords)
-    ) {
-      return;
-    }
-    let option = {
-      x: this.props.ownInfo.coords.longitude,
-      y: this.props.ownInfo.coords.latitude,
-      output: 'json',
-    };
-    axios
-      .get(GEOCODE_ENDPOINT, { params: option })
-      .then(results => {
-        const datas = results.data;
-        if (datas != null || datas.length > 0) {
-          const newDatas = datas.filter(n => n.distance <= NEAREST_DIS);
-          this.setState({ nearestStation: newDatas });
-          this.setState({ nearestCoords: this.props.ownInfo.coords });
-        }
-      })
-      .catch(() => {
-        nearest = false;
-      });
   }
 
   render() {
@@ -285,7 +287,7 @@ export class Top extends Component {
             data={this.state.nearestStation}
             extraData={this.state.nearestStation}
             keyExtractor={item => item.id}
-            showsHorizontalScrollIndicator={false}
+            refreshing={this.state.isNearestFetching}
             renderItem={({ item }) => (
               <View style={styles.nearRestInfo}>
                 <MaterialIcons name="train" size={ICON_SIZE} color="orange" />
@@ -303,15 +305,11 @@ export class Top extends Component {
     return (
       <View style={styles.container}>
         {topHeader(this.props)}
-        {this.props.ownInfo.isNearestDisplay &&
-          nearest &&
-          nearestStation(this.state.nearestStation)}
         <ScrollView>
           <FlatList
             data={sortList()}
             extraData={this.props.alermList}
             keyExtractor={item => item.id}
-            onRefresh={() => this.onRefresh()}
             refreshing={this.state.isFetching}
             renderItem={({ item }) => (
               <Swipeout
@@ -350,6 +348,9 @@ export class Top extends Component {
             )}
           />
         </ScrollView>
+        {this.props.ownInfo.isNearestDisplay &&
+          nearest &&
+          nearestStation(this.state.nearestStation)}
         {this.props.ownInfo.isFree && admobBanner()}
       </View>
     );
