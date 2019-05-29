@@ -8,6 +8,7 @@
     "sound": true,
     "recoveryTime": 60,
     "recoveryDistance": true,
+    "isNearestDisplay": true,
     "sortKind": 0,
     "sortType": true,
     "debug": false

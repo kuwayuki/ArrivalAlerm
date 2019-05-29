@@ -1,5 +1,5 @@
 export default {
-  locale: 'en',
+  locale: 'ja',
   appTitle: 'ノリスゴ',
   blank: '',
   setting: '設定',
@@ -22,6 +22,7 @@ export default {
   recoveryTimeDes: '一定時間経過後に再通知可能となります',
   recoveryDistance: '通知距離範囲外',
   recoveryDistanceDes: '通知距離範囲外に離れた場合に再通知可能となります',
+  isNearestDisplay: '最寄駅表示',
   getLocation: '位置情報精度',
   getLocationInterval: '位置情報取得間隔',
   getLocationDesAuto: '登録地点に近づくほど精度があがります',
@@ -80,8 +81,8 @@ export default {
   freeAlert1: '無料版は',
   freeAlert2: '件までしか登録できません。',
   alermError: 'エラー',
-  alermNotification: '通知設定をオンにしてから起動して下さい',
-  alermLocation: '位置情報設定をオンにしてから起動して下さい',
+  alermNotification: '通知の許可がオフになっています。\n設定画面で通知の許可をオンにして下さい。',
+  alermLocation: '位置情報設定を"常に許可"にしてから起動して下さい',
   searchInit: '現地',
   search: '検索',
   searchResult: '検索結果：',
@@ -92,5 +93,6 @@ export default {
   reviewQuestion:
     'いつもご利用ありがとうございます。\n\n' +
     'もしよろしければレビューをしてくれませんか？アプリ評価にご協力頂けたら登録できる地点が1つ増えます。',
-  reviewDetailQuestion: '詳細レビューも記載する',
+  reviewDetailQuestion:
+    '詳細レビューも記載する',
 };

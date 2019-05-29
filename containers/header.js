@@ -80,6 +80,7 @@ const settingUpdate = (state, props) => {
   }
   ownInfo.recoveryTime = recoveryTime;
   ownInfo.recoveryDistance = state.recoveryDistance;
+  ownInfo.isNearestDisplay = state.isNearestDisplay;
   ownInfo.sortKind = state.sortKind;
   ownInfo.sortType = state.sortType;
   json.setStorageDataOwnInfo(ownInfo);

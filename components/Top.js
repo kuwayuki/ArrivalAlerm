@@ -33,8 +33,12 @@ import * as DEF from '../constants/constants';
 import I18n from '../i18n/index';
 
 let before = null;
-let nearest = false;
+let nearest = true; // TODO:
 const ICON_SIZE = 20;
+const TIMER = 10000;
+const NEAREST_DIS = 100000;
+const POINT_NUM = 2;
+// const POINT_NUM = 3;
 const GEOCODE_ENDPOINT = 'http://map.simpleapi.net/stationapi';
 
 const statusicon = item => {
@@ -110,6 +114,7 @@ export class Top extends Component {
     this.state = {
       isFetching: false,
       nearestStation: null,
+      nearestCoords: null,
     };
   }
   onRefresh() {
@@ -130,7 +135,7 @@ export class Top extends Component {
         this.props.setOwnInfoCoords(ownInfo.coords);
         this.setState({ isFetching: false });
         this.handleGetLatAndLng();
-      }, 5000);
+      }, TIMER);
     }
   }
 
@@ -142,7 +147,7 @@ export class Top extends Component {
     try {
       await utils.initNotification();
       // 現在地取得
-      const position = await getCurrentPosition(5000);
+      const position = await getCurrentPosition(TIMER);
       this.props.setOwnInfoCoords(position.coords);
       // 設定済情報取得
       await json.getJsonData(this.props);
@@ -160,7 +165,40 @@ export class Top extends Component {
     }
   }
 
+  noneExecuteApi(coords, nearRestCoords) {
+    if (coords == null || nearRestCoords == null) {
+      return false;
+    }
+
+    if (
+      coords.latitude.substring(0, coords.latitude.indexOf('.') + POINT_NUM) ==
+        nearRestCoords.latitude.substring(
+          0,
+          nearRestCoords.latitude.indexOf('.') + POINT_NUM
+        ) &&
+      coords.longitude.substring(
+        0,
+        coords.longitude.indexOf('.') + POINT_NUM
+      ) ==
+        nearRestCoords.longitude.substring(
+          0,
+          nearRestCoords.longitude.indexOf('.') + POINT_NUM
+        )
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   handleGetLatAndLng() {
+    if (!this.props.ownInfo.isNearestDisplay) {
+      return;
+    }
+    if (
+      this.noneExecuteApi(this.props.ownInfo.coords, this.state.nearestCoords)
+    ) {
+      return;
+    }
     let option = {
       x: this.props.ownInfo.coords.longitude,
       y: this.props.ownInfo.coords.latitude,
@@ -171,11 +209,14 @@ export class Top extends Component {
       .then(results => {
         const datas = results.data;
         if (datas != null || datas.length > 0) {
-          const newDatas = datas.filter(n => n.distance <= 1500);
+          const newDatas = datas.filter(n => n.distance <= NEAREST_DIS);
           this.setState({ nearestStation: newDatas });
+          this.setState({ nearestCoords: this.props.ownInfo.coords });
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        nearest = false;
+      });
   }
 
   render() {
@@ -251,7 +292,7 @@ export class Top extends Component {
                 <Text style={styles.nearRestName}>
                   {exceptStationLine(item.line) + item.name}
                 </Text>
-                <Text style={styles.nearRestDistance}>{item.distanceKm}</Text>
+                <Text style={styles.nearRestDistance}>{item.distanceM}</Text>
               </View>
             )}
           />
@@ -262,7 +303,9 @@ export class Top extends Component {
     return (
       <View style={styles.container}>
         {topHeader(this.props)}
-        {nearest && nearestStation(this.state.nearestStation)}
+        {this.props.ownInfo.isNearestDisplay &&
+          nearest &&
+          nearestStation(this.state.nearestStation)}
         <ScrollView>
           <FlatList
             data={sortList()}

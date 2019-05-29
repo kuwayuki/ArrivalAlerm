@@ -22,6 +22,7 @@ export default {
   recoveryTimeDes: '一定時間経過後に再通知可能となります',
   recoveryDistance: '通知距離範囲外',
   recoveryDistanceDes: '通知距離範囲外に離れた場合に再通知可能となります',
+  isNearestDisplay: '最寄駅表示',
   getLocation: '位置情報精度',
   getLocationInterval: '位置情報取得間隔',
   getLocationDesAuto: '登録地点に近づくほど精度があがります',

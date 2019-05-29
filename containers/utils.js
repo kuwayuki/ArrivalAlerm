@@ -63,7 +63,6 @@ export async function initNotification() {
       }
     }
   }
-  console.log(currentNotificationPermission);
   if (currentNotificationPermission.status !== 'granted') {
     Alert.alert(I18n.t('setting'), I18n.t('alermNotification'), [
       {
