@@ -107,7 +107,6 @@ const getRimDistance = (coords1, item) => {
       return I18n.t('distanceMessageOutsideTime');
   }
 };
-const nearestStationPart = { name: '', distanceKm: '' };
 export class Top extends Component {
   constructor(props) {
     super(props);
@@ -202,19 +201,10 @@ export class Top extends Component {
     }
 
     if (
-      coords.latitude.substring(0, coords.latitude.indexOf('.') + POINT_NUM) ==
-        nearRestCoords.latitude.substring(
-          0,
-          nearRestCoords.latitude.indexOf('.') + POINT_NUM
-        ) &&
-      coords.longitude.substring(
-        0,
-        coords.longitude.indexOf('.') + POINT_NUM
-      ) ==
-        nearRestCoords.longitude.substring(
-          0,
-          nearRestCoords.longitude.indexOf('.') + POINT_NUM
-        )
+      coords.latitude.toFixed(POINT_NUM) ==
+        nearRestCoords.latitude.toFixed(POINT_NUM) &&
+      coords.longitude.toFixed(POINT_NUM) ==
+        nearRestCoords.longitude.toFixed(POINT_NUM)
     ) {
       return true;
     }
