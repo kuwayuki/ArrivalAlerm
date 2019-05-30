@@ -43,13 +43,13 @@ export async function initNotification() {
   if (this.isRead) return;
   this.isRead = true;
   // 既存のパーミッションを取得
-  const { permissions } = await Permissions.askAsync(
-    Permissions.USER_FACING_NOTIFICATIONS,
-    Permissions.LOCATION
-  );
-  const currentNotificationPermission =
-    permissions[Permissions.USER_FACING_NOTIFICATIONS];
+  const { permissions } = await Permissions.askAsync(Permissions.LOCATION);
   const currentLocationPermission = permissions[Permissions.LOCATION];
+
+  const { status: existingStatus } = await Permissions.getAsync(
+    Permissions.NOTIFICATIONS
+  );
+  let finalStatus = existingStatus;
   if (Platform.OS === 'android') {
     const ok = await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
@@ -63,16 +63,26 @@ export async function initNotification() {
       }
     }
   }
-  if (currentNotificationPermission.status !== 'granted') {
-    Alert.alert(I18n.t('setting'), I18n.t('alermNotification'), [
+  if (finalStatus !== 'granted') {
+    await Alert.alert(I18n.t('setting'), I18n.t('alermNotification'), [
+      {
+        text: I18n.t('allowNotification'),
+        onPress: async () => {
+          const { status } = await Permissions.askAsync(
+            Permissions.NOTIFICATIONS
+          );
+          finalStatus = status;
+        },
+      },
+    ]);
+  }
+  if (finalStatus !== 'granted') {
+    await Alert.alert(I18n.t('setting'), I18n.t('alermNotificationError'), [
       {
         text: I18n.t('goSet'),
         onPress: async () => {
           Linking.openURL(SETTING_APP_URL);
         },
-      },
-      {
-        text: I18n.t('cancel'),
       },
     ]);
   }
@@ -80,7 +90,7 @@ export async function initNotification() {
 
   if (currentLocationPermission.ios.scope !== 'always') {
     // (iOS向け) 位置情報利用の許可をユーザーに求める
-    Alert.alert(I18n.t('alermError'), I18n.t('alermLocation'), [
+    await Alert.alert(I18n.t('alermError'), I18n.t('alermLocation'), [
       {
         text: 'OK',
         onPress: async () => {

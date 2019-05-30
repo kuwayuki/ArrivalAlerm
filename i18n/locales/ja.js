@@ -81,7 +81,11 @@ export default {
   freeAlert1: '無料版は',
   freeAlert2: '件までしか登録できません。',
   alermError: 'エラー',
-  alermNotification: '通知の許可がオフになっています。\n設定画面で通知の許可をオンにして下さい。',
+  allowNotification: '通知を許可する',
+  alermNotification:
+    'このアプリは目的地付近に近づいたら、通知でお知らせすることができます。\n通知を許可してご利用下さい。',
+  alermNotificationError:
+    '通知の許可がオフになっています。\n設定画面で通知の許可をオンにして下さい。',
   alermLocation: '位置情報設定を"常に許可"にしてから起動して下さい',
   searchInit: '現地',
   search: '検索',
@@ -93,6 +97,5 @@ export default {
   reviewQuestion:
     'いつもご利用ありがとうございます。\n\n' +
     'もしよろしければレビューをしてくれませんか？アプリ評価にご協力頂けたら登録できる地点が1つ増えます。',
-  reviewDetailQuestion:
-    '詳細レビューも記載する',
+  reviewDetailQuestion: '詳細レビューも記載する',
 };
