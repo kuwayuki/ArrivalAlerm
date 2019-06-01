@@ -17,7 +17,7 @@ import { admobInterstitial } from '../containers/googleAdmob';
 import { APP_STORE_ID, PLAY_STORE_ID } from '../constants/constants';
 import I18n from '../i18n/index';
 
-let nearest = true; // TODO:
+let nearest = false; // TODO:
 export class Setting extends React.Component {
   constructor(props) {
     super(props);

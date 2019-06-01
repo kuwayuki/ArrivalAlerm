@@ -50,20 +50,22 @@ export async function initNotification() {
     Permissions.NOTIFICATIONS
   );
   let finalStatus = existingStatus;
-  if (Platform.OS === 'android') {
-    const ok = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-    );
-    if (!ok) {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-      );
-      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-        throw new Error();
-      }
-    }
-  }
+  // if (Platform.OS === 'android') {
+  //   const ok = await PermissionsAndroid.check(
+  //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+  //   );
+  //   if (!ok) {
+  //     const granted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+  //     );
+  //     if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+  //       throw new Error();
+  //     }
+  //   }
+  // }
+  // 未設定の場合
   if (finalStatus !== 'granted') {
+    // 通知許可を促す
     await Alert.alert(I18n.t('setting'), I18n.t('alermNotification'), [
       {
         text: I18n.t('allowNotification'),
@@ -72,16 +74,22 @@ export async function initNotification() {
             Permissions.NOTIFICATIONS
           );
           finalStatus = status;
-        },
-      },
-    ]);
-  }
-  if (finalStatus !== 'granted') {
-    await Alert.alert(I18n.t('setting'), I18n.t('alermNotificationError'), [
-      {
-        text: I18n.t('goSet'),
-        onPress: async () => {
-          Linking.openURL(SETTING_APP_URL);
+          if (finalStatus !== 'granted') {
+            if (finalStatus !== 'granted') {
+              await Alert.alert(
+                I18n.t('setting'),
+                I18n.t('alermNotificationError'),
+                [
+                  {
+                    text: I18n.t('goSet'),
+                    onPress: async () => {
+                      Linking.openURL(SETTING_APP_URL);
+                    },
+                  },
+                ]
+              );
+            }
+          }
         },
       },
     ]);

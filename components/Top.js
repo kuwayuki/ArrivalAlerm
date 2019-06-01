@@ -153,15 +153,20 @@ export class Top extends Component {
 
   async componentDidMount() {
     if (this.timer == null) {
+      // 設定済情報取得
+      await json.getJsonData(this.props);
+      await utils.initNotification();
       // 初回情報取得
-      let initOwnInfo = await json.getStorageDataOwnInfo();
-      this.props.setOwnInfoCoords(initOwnInfo.coords);
+      const position = await getCurrentPosition(TIMER);
+      this.props.setOwnInfoCoords(position.coords);
       this.handleGetLatAndLng();
 
       this.timer = setInterval(async () => {
         this.setState({ isFetching: true }, async function() {
           let ownInfo = await json.getStorageDataOwnInfo();
-          this.props.setOwnInfoCoords(ownInfo.coords);
+          if (ownInfo.coords != undefined) {
+            this.props.setOwnInfoCoords(ownInfo.coords);
+          }
           this.setState({ isFetching: false });
         });
         this.handleGetLatAndLng();
@@ -171,19 +176,6 @@ export class Top extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.timer);
-  }
-
-  async componentWillMount() {
-    try {
-      await utils.initNotification();
-      // 現在地取得
-      const position = await getCurrentPosition(TIMER);
-      this.props.setOwnInfoCoords(position.coords);
-      // 設定済情報取得
-      await json.getJsonData(this.props);
-    } catch (e) {
-      // alert(e.message);
-    }
   }
 
   componentDidUpdate() {
