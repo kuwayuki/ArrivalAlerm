@@ -120,6 +120,8 @@ async function getBestPerformance(ownCoords, alermList) {
   }
   // 目的地周辺の場合は再取得距離を短くする
   if (pointDistance < 1.5 * alermDistance * index) {
+    alermDistance = alermDistance / 20;
+  } else if (pointDistance < 2 * alermDistance * index) {
     alermDistance = alermDistance / 10;
   } else if (pointDistance < 3 * alermDistance * index) {
     alermDistance = alermDistance / 5;

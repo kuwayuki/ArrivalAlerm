@@ -3,6 +3,7 @@ import { addAsyncStorage } from './jsonFile';
 import { Notifications } from 'expo';
 import I18n from '../i18n/index';
 
+const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
 export async function getCurrentPosition(timeoutMillis = 10000) {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(resolve, reject, {
@@ -116,16 +117,20 @@ export async function checkPosition(ownInfo, alermList) {
         // 時間チェック
         if (!isCheckTime(alermItem)) continue;
 
-        // 対象範囲なので通知を行う
-        await Notifications.presentLocalNotificationAsync({
-          title: I18n.t('appTitle'),
-          body: alermItem.alermMessage,
-          sound: ownInfo.sound,
-          data: {
-            message: alermItem.alermMessage,
-          },
-        });
-
+        // 対象範囲なので通知を行う :TODO
+        for (let i = 0; i < 1; i++) {
+          (async () => {
+            await sleep(1000);
+          })();
+          await Notifications.presentLocalNotificationAsync({
+            title: I18n.t('appTitle'),
+            body: alermItem.alermMessage,
+            sound: ownInfo.sound,
+            data: {
+              message: alermItem.alermMessage,
+            },
+          });
+        }''
         alermItem.isAlermed = true;
         alermItem.alermTime = new Date().getTime();
         addAsyncStorage(alermItem);

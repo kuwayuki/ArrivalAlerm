@@ -35,7 +35,7 @@ import I18n from '../i18n/index';
 let before = null;
 let nearest = true; // TODO:
 const ICON_SIZE = 20;
-const TIMER = 10000;
+const TIMER = 1000;
 const NEAREST_DIS = 100000;
 const POINT_NUM = 2;
 // const POINT_NUM = 3;
@@ -122,9 +122,14 @@ export class Top extends Component {
     if (!this.props.ownInfo.isNearestDisplay) {
       return;
     }
+    // 一定距離以内は更新しない
     if (
       this.noneExecuteApi(this.props.ownInfo.coords, this.state.nearestCoords)
     ) {
+      return;
+    }
+    // 速度上昇中は更新しない
+    if (this.ngSpeedCheck(this.props.ownInfo.coords.speed)) {
       return;
     }
     let option = {
@@ -151,25 +156,33 @@ export class Top extends Component {
       });
   }
 
+  async getAsyncPosition() {
+    this.setState({ isFetching: true }, async function() {
+      // let ownInfo = await json.getStorageDataOwnInfo();
+      // if (ownInfo.coords != undefined) {
+      //   await this.props.setOwnInfoCoords(ownInfo.coords);
+      // } else {
+      //   const position = await getCurrentPosition(TIMER);
+      //   await this.props.setOwnInfoCoords(position.coords);
+      // }
+      const position = await getCurrentPosition(TIMER);
+      await this.props.setOwnInfoCoords(position.coords);
+
+      this.handleGetLatAndLng();
+      this.setState({ isFetching: false });
+    });
+  }
+
   async componentDidMount() {
     if (this.timer == null) {
       // 設定済情報取得
       await json.getJsonData(this.props);
       await utils.initNotification();
       // 初回情報取得
-      const position = await getCurrentPosition(TIMER);
-      this.props.setOwnInfoCoords(position.coords);
-      this.handleGetLatAndLng();
+      await this.getAsyncPosition();
 
       this.timer = setInterval(async () => {
-        this.setState({ isFetching: true }, async function() {
-          let ownInfo = await json.getStorageDataOwnInfo();
-          if (ownInfo.coords != undefined) {
-            this.props.setOwnInfoCoords(ownInfo.coords);
-          }
-          this.setState({ isFetching: false });
-        });
-        this.handleGetLatAndLng();
+        await this.getAsyncPosition();
       }, TIMER);
     }
   }
@@ -201,6 +214,25 @@ export class Top extends Component {
       return true;
     }
     return false;
+  }
+
+  ngSpeedCheck(speed) {
+    if (speed < 0.2) {
+      // 停滞・維持レベル(目的地までの距離)
+      return false;
+    } else if (speed < 1.5) {
+      // 徒歩レベル(目的地までの距離)
+      return false;
+    } else if (speed < 5) {
+      // 徒歩レベル(目的地までの距離)
+      return false;
+    } else if (speed < 13) {
+      // バス・車レベル(目的地までの距離と通知距離に反比例)
+      return true;
+    } else {
+      // 電車レベル(目的地までの距離と通知距離に反比例)
+      return true;
+    }
   }
 
   render() {

@@ -113,8 +113,13 @@ export async function initNotification() {
 }
 
 export const getDistance = (coords1, coords2) => {
-  if (coords1 == null || coords2 == null) {
-    return '--';
+  if (
+    coords1 == null ||
+    coords2 == null ||
+    coords1.latitude == null ||
+    coords2.latitude == null
+  ) {
+    return '--\nkm';
   }
 
   let distance = getDistanceMeter(coords1, coords2) / 1000;
