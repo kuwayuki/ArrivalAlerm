@@ -19,10 +19,21 @@ export const distanceMtoKm = meter => {
   return distanceKeta(km);
 };
 
+const isOkLocationCheck = permission => {
+  if (
+    permission.ios.scope === 'always' ||
+    permission.ios.scope === 'whenInUse'
+    // (Platform.isPad && permission.ios.scope === 'whenInUse')
+  ) {
+    return true;
+  }
+  return false;
+};
+
 export async function checkOSSetting() {
   const { permissions } = await Permissions.askAsync(Permissions.LOCATION);
   const currentLocationPermission = permissions[Permissions.LOCATION];
-  if (currentLocationPermission.ios.scope !== 'always') {
+  if (!isOkLocationCheck(currentLocationPermission)) {
     // (iOS向け) 位置情報利用の許可をユーザーに求める
     Alert.alert(I18n.t('alermError'), I18n.t('alermLocation'), [
       {
@@ -49,6 +60,7 @@ export async function initNotification() {
   const { status: existingStatus } = await Permissions.getAsync(
     Permissions.NOTIFICATIONS
   );
+
   let finalStatus = existingStatus;
   // if (Platform.OS === 'android') {
   //   const ok = await PermissionsAndroid.check(
@@ -95,8 +107,7 @@ export async function initNotification() {
     ]);
   }
   await Notifications.addListener(_handleNotification);
-
-  if (currentLocationPermission.ios.scope !== 'always') {
+  if (!isOkLocationCheck(currentLocationPermission)) {
     // (iOS向け) 位置情報利用の許可をユーザーに求める
     await Alert.alert(I18n.t('alermError'), I18n.t('alermLocation'), [
       {

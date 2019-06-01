@@ -86,7 +86,7 @@ export default {
     'このアプリは目的地付近に近づいたら、通知でお知らせすることができます。\n通知を許可してご利用下さい。',
   alermNotificationError:
     '通知の許可がオフになっています。\n設定画面で通知の許可をオンにして下さい。',
-  alermLocation: '位置情報設定を"常に許可"にしてから起動して下さい',
+  alermLocation: '位置情報設定を「常に許可」または「このAppの使用中のみ許可」にしてから起動して下さい',
   searchInit: '現地',
   search: '検索',
   searchResult: '検索結果：',

@@ -119,9 +119,6 @@ export async function checkPosition(ownInfo, alermList) {
 
         // 対象範囲なので通知を行う :TODO
         for (let i = 0; i < 1; i++) {
-          (async () => {
-            await sleep(1000);
-          })();
           await Notifications.presentLocalNotificationAsync({
             title: I18n.t('appTitle'),
             body: alermItem.alermMessage,
@@ -130,7 +127,10 @@ export async function checkPosition(ownInfo, alermList) {
               message: alermItem.alermMessage,
             },
           });
-        }''
+          // (async () => {
+          //   await sleep(1000);
+          // })();
+        }
         alermItem.isAlermed = true;
         alermItem.alermTime = new Date().getTime();
         addAsyncStorage(alermItem);
