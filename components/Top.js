@@ -173,11 +173,17 @@ export class Top extends Component {
     });
   }
 
-  async componentDidMount() {
-    if (this.timer == null) {
+  async componentWillMount() {
+    try {
       // 設定済情報取得
       await json.getJsonData(this.props);
       await utils.initNotification();
+    } catch (e) {
+      // alert(e.message);
+    }
+  }
+  async componentDidMount() {
+    if (this.timer == null) {
       // 初回情報取得
       await this.getAsyncPosition();
 
